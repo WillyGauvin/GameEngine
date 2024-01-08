@@ -8,10 +8,10 @@ cmake_minimum_required( VERSION 3.10 )
 file( GLOB_RECURSE GameSourceFiles
 	Source/*.cpp
 	Source/*.h
-	DataRaw/Shaders/*.vert
-	DataRaw/Shaders/*.frag
-	DataRaw/Shaders/*.sc
-	DataRaw/*.bat
+	../DataRaw/Shaders/*.vert
+	../DataRaw/Shaders/*.frag
+	../DataRaw/Shaders/*.sc
+	../DataRaw/*.bat
 	../
 	../BuildShaders.bat
 	../GenerateProjectFiles.bat

@@ -1,8 +1,8 @@
 mkdir build
 cd build
-cmake ..
+"C:\Program Files\CMake\bin\cmake" ..
 rem Build a second time to fix PCH folder
-cmake ..
+"C:\Program Files\CMake\bin\cmake" ..
 pause
 cd..
 call BuildShaders.bat

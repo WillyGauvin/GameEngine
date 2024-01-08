@@ -38,14 +38,11 @@ static const VertexFormat_PosColor g_SquareVerts[] =
     { vec2(-0.5f, 0.5f), 0, 255, 0, 255 }, // Top-left
     { vec2(-0.5f,-0.5f), 0,   0, 0, 255 }, // Bottom-left
     { vec2( 0.5f,-0.5f), 0,   0, 0, 255 }, // Bottom-right
-
-    { vec2(-0.5f, 0.5f), 0, 255, 0, 255 }, // Top-left
-    { vec2( 0.5f,-0.5f), 0,   0, 0, 255 }, // Bottom-right
     { vec2( 0.5f, 0.5f), 0, 255, 0, 255 }, // Top-right
 };
 static const uint16 g_SquareIndices[] =
 {
-    0,2,1, 3,5,4
+    0,2,1, 0,3,2
 };
 fw::Mesh* CreateSquareMesh()
 {
@@ -60,14 +57,11 @@ static const VertexFormat_PosUV g_SpriteVerts[] =
     { vec2(-0.5f, 0.5f), vec2(0,1) }, // Top-left
     { vec2(-0.5f,-0.5f), vec2(0,0) }, // Bottom-left
     { vec2( 0.5f,-0.5f), vec2(1,0) }, // Bottom-right
-
-    { vec2(-0.5f, 0.5f), vec2(0,1) }, // Top-left
-    { vec2( 0.5f,-0.5f), vec2(1,0) }, // Bottom-right
     { vec2( 0.5f, 0.5f), vec2(1,1) }, // Top-right
 };
 static const uint16 g_SpriteIndices[] =
 {
-    0,2,1, 3,5,4
+    0,2,1, 0,3,2
 };
 fw::Mesh* CreateSpriteMesh()
 {
