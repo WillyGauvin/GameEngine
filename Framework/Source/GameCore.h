@@ -14,6 +14,7 @@ namespace fw {
     class Event;
     class FWCore;
     class Uniforms;
+    class EventManager;
 
     class GameCore
     {
@@ -29,10 +30,12 @@ namespace fw {
         // Getters.
         FWCore* GetFramework() { return &m_FWCore; }
         Uniforms* GetUniforms() { return m_pUniforms; }
+        EventManager* GetEventManager() { return m_pEventManager; }
 
     protected:
         FWCore& m_FWCore;
 
+        EventManager* m_pEventManager = nullptr;
         // Resources.
         Uniforms* m_pUniforms = nullptr;
     };

@@ -1,4 +1,4 @@
-//
+ //
 // Copyright (c) 2022-2023 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -28,6 +28,7 @@ Game::Game(fw::FWCore& fwCore)
     // Create some manager objects.
     m_pImGuiManager = new fw::ImGuiManager( &m_FWCore, 1 );
     m_pResources = new fw::ResourceManager();
+    m_pEventManager = new fw::EventManager(this);
 
     // Create uniforms.
     CreateUniforms();
@@ -67,6 +68,8 @@ Game::~Game()
     delete m_pUniforms;
 
     delete m_pImGuiManager;
+
+    delete m_pEventManager;
 }
 
 void Game::CreateUniforms()
@@ -92,6 +95,7 @@ void Game::CreateUniforms()
 void Game::StartFrame(float deltaTime)
 {
     m_pImGuiManager->StartFrame( deltaTime );
+    m_pEventManager->ProcessEvents();
 }
 
 void Game::OnEvent(fw::Event* pEvent)

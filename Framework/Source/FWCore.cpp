@@ -1,4 +1,4 @@
-//
+ //
 // Copyright (c) 2016-2023 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -15,6 +15,7 @@
 #include "GameCore.h"
 #include "EventSystem/Events.h"
 #include "Utility/Utility.h"
+#include "EventSystem/EventManager.h"
 
 namespace fw {
 
@@ -448,7 +449,7 @@ namespace fw {
             {
                 // Send a char event to the event manager.
                 CharEvent* pEvent = new CharEvent( (uint32)wParam );
-                pFWCore->m_pGame->OnEvent( pEvent );
+                pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
             }
             return 0;
 
@@ -469,7 +470,7 @@ namespace fw {
                         InputEvent::DeviceState::Pressed,
                         (uint32)wParam );
 
-                    pFWCore->m_pGame->OnEvent( pEvent );
+                    pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
                 }
             }
             return 0;
@@ -484,7 +485,7 @@ namespace fw {
                     InputEvent::DeviceState::Released,
                     (uint32)wParam );
 
-                pFWCore->m_pGame->OnEvent( pEvent );
+                pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
             }
             return 0;
 

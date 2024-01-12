@@ -67,3 +67,35 @@ fw::Mesh* CreateSpriteMesh()
 {
     return new fw::Mesh( VertexFormat_PosUV::format, g_SpriteVerts, sizeof(g_SpriteVerts), g_SpriteIndices, sizeof(g_SpriteIndices) );
 }
+
+fw::Mesh* CreateCircleMesh()
+{
+    int numPoints = 32;
+
+    std::vector<VertexFormat_PosColor> verts;
+    std::vector<uint16> indices;
+
+    float angleInc = 2 * PI / numPoints;
+    float radius = 5.0f;
+
+    for (int i = 0; i < numPoints; i++)
+    {
+        float angle = angleInc * i;
+        vec2 pos = vec2(cos(angle), sin(angle)) * radius;
+        verts.push_back({ pos, 0, 255, 0, 255 });
+    }
+
+    for (int i = 1; i < numPoints - 1; i++)
+    {
+        indices.push_back(0);
+        indices.push_back(i + 1);
+        indices.push_back(i);
+    }
+
+    int vertBytes = sizeof(VertexFormat_PosColor) * (int)verts.size();
+    int indicesBytes = sizeof(uint16) * (int)indices.size();
+
+    return new fw::Mesh(VertexFormat_PosColor::format,
+        verts.data(), vertBytes,
+        indices.data(), indicesBytes);
+}

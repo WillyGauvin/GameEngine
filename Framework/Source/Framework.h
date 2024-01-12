@@ -25,6 +25,7 @@
 #include "FWCore.h"
 #include "GameCore.h"
 #include "EventSystem/Events.h"
+#include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"
 #include "Math/MathHelpers.h"
 #include "Math/Matrix.h"
