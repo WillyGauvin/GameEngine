@@ -14,7 +14,7 @@
 
 class Player;
 
-class Game : public fw::GameCore
+class Game : public fw::GameCore, fw::EventListener
 {
 public:
     Game(fw::FWCore& fwCore);
@@ -22,6 +22,7 @@ public:
 
     void CreateUniforms();
 
+    virtual void ExecuteEvent(fw::Event* pEvent) override;
     virtual void StartFrame(float deltaTime) override;
     virtual void OnEvent(fw::Event* pEvent) override;
     virtual void Update(float deltaTime) override;

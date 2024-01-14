@@ -11,16 +11,19 @@
 
 #include "Math/Matrix.h"
 #include "Objects/GameObject.h"
+#include "EventSystem/EventListener.h"
 
 namespace fw {
 
-    class Camera : public GameObject
+    class Camera : public GameObject, public EventListener
     {
     public:
         Camera(GameCore* pGameCore, vec3 pos);
         virtual ~Camera();
 
         virtual void Update(float32 deltaTime) override;
+        virtual void ExecuteEvent(Event* pEvent) override;
+
 
         void Enable(int viewID);
 

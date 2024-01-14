@@ -30,6 +30,9 @@ Game::Game(fw::FWCore& fwCore)
     m_pResources = new fw::ResourceManager();
     m_pEventManager = new fw::EventManager(this);
 
+    //Register for Events
+    GetEventManager()->RegisterListener(RemoveFromGameEvent::GetStaticEventType(), this);
+
     // Create uniforms.
     CreateUniforms();
 
@@ -92,6 +95,20 @@ void Game::CreateUniforms()
     m_pUniforms->CreateUniform( "u_Time", bgfx::UniformType::Vec4 );
 }
 
+void Game::ExecuteEvent(fw::Event* pEvent)
+{
+    if (pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType())
+    {
+        RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>(pEvent);
+        fw::GameObject* pObject = pRemoveFromGameEvent->GetGameObject();
+
+        auto it = std::find(m_Objects.begin(), m_Objects.end(), pObject);
+        m_Objects.erase(it);
+
+        delete pObject;
+    }
+}
+
 void Game::StartFrame(float deltaTime)
 {
     m_pImGuiManager->StartFrame( deltaTime );
@@ -103,7 +120,7 @@ void Game::OnEvent(fw::Event* pEvent)
     // Process events.
 
     // Remove object from GameObject list and delete it.
-    if( pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType() )
+    /*if( pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType() )
     {
         RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>( pEvent );
         fw::GameObject* pObject = pRemoveFromGameEvent->GetGameObject();
@@ -112,23 +129,23 @@ void Game::OnEvent(fw::Event* pEvent)
         m_Objects.erase( it );
 
         delete pObject;
-    }
+    }*/
 
     // Set the new aspect ratio in the camera.
-    if( pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType() )
+    /*if( pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType() )
     {
         int width = m_FWCore.GetWindowClientWidth();
         int height = m_FWCore.GetWindowClientHeight();
 
         m_pCamera->SetAspectRatio( (float)width/height );
-    }
+    }*/
 
     // Pass "WM_CHAR" events to imgui to handle text input.
-    if( pEvent->GetType() == fw::CharEvent::GetStaticEventType() )
+    /*if( pEvent->GetType() == fw::CharEvent::GetStaticEventType() )
     {
         int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
         m_pImGuiManager->AddInputCharacter( character );
-    }
+    }*/
 }
 
 void Game::Update(float deltaTime)
@@ -137,8 +154,8 @@ void Game::Update(float deltaTime)
     {
         if( m_Objects.size() > 1 )
         {
-            RemoveFromGameEvent event( m_Objects[1] );
-            OnEvent( &event );
+            RemoveFromGameEvent* pEvent = new RemoveFromGameEvent(m_Objects[1]);
+            m_pEventManager->AddEvent(pEvent);
         }
     }
 

@@ -30,6 +30,19 @@ namespace fw {
     {
         m_pFramework = pFramework;
         Init( viewID );
+
+        //Register For Events
+        //pFramework->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
+
+    }
+
+    void ImGuiManager::ExecuteEvent(Event* pEvent)
+    {
+        if (pEvent->GetType() == fw::CharEvent::GetStaticEventType())
+        {
+            int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
+            AddInputCharacter(character);
+        }
     }
 
     ImGuiManager::~ImGuiManager()

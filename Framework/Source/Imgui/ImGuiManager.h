@@ -11,6 +11,7 @@
 
 #include "Resources/Texture.h"
 #include "../Libraries/imgui/imgui.h"
+#include "EventSystem/EventListener.h"
 
 struct ImDrawData;
 
@@ -43,10 +44,12 @@ namespace fw {
         imguiTexture( pTexture->GetHandle(), flags, mip );
     }
 
-    class ImGuiManager
+    class ImGuiManager : public EventListener
     {
     public:
         ImGuiManager(FWCore* pFramework, int viewID);
+        virtual void ExecuteEvent(Event* pEvent) override;
+
         virtual ~ImGuiManager();
 
         void Init(int viewID);

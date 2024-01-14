@@ -5,6 +5,9 @@
 
 namespace fw
 {
+
+	class EventListener;
+
 	class EventManager
 	{
 	public:
@@ -13,9 +16,11 @@ namespace fw
 
 		void AddEvent(Event* pEvent);
 		void ProcessEvents(); 
+		void RegisterListener(EventType event, EventListener* pEventListener);
 		
 	protected:
 		std::queue<Event*> m_Queue;
 		GameCore* m_pGame;
+		std::map<EventType, std::vector<EventListener*>> m_Listeners;
 	};
 }

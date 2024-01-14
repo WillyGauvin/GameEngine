@@ -13,6 +13,7 @@
 #include "FWCore.h"
 #include "GameCore.h"
 #include "Utility/Uniforms.h"
+#include "EventSystem/EventManager.h"
 
 namespace fw {
 
@@ -21,6 +22,9 @@ namespace fw {
     {
         FWCore* pFW = pGameCore->GetFramework();
         SetAspectRatio( (float)pFW->GetWindowClientWidth()/pFW->GetWindowClientHeight() );
+
+        //Register For Events
+        m_pGameCore->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
     }
 
     Camera::~Camera()
@@ -29,6 +33,16 @@ namespace fw {
 
     void Camera::Update(float32 deltaTime)
     {
+    }
+
+    void Camera::ExecuteEvent(Event* pEvent)
+    {
+        if (pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType())
+        {
+            int width = m_pGameCore->GetFramework()->GetWindowClientWidth();
+            int height = m_pGameCore->GetFramework()->GetWindowClientHeight();
+            SetAspectRatio((float)width / height);
+        }
     }
 
     void Camera::Enable(int viewID)
