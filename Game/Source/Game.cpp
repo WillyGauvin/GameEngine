@@ -16,6 +16,7 @@
 #include "Events/GameEvents.h"
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
+#include "Objects/VirtualController.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -32,6 +33,8 @@ Game::Game(fw::FWCore& fwCore)
 
     //Register for Events
     GetEventManager()->RegisterListener(RemoveFromGameEvent::GetStaticEventType(), this);
+    GetEventManager()->RegisterListener(fw::CharEvent::GetStaticEventType(), this);
+
 
     // Create uniforms.
     CreateUniforms();
@@ -45,6 +48,8 @@ Game::Game(fw::FWCore& fwCore)
     // Create some GameObjects.
     m_pCamera = new fw::Camera( this, vec3(5,5,0) );
 
+    m_pController = new VirtualController(m_pEventManager);
+
 #define getMesh m_pResources->Get<fw::Mesh>
 #define getMaterial m_pResources->Get<fw::Material>
 
@@ -56,6 +61,8 @@ Game::Game(fw::FWCore& fwCore)
     m_Objects.push_back( new fw::GameObject( this, "Object 3", vec3(5,5,0), getMesh("Square"), getMaterial("VertexColor") ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 4", vec3(1,1,0), getMesh("Square"), getMaterial("VertexColor") ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 5", vec3(1,9,0), getMesh("Square"), getMaterial("Blue") ) );
+
+    m_pPlayer->SetController(m_pController);
 }
 
 Game::~Game()
@@ -106,6 +113,13 @@ void Game::ExecuteEvent(fw::Event* pEvent)
         m_Objects.erase(it);
 
         delete pObject;
+    }
+
+    // Pass "WM_CHAR" events to imgui to handle text input.
+    if( pEvent->GetType() == fw::CharEvent::GetStaticEventType() )
+    {
+        int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
+        m_pImGuiManager->AddInputCharacter( character );
     }
 }
 

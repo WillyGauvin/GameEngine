@@ -233,7 +233,7 @@ namespace fw {
         if( m_pGame )
         {
             WindowResizeEvent* pEvent = new WindowResizeEvent( width, height );
-            m_pGame->OnEvent( pEvent );
+            m_pGame->GetEventManager()->AddEvent(pEvent);
         }
     }
 

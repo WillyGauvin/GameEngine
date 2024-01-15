@@ -11,13 +11,18 @@
 
 #include "DataTypes.h"
 
+class VirtualController;
+
 class Player : public fw::GameObject
 {
 public:
     Player(Game* pGame, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial);
     virtual ~Player();
 
+    void SetController(VirtualController* pController) { m_pController = pController; }
+
     virtual void Update(float deltaTime) override;
 
 protected:
+    VirtualController* m_pController = nullptr;
 };

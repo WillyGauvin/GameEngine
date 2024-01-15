@@ -14,6 +14,8 @@
 
 class Player;
 
+class VirtualController;
+
 class Game : public fw::GameCore, fw::EventListener
 {
 public:
@@ -41,4 +43,6 @@ protected:
     fw::Camera* m_pCamera = nullptr;
     Player* m_pPlayer = nullptr;
     std::vector<fw::GameObject*> m_Objects;
+
+    VirtualController* m_pController;
 };

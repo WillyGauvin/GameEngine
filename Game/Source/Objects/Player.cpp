@@ -12,6 +12,7 @@
 #include "Game.h"
 #include "GameCore.h"
 #include "Objects/Player.h"
+#include "Objects/VirtualController.h"
 
 Player::Player(Game* pGame, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial)
     : fw::GameObject( pGame, name, pos, pMesh, pMaterial )
@@ -27,11 +28,27 @@ void Player::Update(float deltaTime)
     float speed = 4.0f;
 
     vec2 dir;
-    if( m_pGameCore->GetFramework()->IsKeyDown( 'W' ) ) dir.y++;
-    if( m_pGameCore->GetFramework()->IsKeyDown( 'S' ) ) dir.y--;
-    if( m_pGameCore->GetFramework()->IsKeyDown( 'A' ) ) dir.x--;
-    if( m_pGameCore->GetFramework()->IsKeyDown( 'D' ) ) dir.x++;
+
+
+    if (m_pController != nullptr)
+    {
+        if (m_pController->isActionHeld(VirtualController::Up)) dir.y++;
+        if (m_pController->isActionHeld(VirtualController::Down)) dir.y--;
+        if (m_pController->isActionHeld(VirtualController::Left)) dir.x--;
+        if (m_pController->isActionHeld(VirtualController::Right)) dir.x++;
+
+    }
+
     dir.Normalize();
 
     m_Position += dir * speed * deltaTime;
+
+    if (m_pController != nullptr)
+    {
+        if (m_pController->WasActionPressed(VirtualController::Teleport))
+        {
+            m_Position.x = fw::Random::Float(0, 10);
+            m_Position.y = fw::Random::Float(0, 10);
+        }
+    }
 }
