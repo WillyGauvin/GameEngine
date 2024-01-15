@@ -76,7 +76,7 @@ fw::Mesh* CreateCircleMesh()
     std::vector<uint16> indices;
 
     float angleInc = 2 * PI / numPoints;
-    float radius = 5.0f;
+    float radius = 2.0f;
 
     for (int i = 0; i < numPoints; i++)
     {

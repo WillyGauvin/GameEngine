@@ -16,7 +16,7 @@ class VirtualController;
 class Player : public fw::GameObject
 {
 public:
-    Player(Game* pGame, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial);
+    Player(fw::Scene* pScene, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial);
     virtual ~Player();
 
     void SetController(VirtualController* pController) { m_pController = pController; }

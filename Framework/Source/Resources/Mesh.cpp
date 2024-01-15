@@ -32,8 +32,8 @@ namespace fw {
 
     void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
     {
-        m_VBO = bgfx::createVertexBuffer( bgfx::makeRef(verts, vertsSize), vertexFormat );
-        m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
+        m_VBO = bgfx::createVertexBuffer( bgfx::copy(verts, vertsSize), vertexFormat );
+        m_IBO = bgfx::createIndexBuffer( bgfx::copy(indices, indicesSize) );
     }
 
     void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)

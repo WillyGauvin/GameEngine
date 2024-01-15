@@ -26,6 +26,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>( "Triangle", CreateTriangleMesh() );
     pResources->Add<fw::Mesh>( "Square", CreateSquareMesh() );
     pResources->Add<fw::Mesh>( "Sprite", CreateSpriteMesh() );
+    pResources->Add<fw::Mesh>("Circle", CreateCircleMesh());
 
     // Load some shaders.
     pResources->Add<fw::ShaderProgram>( "SolidColor", new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" ) );

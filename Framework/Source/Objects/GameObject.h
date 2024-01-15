@@ -18,11 +18,12 @@ namespace fw {
     class Material;
     class Mesh;
     class Uniforms;
+    class Scene;
 
     class GameObject
     {
     public:
-        GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
+        GameObject(Scene* scene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
         virtual ~GameObject();
 
         virtual void Update(float deltaTime);
@@ -44,7 +45,7 @@ namespace fw {
         void SetScale(vec3 scale) { m_Scale = scale; }
 
     protected:
-        GameCore* m_pGameCore = nullptr;
+        Scene* m_pScene = nullptr;
 
         std::string m_Name;
 

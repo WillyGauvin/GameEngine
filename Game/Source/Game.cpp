@@ -17,6 +17,7 @@
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
+#include "Scenes/JimmyScene.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -45,22 +46,25 @@ Game::Game(fw::FWCore& fwCore)
     // Load Resources.
     LoadResources( m_pResources );
 
+    //Create some Scenes
+    m_pJimmyScene = new JimmyScene(this);
     // Create some GameObjects.
-    m_pCamera = new fw::Camera( this, vec3(5,5,0) );
+    m_pCamera = new fw::Camera( m_pJimmyScene, vec3(5,5,0) );
 
     m_pController = new VirtualController(m_pEventManager);
 
 #define getMesh m_pResources->Get<fw::Mesh>
 #define getMaterial m_pResources->Get<fw::Material>
 
-    m_pPlayer = new Player( this, "Player", vec3(6,5,0), getMesh("Sprite"), getMaterial("MegaMan") );
+    m_pPlayer = new Player(m_pJimmyScene, "Player", vec3(6,5,0), getMesh("Sprite"), getMaterial("MegaMan") );
     m_Objects.push_back( m_pPlayer );
 
-    m_Objects.push_back( new fw::GameObject( this, "Object 1", vec3(0,0,0), getMesh("Triangle"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( this, "Object 2", vec3(10,10,0), getMesh("Triangle"), getMaterial("Blue") ) );
-    m_Objects.push_back( new fw::GameObject( this, "Object 3", vec3(5,5,0), getMesh("Square"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( this, "Object 4", vec3(1,1,0), getMesh("Square"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( this, "Object 5", vec3(1,9,0), getMesh("Square"), getMaterial("Blue") ) );
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 1", vec3(0,0,0), getMesh("Triangle"), getMaterial("VertexColor") ) );
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 2", vec3(10,10,0), getMesh("Triangle"), getMaterial("Blue") ) );
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 3", vec3(5,5,0), getMesh("Square"), getMaterial("VertexColor") ) );
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 4", vec3(1,1,0), getMesh("Square"), getMaterial("VertexColor") ) );
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 5", vec3(1,9,0), getMesh("Square"), getMaterial("Blue") ) );
+    m_Objects.push_back(new fw::GameObject(m_pJimmyScene, "Object 6", vec3(7, 2, 0), getMesh("Circle"), getMaterial("Blue")));
 
     m_pPlayer->SetController(m_pController);
 }
@@ -80,6 +84,8 @@ Game::~Game()
     delete m_pImGuiManager;
 
     delete m_pEventManager;
+    delete m_pController;
+    delete m_pJimmyScene;
 }
 
 void Game::CreateUniforms()
@@ -125,8 +131,10 @@ void Game::ExecuteEvent(fw::Event* pEvent)
 
 void Game::StartFrame(float deltaTime)
 {
+    m_pController->StartFrame();
     m_pImGuiManager->StartFrame( deltaTime );
     m_pEventManager->ProcessEvents();
+    
 }
 
 void Game::OnEvent(fw::Event* pEvent)

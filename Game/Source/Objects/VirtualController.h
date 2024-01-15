@@ -26,8 +26,8 @@ public:
 
 	void StartFrame();
 	bool isActionHeld(Actions action) { return (m_Actions & action); }
-	bool WasActionPressed(Actions action) { return !(m_OldActions & action); }
-	bool WasActionReleased(Actions action) { return (m_OldActions & ~m_Actions); }
+	bool WasActionPressed(Actions action) { return (~m_OldActions & action && m_Actions & action); }
+	bool WasActionReleased(Actions action) { return (m_OldActions & action && ~m_Actions & action); }
 
 	//Math doesn't work
 protected:

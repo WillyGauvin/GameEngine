@@ -14,17 +14,18 @@
 #include "GameCore.h"
 #include "Utility/Uniforms.h"
 #include "EventSystem/EventManager.h"
+#include "Objects/Scene.h"
 
 namespace fw {
 
-    Camera::Camera(GameCore* pGameCore, vec3 pos)
-        : GameObject( pGameCore, "Camera", pos, nullptr, nullptr )
+    Camera::Camera(Scene* pScene, vec3 pos)
+        : GameObject( pScene, "Camera", pos, nullptr, nullptr )
     {
-        FWCore* pFW = pGameCore->GetFramework();
+        FWCore* pFW = m_pScene->GetGameCore()->GetFramework();
         SetAspectRatio( (float)pFW->GetWindowClientWidth()/pFW->GetWindowClientHeight() );
 
         //Register For Events
-        m_pGameCore->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
+        m_pScene->GetGameCore()->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
     }
 
     Camera::~Camera()
@@ -39,15 +40,15 @@ namespace fw {
     {
         if (pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType())
         {
-            int width = m_pGameCore->GetFramework()->GetWindowClientWidth();
-            int height = m_pGameCore->GetFramework()->GetWindowClientHeight();
+            int width = m_pScene->GetGameCore()->GetFramework()->GetWindowClientWidth();
+            int height = m_pScene->GetGameCore()->GetFramework()->GetWindowClientHeight();
             SetAspectRatio((float)width / height);
         }
     }
 
     void Camera::Enable(int viewID)
     {
-        Uniforms* pUniforms = m_pGameCore->GetUniforms();
+        Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
         vec2 scaleWithAspectRatio = m_ProjectionScale * vec2( 1.0f/m_AspectRatio, 1 );
     
         // Setup uniforms.

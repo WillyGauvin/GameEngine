@@ -14,11 +14,12 @@
 #include "GameObject.h"
 #include "Resources/Mesh.h"
 #include "Utility/Uniforms.h"
+#include "Objects/Scene.h"
 
 namespace fw {
 
-    GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
-        : m_pGameCore( pGameCore )
+    GameObject::GameObject(Scene* scene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
+        : m_pScene(scene)
         , m_Name( name )
         , m_Position( pos )
         , m_pMesh( pMesh )
@@ -36,7 +37,7 @@ namespace fw {
 
     void GameObject::Draw(Camera* pCamera)
     {
-        Uniforms* pUniforms = m_pGameCore->GetUniforms();
+        Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
         bgfx::setUniform( pUniforms->GetUniform("u_Scale"), &m_Scale.x );
         bgfx::setUniform( pUniforms->GetUniform("u_Rotation"), &m_Rotation.x );
         bgfx::setUniform( pUniforms->GetUniform("u_Position"), &m_Position.x );

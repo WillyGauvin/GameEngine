@@ -40,3 +40,4 @@
 #include "Resources/Texture.h"
 #include "Utility/Uniforms.h"
 #include "Utility/Utility.h"
+#include "Objects/Scene.h"
