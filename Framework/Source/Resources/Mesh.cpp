@@ -36,7 +36,7 @@ namespace fw {
         m_IBO = bgfx::createIndexBuffer( bgfx::copy(indices, indicesSize) );
     }
 
-    void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
+    void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial)
     {
         // Set vertex and index buffer.
         bgfx::setVertexBuffer( 0, m_VBO );
@@ -48,11 +48,6 @@ namespace fw {
         // Set render states.
         uint64_t state = pMaterial->GetBGFXRenderState() | BGFX_STATE_MSAA;
         bgfx::setState( state );
-
-        if( worldMat )
-        {
-            bgfx::setTransform( &worldMat->m11 );
-        }
 
         // Submit primitive for rendering to the selected view.
         bgfx::submit( viewID, pMaterial->GetShader()->GetProgram() );

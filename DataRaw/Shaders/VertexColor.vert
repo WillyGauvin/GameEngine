@@ -11,7 +11,7 @@ vec2 TransformIntoWorldSpace(vec2 pos);
 
 void main()
 {
-	vec2 objectSpacePosition = a_position;
+	vec2 objectSpacePosition = a_position.xy;
 	vec2 worldSpacePosition = TransformIntoWorldSpace( objectSpacePosition );
 	vec2 viewSpacePosition = worldSpacePosition - u_CameraPosition.xy;
 	vec2 clipSpacePosition = viewSpacePosition * u_ProjectionScale.xy;

@@ -93,9 +93,16 @@ void Game::CreateUniforms()
     assert( m_pUniforms == nullptr );
 
     m_pUniforms = new fw::Uniforms();
+
+    //Once I affect all the other shaders to use mat4's , I can rip our the 3 lines below
     m_pUniforms->CreateUniform( "u_Position", bgfx::UniformType::Vec4 );
     m_pUniforms->CreateUniform( "u_Rotation", bgfx::UniformType::Vec4 );
     m_pUniforms->CreateUniform( "u_Scale", bgfx::UniformType::Vec4 );
+    
+    m_pUniforms->CreateUniform("u_MatWorld", bgfx::UniformType::Mat4);
+    m_pUniforms->CreateUniform("u_MatView", bgfx::UniformType::Mat4);
+    m_pUniforms->CreateUniform("u_MatProj", bgfx::UniformType::Mat4);
+
 
     m_pUniforms->CreateUniform( "u_CameraPosition", bgfx::UniformType::Vec4 );
     m_pUniforms->CreateUniform( "u_ProjectionScale", bgfx::UniformType::Vec4 );
@@ -106,6 +113,8 @@ void Game::CreateUniforms()
     m_pUniforms->CreateUniform( "u_UVOffset", bgfx::UniformType::Vec4 );
 
     m_pUniforms->CreateUniform( "u_Time", bgfx::UniformType::Vec4 );
+ 
+
 }
 
 void Game::ExecuteEvent(fw::Event* pEvent)

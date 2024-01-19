@@ -54,6 +54,14 @@ namespace fw {
         // Setup uniforms.
         bgfx::setUniform( pUniforms->GetUniform("u_CameraPosition"), &m_Position, 1 );
         bgfx::setUniform( pUniforms->GetUniform("u_ProjectionScale"), &scaleWithAspectRatio, 1 );
+
+        mat4 viewMatrix;
+        viewMatrix.CreateLookAtView(m_Position + vec3(0,0,-25), vec3(0, 1, 0), m_Position + vec3(0, 0, 3));
+        bgfx::setUniform(pUniforms->GetUniform("u_MatView"), &viewMatrix, 1);
+
+        mat4 projMatrix;
+        projMatrix.CreatePerspectiveVFoV(45, m_AspectRatio, 0.01f, 100.0f);
+        bgfx::setUniform(pUniforms->GetUniform("u_MatProj"), &projMatrix);
     }
 
 } // namespace fw
