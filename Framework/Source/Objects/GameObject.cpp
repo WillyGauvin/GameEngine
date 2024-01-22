@@ -14,7 +14,7 @@
 #include "GameObject.h"
 #include "Resources/Mesh.h"
 #include "Utility/Uniforms.h"
-#include "Objects/Scene.h"
+#include "SceneSystem/Scene.h"
 
 namespace fw {
 

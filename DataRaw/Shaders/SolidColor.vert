@@ -5,7 +5,6 @@ $input a_position
 uniform mat4 u_MatWorld;
 uniform mat4 u_MatView;
 uniform mat4 u_MatProj;
-uniform vec4 u_ProjectionScale;
 
 void main()
 {

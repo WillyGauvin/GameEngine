@@ -14,7 +14,7 @@
 #include "GameCore.h"
 #include "Utility/Uniforms.h"
 #include "EventSystem/EventManager.h"
-#include "Objects/Scene.h"
+#include "SceneSystem/Scene.h"
 
 namespace fw {
 

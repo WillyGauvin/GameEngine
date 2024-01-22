@@ -64,7 +64,7 @@ Game::Game(fw::FWCore& fwCore)
     m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 3", vec3(5,5,0), getMesh("Square"), getMaterial("VertexColor") ) );
     m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 4", vec3(1,1,0), getMesh("Square"), getMaterial("VertexColor") ) );
     m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 5", vec3(1,9,0), getMesh("Square"), getMaterial("Blue") ) );
-    m_Objects.push_back(new fw::GameObject(m_pJimmyScene, "Object 6", vec3(7, 2, 0), getMesh("Circle"), getMaterial("Blue")));
+    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 6", vec3(7,2,0), getMesh("Circle"), getMaterial("Blue") ) );
 
     m_pPlayer->SetController(m_pController);
 }

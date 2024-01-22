@@ -82,6 +82,8 @@ namespace fw {
         if( m_RenderStateFlags & RenderStateFlag::CullCW ) bgfxRenderState |= BGFX_STATE_CULL_CW;
         if( m_RenderStateFlags & RenderStateFlag::CullCCW ) bgfxRenderState |= BGFX_STATE_CULL_CCW;
 
+        bgfxRenderState |= BGFX_STATE_WRITE_Z;
+
         bgfxRenderState |= (uint64)BGFX_STATE_DEPTH_TEST_LESS + (uint64)m_DepthTest;
 
         bgfxRenderState |= GetBGFXAlphaState();
