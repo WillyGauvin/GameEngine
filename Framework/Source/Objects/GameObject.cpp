@@ -15,6 +15,7 @@
 #include "Resources/Mesh.h"
 #include "Utility/Uniforms.h"
 #include "SceneSystem/Scene.h"
+#include "Component/ComponentManager.h"
 
 namespace fw {
 
@@ -47,6 +48,29 @@ namespace fw {
         bgfx::setUniform(pUniforms->GetUniform("u_MatWorld"), &transform);
 
         m_pMesh->Draw( 0, pUniforms, m_pMaterial);
+    }
+
+    void GameObject::Enable()
+    {
+        for (Component* component : m_Components)
+        {
+            m_pScene->GetComponentManager()->RemoveComponent(component);
+            m_pScene->GetComponentManager()->AddComponent(component);
+        }
+    }
+
+    void GameObject::Disable()
+    {
+        for (Component* component : m_Components)
+        {
+            m_pScene->GetComponentManager()->RemoveComponent(component);
+        }
+    }
+
+    void GameObject::AddComponent(Component* pComponent)
+    {
+        m_Components.push_back(pComponent);
+        m_pScene->GetComponentManager()->AddComponent(pComponent);
     }
 
 } // namespace fw

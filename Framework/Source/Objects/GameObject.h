@@ -19,6 +19,7 @@ namespace fw {
     class Mesh;
     class Uniforms;
     class Scene;
+    class Component;
 
     class GameObject
     {
@@ -39,10 +40,15 @@ namespace fw {
         vec3 GetRotation() { return m_Rotation; }
         vec3 GetScale() { return m_Scale; }
 
+        void Enable();
+        void Disable();
+
         // Setters.
         void SetPosition(vec3 pos) { m_Position = pos; }
         void SetRotation(vec3 rot) { m_Rotation = rot; }
         void SetScale(vec3 scale) { m_Scale = scale; }
+
+        void AddComponent(Component* pComponent);
 
     protected:
         Scene* m_pScene = nullptr;
@@ -55,6 +61,8 @@ namespace fw {
         vec3 m_Position = vec3(0, 0, 0);
         vec3 m_Rotation = vec3(0, 0, 0);
         vec3 m_Scale = vec3(1, 1, 1);
+
+        std::vector<Component*> m_Components;
     };
 
 } // namespace fw

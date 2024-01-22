@@ -40,7 +40,6 @@ namespace fw
 	void EventManager::RegisterListener(EventType event, EventListener* pEventListener)
 	{
 		m_Listeners[event].push_back(pEventListener);
-		int i = 0;
 	}
 }
 
