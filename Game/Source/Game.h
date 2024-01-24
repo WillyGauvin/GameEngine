@@ -28,25 +28,16 @@ public:
 
     virtual void ExecuteEvent(fw::Event* pEvent) override;
     virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
     virtual void Update(float deltaTime) override;
     virtual void Draw() override;
+    fw::ResourceManager* GetResourceManager() { return m_pResources; }
 
 protected:
-    // Editor Interface.
-    fw::ImGuiManager* m_pImGuiManager = nullptr;
-    void Editor_DisplayObjectList();
-    void Editor_DisplayResources();
 
     // Resources.
     fw::ResourceManager* m_pResources = nullptr;
 
-    // GameObjects and Helpers.
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    JimmyScene* m_pJimmyScene = nullptr;
 
     VirtualController* m_pController = nullptr;
-
-    JimmyScene* m_pJimmyScene = nullptr;
 };

@@ -25,7 +25,7 @@ namespace fw {
         SetAspectRatio( (float)pFW->GetWindowClientWidth()/pFW->GetWindowClientHeight() );
 
         //Register For Events
-        m_pScene->GetGameCore()->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
+        m_pScene->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
     }
 
     Camera::~Camera()

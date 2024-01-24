@@ -13,7 +13,6 @@
 #include "Game.h"
 #include "LoadResources.h"
 #include "Objects/Player.h"
-#include "Events/GameEvents.h"
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
@@ -28,14 +27,7 @@ Game::Game(fw::FWCore& fwCore)
     bgfx::setViewRect( viewID, 0, 0, m_FWCore.GetWindowClientWidth(), m_FWCore.GetWindowClientHeight() );
 
     // Create some manager objects.
-    m_pImGuiManager = new fw::ImGuiManager( &m_FWCore, 1 );
     m_pResources = new fw::ResourceManager();
-    m_pEventManager = new fw::EventManager(this);
-
-    //Register for Events
-    GetEventManager()->RegisterListener(RemoveFromGameEvent::GetStaticEventType(), this);
-    GetEventManager()->RegisterListener(fw::CharEvent::GetStaticEventType(), this);
-
 
     // Create uniforms.
     CreateUniforms();
@@ -48,43 +40,13 @@ Game::Game(fw::FWCore& fwCore)
 
     //Create some Scenes
     m_pJimmyScene = new JimmyScene(this);
-    // Create some GameObjects.
-    m_pCamera = new fw::Camera( m_pJimmyScene, vec3(5,5,0) );
-
-    m_pController = new VirtualController(m_pEventManager);
-
-#define getMesh m_pResources->Get<fw::Mesh>
-#define getMaterial m_pResources->Get<fw::Material>
-
-    m_pPlayer = new Player(m_pJimmyScene, "Player", vec3(6,5,0), getMesh("Sprite"), getMaterial("MegaMan") );
-    m_Objects.push_back( m_pPlayer );
-
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 1", vec3(0,0,0), getMesh("Triangle"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 2", vec3(10,10,0), getMesh("Triangle"), getMaterial("Blue") ) );
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 3", vec3(5,5,0), getMesh("Square"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 4", vec3(1,1,0), getMesh("Square"), getMaterial("VertexColor") ) );
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 5", vec3(1,9,0), getMesh("Square"), getMaterial("Blue") ) );
-    m_Objects.push_back( new fw::GameObject( m_pJimmyScene, "Object 6", vec3(7,2,0), getMesh("Circle"), getMaterial("Blue") ) );
-
-    m_pPlayer->SetController(m_pController);
+    m_pCurrentScene = m_pJimmyScene;
 }
 
 Game::~Game()
 {
-    for( fw::GameObject* pObject : m_Objects )
-    {
-        delete pObject;
-    }
-    
-    delete m_pCamera;
-
     delete m_pResources;
     delete m_pUniforms;
-
-    delete m_pImGuiManager;
-
-    delete m_pEventManager;
-    delete m_pController;
     delete m_pJimmyScene;
 }
 
@@ -119,129 +81,20 @@ void Game::CreateUniforms()
 
 void Game::ExecuteEvent(fw::Event* pEvent)
 {
-    if (pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType())
-    {
-        RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>(pEvent);
-        fw::GameObject* pObject = pRemoveFromGameEvent->GetGameObject();
 
-        auto it = std::find(m_Objects.begin(), m_Objects.end(), pObject);
-        m_Objects.erase(it);
-
-        delete pObject;
-    }
-
-    // Pass "WM_CHAR" events to imgui to handle text input.
-    if( pEvent->GetType() == fw::CharEvent::GetStaticEventType() )
-    {
-        int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
-        m_pImGuiManager->AddInputCharacter( character );
-    }
 }
 
 void Game::StartFrame(float deltaTime)
 {
-    m_pController->StartFrame();
-    m_pImGuiManager->StartFrame( deltaTime );
-    m_pEventManager->ProcessEvents();
-    
-}
-
-void Game::OnEvent(fw::Event* pEvent)
-{
-    // Process events.
-
-    // Remove object from GameObject list and delete it.
-    /*if( pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType() )
-    {
-        RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>( pEvent );
-        fw::GameObject* pObject = pRemoveFromGameEvent->GetGameObject();
-
-        auto it = std::find( m_Objects.begin(), m_Objects.end(), pObject );
-        m_Objects.erase( it );
-
-        delete pObject;
-    }*/
-
-    // Set the new aspect ratio in the camera.
-    /*if( pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType() )
-    {
-        int width = m_FWCore.GetWindowClientWidth();
-        int height = m_FWCore.GetWindowClientHeight();
-
-        m_pCamera->SetAspectRatio( (float)width/height );
-    }*/
-
-    // Pass "WM_CHAR" events to imgui to handle text input.
-    /*if( pEvent->GetType() == fw::CharEvent::GetStaticEventType() )
-    {
-        int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
-        m_pImGuiManager->AddInputCharacter( character );
-    }*/
+    m_pCurrentScene->StartFrame(deltaTime);
 }
 
 void Game::Update(float deltaTime)
 {
-    if( m_FWCore.IsKeyDown('X') )
-    {
-        if( m_Objects.size() > 1 )
-        {
-            RemoveFromGameEvent* pEvent = new RemoveFromGameEvent(m_Objects[1]);
-            m_pEventManager->AddEvent(pEvent);
-        }
-    }
-
-    for( fw::GameObject* pObject : m_Objects )
-    {
-        pObject->Update( deltaTime );
-    }
-
-    m_pCamera->Update( deltaTime );
-
-    Editor_DisplayObjectList();
-    Editor_DisplayResources();
+    m_pCurrentScene->Update(deltaTime);
 }
 
 void Game::Draw()
 {
-    int viewID = 0;
-
-    // Setup time uniforms.
-    float time = (float)fw::GetSystemTimeSinceGameStart();
-    bgfx::setUniform( m_pUniforms->GetUniform("u_Time"), &time );
-
-    // Program the view and proj uniforms from the camera.
-    m_pCamera->Enable( viewID );
-
-    // Draw all objects.
-    for( fw::GameObject* pObject : m_Objects )
-    {
-        pObject->Draw( m_pCamera );
-    }
-
-    m_pImGuiManager->EndFrame();
-}
-
-void Game::Editor_DisplayObjectList()
-{
-    ImGui::Begin( "Object List" );
-
-    for( fw::GameObject* pObject : m_Objects )
-    {
-        ImGui::Text( "%s", pObject->GetName().c_str() );
-    }
-
-    // Testing character input, get rid of this once you confirm its working.
-    int i = 50;
-    ImGui::InputInt( "Test", &i );
-
-    ImGui::End(); // "Object List"
-}
-
-void Game::Editor_DisplayResources()
-{
-    ImGui::Begin("Resources");
-
-    m_pResources->Editor_DisplayResourceLists();
-
-    ImGui::End(); // "Resources"
+    m_pCurrentScene->Draw();
 }

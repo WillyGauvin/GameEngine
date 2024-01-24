@@ -16,6 +16,7 @@
 #include "EventSystem/Events.h"
 #include "Utility/Utility.h"
 #include "EventSystem/EventManager.h"
+#include "SceneSystem/Scene.h"
 
 namespace fw {
 
@@ -233,7 +234,7 @@ namespace fw {
         if( m_pGame )
         {
             WindowResizeEvent* pEvent = new WindowResizeEvent( width, height );
-            m_pGame->GetEventManager()->AddEvent(pEvent);
+            m_pGame->GetCurrentScene()->GetEventManager()->AddEvent(pEvent);
         }
     }
 
@@ -449,7 +450,7 @@ namespace fw {
             {
                 // Send a char event to the event manager.
                 CharEvent* pEvent = new CharEvent( (uint32)wParam );
-                pFWCore->m_pGame->GetEventManager()->AddEvent(pEvent);
+                pFWCore->m_pGame->GetCurrentScene()->GetEventManager()->AddEvent(pEvent);
             }
             return 0;
 
@@ -470,7 +471,7 @@ namespace fw {
                         InputEvent::DeviceState::Pressed,
                         (uint32)wParam );
 
-                    pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
+                    pFWCore->m_pGame->GetCurrentScene()->GetEventManager()->AddEvent( pEvent );
                 }
             }
             return 0;
@@ -485,7 +486,7 @@ namespace fw {
                     InputEvent::DeviceState::Released,
                     (uint32)wParam );
 
-                pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
+                pFWCore->m_pGame->GetCurrentScene()->GetEventManager()->AddEvent( pEvent );
             }
             return 0;
 

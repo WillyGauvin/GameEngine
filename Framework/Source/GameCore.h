@@ -15,6 +15,7 @@ namespace fw {
     class FWCore;
     class Uniforms;
     class EventManager;
+    class Scene;
 
     class GameCore
     {
@@ -23,19 +24,18 @@ namespace fw {
         virtual ~GameCore() = 0 {}
 
         virtual void StartFrame(float deltaTime) = 0;
-        virtual void OnEvent(Event* pEvent) = 0;
         virtual void Update(float deltaTime) = 0;
         virtual void Draw() = 0;
 
         // Getters.
         FWCore* GetFramework() { return &m_FWCore; }
         Uniforms* GetUniforms() { return m_pUniforms; }
-        EventManager* GetEventManager() { return m_pEventManager; }
+        virtual Scene* GetCurrentScene() { return m_pCurrentScene; }
 
     protected:
         FWCore& m_FWCore;
 
-        EventManager* m_pEventManager = nullptr;
+        Scene* m_pCurrentScene = nullptr;
         // Resources.
         Uniforms* m_pUniforms = nullptr;
     };

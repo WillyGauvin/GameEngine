@@ -115,10 +115,6 @@ void ShaderCompilerGame::StartFrame(float deltaTime)
 {
 }
 
-void ShaderCompilerGame::OnEvent(fw::Event* pEvent)
-{
-}
-
 void ShaderCompilerGame::Update(float deltaTime)
 {
 }

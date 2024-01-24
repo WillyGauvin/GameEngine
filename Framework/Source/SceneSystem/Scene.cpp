@@ -1,13 +1,33 @@
 #include "Scene.h"
 #include "Component/ComponentManager.h"
 
-fw::Scene::Scene(GameCore* pGameCore) :
-	m_pGameCore(pGameCore)
+namespace fw
 {
-	m_pComponentManager = new ComponentManager();
-}
+	Scene::Scene(GameCore* pGameCore) :
+		m_pGameCore(pGameCore)
+	{
+		m_pComponentManager = new ComponentManager();
+	}
 
-fw::Scene::~Scene()
-{
-	delete m_pComponentManager;
+	Scene::~Scene()
+	{
+		delete m_pComponentManager;
+	}
+
+	void Scene::ExecuteEvent(fw::Event* pEvent)
+	{
+	}
+
+	void Scene::StartFrame(float deltaTime)
+	{
+	}
+
+	void Scene::Update(float deltaTime)
+	{
+	}
+
+	void Scene::Draw()
+	{
+	}
+
 }
