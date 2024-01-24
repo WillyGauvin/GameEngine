@@ -35,6 +35,7 @@ namespace fw {
 
         Mesh* GetMesh() { return m_pMesh; }
         Material* GetMaterial() { return m_pMaterial; }
+        Scene* GetScene() { return m_pScene; }
 
         vec3 GetPosition() { return m_Position; }
         vec3 GetRotation() { return m_Rotation; }

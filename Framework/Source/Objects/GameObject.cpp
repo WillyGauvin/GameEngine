@@ -30,6 +30,10 @@ namespace fw {
 
     GameObject::~GameObject()
     {
+        for (Component* component : m_Components)
+        {
+            m_pScene->GetComponentManager()->RemoveComponent(component);
+        }
     }
 
     void GameObject::Update(float deltaTime)

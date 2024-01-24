@@ -14,4 +14,9 @@ namespace fw
 
 	}
 
+	void TransformComponent::UpdateSRT()
+	{
+		m_transform.CreateSRT(m_scale, m_rotation, m_position);
+	}
+
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreHeaders.h"
-
+#include "Math/Matrix.h"
 #include "Component.h"
 
 namespace fw
@@ -14,6 +14,8 @@ namespace fw
 
 		static const char* GetStaticType() { return "TransformComponent"; }
 		virtual const char* GetType() override { return GetStaticType(); }
+
+		void UpdateSRT();
 	
 	public:
 		vec3 m_scale;

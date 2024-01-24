@@ -1,7 +1,8 @@
 #include "RenderComponent.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
-
+#include "SceneSystem/Scene.h"
+#include "GameCore.h"
 namespace fw
 {
 
@@ -16,6 +17,11 @@ namespace fw
 	RenderComponent::~RenderComponent()
 	{
 
+	}
+
+	void RenderComponent::Render()
+	{
+		m_pMesh->Draw(0, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
 	}
 
 }

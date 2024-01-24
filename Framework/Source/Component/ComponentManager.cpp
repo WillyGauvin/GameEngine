@@ -44,11 +44,16 @@ namespace fw
 
 		for (int i = 0; i < ComponentList.size(); i++)
 		{
-			static_cast<TransformComponent*>(ComponentList[i]) ;
+			static_cast<TransformComponent*>(ComponentList[i])->UpdateSRT();
 		}
 	}
 	void ComponentManager::RenderMeshes()
 	{
+		std::vector<Component*>& ComponentList = m_Components["RenderComponent"];
 
+		for (int i = 0; i < ComponentList.size(); i++)
+		{
+			static_cast<RenderComponent*>(ComponentList[i])->Render();
+		}
 	}
 }
