@@ -16,6 +16,8 @@ class Player;
 
 class JimmyScene;
 
+class CubeScene;
+
 class VirtualController;
 
 class Game : public fw::GameCore, fw::EventListener
@@ -31,6 +33,9 @@ public:
     virtual void Update(float deltaTime) override;
     virtual void Draw() override;
     fw::ResourceManager* GetResourceManager() { return m_pResources; }
+    fw::ImGuiManager* GetGuiManager() { return m_pImGuiManager; }
+
+    void Editor_SelectScene();
 
 protected:
 
@@ -38,6 +43,7 @@ protected:
     fw::ResourceManager* m_pResources = nullptr;
 
     JimmyScene* m_pJimmyScene = nullptr;
+    CubeScene* m_pCubeScene = nullptr;
 
-    VirtualController* m_pController = nullptr;
+    fw::ImGuiManager* m_pImGuiManager = nullptr;
 };

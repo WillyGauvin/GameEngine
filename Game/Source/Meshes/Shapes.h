@@ -16,3 +16,4 @@ fw::Mesh* CreateTriangleMesh();
 fw::Mesh* CreateSquareMesh();
 fw::Mesh* CreateSpriteMesh();
 fw::Mesh* CreateCircleMesh();
+fw::Mesh* CreateCubeMesh(vec3 Objscale);

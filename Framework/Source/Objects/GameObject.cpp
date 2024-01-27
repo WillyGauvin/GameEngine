@@ -43,9 +43,6 @@ namespace fw {
     void GameObject::Draw(Camera* pCamera)
     {
         Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
-        bgfx::setUniform( pUniforms->GetUniform("u_Scale"), &m_Scale.x );
-        bgfx::setUniform( pUniforms->GetUniform("u_Rotation"), &m_Rotation.x );
-        bgfx::setUniform( pUniforms->GetUniform("u_Position"), &m_Position.x );
 
         mat4 transform;
         transform.CreateSRT(m_Scale, m_Rotation, m_Position);

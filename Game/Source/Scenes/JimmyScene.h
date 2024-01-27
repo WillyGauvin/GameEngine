@@ -18,13 +18,9 @@ public:
 	virtual void Draw() override;
 
 protected:
-
-	fw::Camera* m_pCamera = nullptr;
 	Player* m_pPlayer = nullptr;
-	std::vector<fw::GameObject*> m_Objects;
 	VirtualController* m_pController = nullptr;
 
 	void Editor_DisplayObjectList();
 	void Editor_DisplayResources();
-	void Editor_DisableEnable();
 };

@@ -17,6 +17,7 @@
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
 #include "Scenes/JimmyScene.h"
+#include "Scenes/CubeScene.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -28,6 +29,7 @@ Game::Game(fw::FWCore& fwCore)
 
     // Create some manager objects.
     m_pResources = new fw::ResourceManager();
+    m_pImGuiManager = new fw::ImGuiManager(GetFramework(), 1);
 
     // Create uniforms.
     CreateUniforms();
@@ -39,15 +41,19 @@ Game::Game(fw::FWCore& fwCore)
     LoadResources( m_pResources );
 
     //Create some Scenes
+    m_pCubeScene = new CubeScene(this);
     m_pJimmyScene = new JimmyScene(this);
-    m_pCurrentScene = m_pJimmyScene;
+    m_pCurrentScene = m_pCubeScene;
 }
 
 Game::~Game()
 {
     delete m_pResources;
+    delete m_pImGuiManager;
     delete m_pUniforms;
+
     delete m_pJimmyScene;
+    delete m_pCubeScene;
 }
 
 void Game::CreateUniforms()
@@ -56,11 +62,6 @@ void Game::CreateUniforms()
 
     m_pUniforms = new fw::Uniforms();
 
-    //Once I affect all the other shaders to use mat4's , I can rip our the 3 lines below
-    m_pUniforms->CreateUniform( "u_Position", bgfx::UniformType::Vec4 );
-    m_pUniforms->CreateUniform( "u_Rotation", bgfx::UniformType::Vec4 );
-    m_pUniforms->CreateUniform( "u_Scale", bgfx::UniformType::Vec4 );
-    
     m_pUniforms->CreateUniform("u_MatWorld", bgfx::UniformType::Mat4);
     m_pUniforms->CreateUniform("u_MatView", bgfx::UniformType::Mat4);
     m_pUniforms->CreateUniform("u_MatProj", bgfx::UniformType::Mat4);
@@ -76,25 +77,43 @@ void Game::CreateUniforms()
 
     m_pUniforms->CreateUniform( "u_Time", bgfx::UniformType::Vec4 );
  
-
+    
 }
 
 void Game::ExecuteEvent(fw::Event* pEvent)
 {
-
+    m_pCurrentScene->ExecuteEvent(pEvent);
 }
 
 void Game::StartFrame(float deltaTime)
 {
     m_pCurrentScene->StartFrame(deltaTime);
+    m_pImGuiManager->StartFrame(deltaTime);
 }
 
 void Game::Update(float deltaTime)
 {
+    Editor_SelectScene();
     m_pCurrentScene->Update(deltaTime);
 }
 
 void Game::Draw()
 {
     m_pCurrentScene->Draw();
+    m_pImGuiManager->EndFrame();
 }
+
+void Game::Editor_SelectScene()
+{
+    ImGui::Begin("SceneSelector");
+    if (ImGui::Button("Default"))
+    {
+        m_pCurrentScene = m_pJimmyScene;
+    }
+    if (ImGui::Button("Cube"))
+    {
+        m_pCurrentScene = m_pCubeScene;
+    }
+    ImGui::End();
+}
+

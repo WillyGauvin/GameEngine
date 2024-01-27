@@ -15,14 +15,14 @@ void InitVertexFormats();
 
 struct VertexFormat_PosColor
 {
-    vec2 pos;
+    vec3 pos;
     uint8 color[4];
 
     static void InitVertexLayout()
     {
         format
             .begin()
-            .add( bgfx::Attrib::Position, 2, bgfx::AttribType::Float )
+            .add( bgfx::Attrib::Position, 3, bgfx::AttribType::Float )
             .add( bgfx::Attrib::Color0,   4, bgfx::AttribType::Uint8, true )
             .end();
     };
@@ -32,14 +32,14 @@ struct VertexFormat_PosColor
 
 struct VertexFormat_PosUV
 {
-    vec2 pos;
+    vec3 pos;
     vec2 uv;
 
     static void InitVertexLayout()
     {
         format
             .begin()
-            .add( bgfx::Attrib::Position,  2, bgfx::AttribType::Float )
+            .add( bgfx::Attrib::Position,  3, bgfx::AttribType::Float )
             .add( bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float )
             .end();
     };

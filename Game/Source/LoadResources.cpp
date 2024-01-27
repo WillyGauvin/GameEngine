@@ -27,6 +27,12 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>( "Square", CreateSquareMesh() );
     pResources->Add<fw::Mesh>( "Sprite", CreateSpriteMesh() );
     pResources->Add<fw::Mesh>("Circle", CreateCircleMesh());
+    pResources->Add<fw::Mesh>("Cube", CreateCubeMesh(vec3(1, 1, 1)));
+    pResources->Add<fw::Mesh>("WideXCube", CreateCubeMesh(vec3(5, 1, 1)));
+    pResources->Add<fw::Mesh>("WideYCube", CreateCubeMesh(vec3(1, 5, 1)));
+    pResources->Add<fw::Mesh>("WideZCube", CreateCubeMesh(vec3(1, 1, 5)));
+
+
 
     // Load some shaders.
     pResources->Add<fw::ShaderProgram>( "SolidColor", new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" ) );
@@ -35,6 +41,7 @@ void LoadResources(fw::ResourceManager* pResources)
 
     // Load some textures.
     pResources->Add<fw::Texture>( "MegaMan", new fw::Texture( "Data/Textures/MegaMan.png" ) );
+    pResources->Add<fw::Texture>("Dice", new fw::Texture("Data/Textures/dice.png"));
 
     // Create some materials.
     pResources->Add<fw::Material>( "Red", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Red(), false ) );
@@ -42,4 +49,5 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>( "Green", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Green(), false ) );
     pResources->Add<fw::Material>( "VertexColor", new fw::Material( getShader("VertexColor"), nullptr, fw::color4f::White(), false ) );
     pResources->Add<fw::Material>( "MegaMan", new fw::Material( getShader("Texture"), getTexture("MegaMan"), fw::color4f::White(), true ) );
+    pResources->Add<fw::Material>("Dice", new fw::Material(getShader("Texture"), getTexture("Dice"), fw::color4f::White(), true));
 }

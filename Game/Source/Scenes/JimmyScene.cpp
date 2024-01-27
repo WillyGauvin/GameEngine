@@ -9,15 +9,9 @@
 JimmyScene::JimmyScene(fw::GameCore* pGameCore) 
 	: fw::Scene(pGameCore)
 {
-
-    m_pEventManager = new fw::EventManager(m_pGameCore);
-
-    m_pImGuiManager = new fw::ImGuiManager(m_pGameCore->GetFramework(), 1);
-
-    m_pCamera = new fw::Camera(this, vec3(5, 5, 0));
-
     m_pController = new VirtualController(m_pEventManager);
 
+    m_pCamera->SetPosition(vec3(5, 5, 0));
     //Register for Events
     GetEventManager()->RegisterListener(RemoveFromGameEvent::GetStaticEventType(), this);
     GetEventManager()->RegisterListener(fw::CharEvent::GetStaticEventType(), this);
@@ -42,12 +36,7 @@ JimmyScene::JimmyScene(fw::GameCore* pGameCore)
 
 JimmyScene::~JimmyScene()
 {
-    for (fw::GameObject* pObject : m_Objects)
-    {
-        delete pObject;
-    }
-
-    delete m_pCamera;
+    delete m_pController;
 }
 
 void JimmyScene::ExecuteEvent(fw::Event* pEvent)
@@ -67,14 +56,14 @@ void JimmyScene::ExecuteEvent(fw::Event* pEvent)
     if (pEvent->GetType() == fw::CharEvent::GetStaticEventType())
     {
         int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
-        m_pImGuiManager->AddInputCharacter(character);
+        Game* pGame = static_cast<Game*>(m_pGameCore);
+        pGame->GetGuiManager()->AddInputCharacter(character);
     }
 }
 
 void JimmyScene::StartFrame(float deltaTime)
 {
     m_pController->StartFrame();
-    m_pImGuiManager->StartFrame(deltaTime);
     m_pEventManager->ProcessEvents();
 }
 
@@ -82,7 +71,6 @@ void JimmyScene::Update(float deltaTime)
 {
     Editor_DisplayObjectList();
     Editor_DisplayResources();
-    Editor_DisableEnable();
 
     if (m_pGameCore->GetFramework()->IsKeyDown('X'))
     {
@@ -117,8 +105,6 @@ void JimmyScene::Draw()
     {
         pObject->Draw(m_pCamera);
     }
-
-    m_pImGuiManager->EndFrame();
 }
 
 void JimmyScene::Editor_DisplayObjectList()
@@ -146,21 +132,21 @@ void JimmyScene::Editor_DisplayResources()
     ImGui::End(); // "Resources"
 }
 
-void JimmyScene::Editor_DisableEnable()
-{
-    if (ImGui::Button("Enable"))
-    {
-        for (fw::GameObject* pObject : m_Objects)
-        {
-            pObject->Enable();
-        }
-    }
-    if (ImGui::Button("Disable"))
-    {
-        for (fw::GameObject* pObject : m_Objects)
-        {
-            pObject->Disable();
-        }
-    }
-
-}
+//void JimmyScene::Editor_DisableEnable()
+//{
+//    if (ImGui::Button("Enable"))
+//    {
+//        for (fw::GameObject* pObject : m_Objects)
+//        {
+//            pObject->Enable();
+//        }
+//    }
+//    if (ImGui::Button("Disable"))
+//    {
+//        for (fw::GameObject* pObject : m_Objects)
+//        {
+//            pObject->Disable();
+//        }
+//    }
+//
+//}

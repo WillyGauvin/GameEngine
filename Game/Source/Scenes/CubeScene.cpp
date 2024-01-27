@@ -8,14 +8,6 @@
 CubeScene::CubeScene(fw::GameCore* pGameCore)
 	: fw::Scene(pGameCore)
 {
-    m_pEventManager = new fw::EventManager(m_pGameCore);
-
-    m_pImGuiManager = new fw::ImGuiManager(m_pGameCore->GetFramework(), 1);
-
-    m_pCamera = new fw::Camera(this, vec3(5, 5, 0));
-
-    m_pController = new VirtualController(m_pEventManager);
-
     //Register for Events
     GetEventManager()->RegisterListener(RemoveFromGameEvent::GetStaticEventType(), this);
     GetEventManager()->RegisterListener(fw::CharEvent::GetStaticEventType(), this);
@@ -25,17 +17,21 @@ CubeScene::CubeScene(fw::GameCore* pGameCore)
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-    m_pPlayer = new Player(this, "Player", vec3(6, 5, 0), getMesh("Sprite"), getMaterial("MegaMan"));
-    m_Objects.push_back(m_pPlayer);
+    m_pRotatingDice = new fw::GameObject(this, "Dice", vec3(0, 0, 0), getMesh("Cube"), getMaterial("Dice"));
+    m_Objects.push_back(m_pRotatingDice);
+    m_Objects.push_back(new fw::GameObject(this, "Dice2", vec3(5, 5, 20), getMesh("Cube"), getMaterial("Dice")));
+    m_Objects.push_back(new fw::GameObject(this, "Dice3", vec3(-4, -2, -15), getMesh("Cube"), getMaterial("Dice")));
+    m_Objects.push_back(new fw::GameObject(this, "Dice2", vec3(0, 5, 30), getMesh("WideXCube"), getMaterial("Dice")));
+    m_Objects[m_Objects.size() - 1]->SetRotation(vec3(0,45,0));
+    m_Objects.push_back(new fw::GameObject(this, "Dice2", vec3(5, 0, 25), getMesh("WideYCube"), getMaterial("Dice")));
+    m_Objects[m_Objects.size() - 1]->SetRotation(vec3(45, 0, 0));
+    m_Objects.push_back(new fw::GameObject(this, "Dice2", vec3(5, -5, -8), getMesh("WideZCube"), getMaterial("Dice")));
+    m_Objects[m_Objects.size() - 1]->SetRotation(vec3(0, 0, 0));
 
-    m_Objects.push_back(new fw::GameObject(this, "Object 1", vec3(0, 0, 0), getMesh("Triangle"), getMaterial("VertexColor")));
-    m_Objects.push_back(new fw::GameObject(this, "Object 2", vec3(10, 10, 0), getMesh("Triangle"), getMaterial("Blue")));
-    m_Objects.push_back(new fw::GameObject(this, "Object 3", vec3(5, 5, 0), getMesh("Square"), getMaterial("VertexColor")));
-    m_Objects.push_back(new fw::GameObject(this, "Object 4", vec3(1, 1, 0), getMesh("Square"), getMaterial("VertexColor")));
-    m_Objects.push_back(new fw::GameObject(this, "Object 5", vec3(1, 9, 0), getMesh("Square"), getMaterial("Blue")));
-    m_Objects.push_back(new fw::GameObject(this, "Object 6", vec3(7, 2, 0), getMesh("Circle"), getMaterial("Blue")));
 
-    m_pPlayer->SetController(m_pController);
+
+
+
 }
 
 CubeScene::~CubeScene()
@@ -44,28 +40,45 @@ CubeScene::~CubeScene()
 
 void CubeScene::ExecuteEvent(fw::Event* pEvent)
 {
+    // Pass "WM_CHAR" events to imgui to handle text input.
+    if (pEvent->GetType() == fw::CharEvent::GetStaticEventType())
+    {
+        int character = static_cast<fw::CharEvent*>(pEvent)->GetValue();
+        Game* pGame = static_cast<Game*>(m_pGameCore);
+        pGame->GetGuiManager()->AddInputCharacter(character);
+    }
 }
 
 void CubeScene::StartFrame(float deltaTime)
 {
+    m_pEventManager->ProcessEvents();
 }
 
 void CubeScene::Update(float deltaTime)
 {
+    m_rotation += vec3(0, 0.3, 0.3);
+    if (m_rotation.y > 359)
+    {
+        m_rotation = vec3(45, 0, 0);
+    }
+    m_pRotatingDice->SetRotation(m_rotation);
+    m_pCamera->Update(deltaTime);
 }
 
 void CubeScene::Draw()
 {
-}
+    int viewID = 0;
 
-void CubeScene::Editor_DisplayObjectList()
-{
-}
+    // Setup time uniforms.
+    float time = (float)fw::GetSystemTimeSinceGameStart();
+    bgfx::setUniform(m_pGameCore->GetUniforms()->GetUniform("u_Time"), &time);
 
-void CubeScene::Editor_DisplayResources()
-{
-}
+    // Program the view and proj uniforms from the camera.
+    m_pCamera->Enable(viewID);
 
-void CubeScene::Editor_DisableEnable()
-{
+    // Draw all objects.
+    for (fw::GameObject* pObject : m_Objects)
+    {
+        pObject->Draw(m_pCamera);
+    }
 }

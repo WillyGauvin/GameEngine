@@ -5,7 +5,8 @@ namespace fw
 	class GameCore;
 	class ComponentManager;
 	class Event;
-	class ImGuiManager;
+	class Camera;
+	class GameObject;
 
 	class Scene : public EventListener
 	{
@@ -25,11 +26,14 @@ namespace fw
 
 	protected:
 		GameCore* m_pGameCore = nullptr;
+
+		//Managers
 		ComponentManager* m_pComponentManager = nullptr;
 		fw::EventManager* m_pEventManager = nullptr;
 
-		// Editor Interface.
-		ImGuiManager* m_pImGuiManager = nullptr;
+		//Objects
+		std::vector<GameObject*> m_Objects;
+		fw::Camera* m_pCamera = nullptr;
 
 	};
 }
