@@ -50,4 +50,5 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>( "VertexColor", new fw::Material( getShader("VertexColor"), nullptr, fw::color4f::White(), false ) );
     pResources->Add<fw::Material>( "MegaMan", new fw::Material( getShader("Texture"), getTexture("MegaMan"), fw::color4f::White(), true ) );
     pResources->Add<fw::Material>("Dice", new fw::Material(getShader("Texture"), getTexture("Dice"), fw::color4f::White(), true));
+
 }

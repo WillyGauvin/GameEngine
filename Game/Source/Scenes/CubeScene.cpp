@@ -28,10 +28,6 @@ CubeScene::CubeScene(fw::GameCore* pGameCore)
     m_Objects.push_back(new fw::GameObject(this, "Dice2", vec3(5, -5, -8), getMesh("WideZCube"), getMaterial("Dice")));
     m_Objects[m_Objects.size() - 1]->SetRotation(vec3(0, 0, 0));
 
-
-
-
-
 }
 
 CubeScene::~CubeScene()
