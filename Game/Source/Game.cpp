@@ -18,6 +18,7 @@
 #include "Objects/VirtualController.h"
 #include "Scenes/JimmyScene.h"
 #include "Scenes/CubeScene.h"
+#include "Scenes/PhysicsScene.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -43,7 +44,8 @@ Game::Game(fw::FWCore& fwCore)
     //Create some Scenes
     m_pCubeScene = new CubeScene(this);
     m_pJimmyScene = new JimmyScene(this);
-    m_pCurrentScene = m_pCubeScene;
+    m_pPhysicsScene = new PhysicsScene(this);
+    m_pCurrentScene = m_pPhysicsScene;
 }
 
 Game::~Game()
@@ -113,6 +115,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("Cube"))
     {
         m_pCurrentScene = m_pCubeScene;
+    }
+    if (ImGui::Button("Physics"))
+    {
+        m_pCurrentScene = m_pPhysicsScene;
     }
     ImGui::End();
 }

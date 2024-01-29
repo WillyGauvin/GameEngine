@@ -41,6 +41,7 @@ target_link_libraries( GameProject
 	bx
 	bimg
 	otherLibs
+	box2d
 )
 
 # Visual Studio Settings

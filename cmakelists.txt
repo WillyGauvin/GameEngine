@@ -23,6 +23,9 @@ add_subdirectory( Framework )
 
 add_subdirectory( Libraries )
 
+include ( GNUInstallDirs )
+add_subdirectory( Libraries/box2d/src )
+
 ###################
 # Game Project
 ###################

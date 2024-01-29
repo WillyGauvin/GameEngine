@@ -18,6 +18,8 @@ class JimmyScene;
 
 class CubeScene;
 
+class PhysicsScene;
+
 class VirtualController;
 
 class Game : public fw::GameCore, fw::EventListener
@@ -44,6 +46,7 @@ protected:
 
     JimmyScene* m_pJimmyScene = nullptr;
     CubeScene* m_pCubeScene = nullptr;
+    PhysicsScene* m_pPhysicsScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 };
