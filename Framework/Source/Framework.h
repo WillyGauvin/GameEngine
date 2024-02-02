@@ -24,20 +24,32 @@
 
 #include "FWCore.h"
 #include "GameCore.h"
+
+//Events
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "EventSystem/EventListener.h"
+
 #include "Imgui/ImGuiManager.h"
 #include "Math/MathHelpers.h"
 #include "Math/Matrix.h"
 #include "Math/Random.h"
+
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
+
 #include "Resources/Material.h"
 #include "Resources/Mesh.h"
+#include "Resources/Texture.h"
+
 #include "Resources/ResourceManager.h"
 #include "Resources/ShaderProgram.h"
-#include "Resources/Texture.h"
+
 #include "Utility/Uniforms.h"
 #include "Utility/Utility.h"
 #include "SceneSystem/Scene.h"
+
+#include "Component/Component.h"
+#include "Component/ComponentManager.h"
+#include "Component/RenderComponent.h"
+#include "Component/TransformComponent.h"

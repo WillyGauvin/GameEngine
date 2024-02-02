@@ -3,6 +3,9 @@
 #include "Resources/Material.h"
 #include "SceneSystem/Scene.h"
 #include "GameCore.h"
+#include "Utility/Uniforms.h"
+#include "Objects/GameObject.h"
+#include "Component/TransformComponent.h"
 namespace fw
 {
 
@@ -21,6 +24,9 @@ namespace fw
 
 	void RenderComponent::Render()
 	{
+		Uniforms* pUniforms = m_pGameObject->GetScene()->GetGameCore()->GetUniforms();
+		bgfx::setUniform(pUniforms->GetUniform("u_MatWorld"), &m_pGameObject->GetTransformComponent()->m_transform);
+
 		m_pMesh->Draw(0, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
 	}
 

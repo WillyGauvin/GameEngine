@@ -1,6 +1,10 @@
 #include <stdarg.h>
 #include <stdint.h>
+namespace fw
+{
+	class GameObject;
 
+}
 // Tunable Constants
 
 /// You can use this to change the length scale used by your game.
@@ -18,11 +22,11 @@ struct B2_API b2BodyUserData
 {
 	b2BodyUserData()
 	{
-		pointer = 0;
+		pGameObject = 0;
 	}
 
 	/// For legacy compatibility
-	uintptr_t pointer;
+	fw::GameObject* pGameObject;
 };
 
 /// You can define this to inject whatever data you want in b2Fixture

@@ -16,6 +16,7 @@ namespace fw
 	{
 		m_Components[pComponent->GetType()].push_back(pComponent);
 	}
+
 	void ComponentManager::RemoveComponent(Component* pComponent)
 	{
 		std::vector<Component*>& ComponentList = m_Components[pComponent->GetType()];
@@ -47,6 +48,7 @@ namespace fw
 			static_cast<TransformComponent*>(ComponentList[i])->UpdateSRT();
 		}
 	}
+
 	void ComponentManager::RenderMeshes()
 	{
 		std::vector<Component*>& ComponentList = m_Components["RenderComponent"];

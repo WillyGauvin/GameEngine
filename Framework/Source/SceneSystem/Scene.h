@@ -1,5 +1,10 @@
 #pragma once
 #include "EventSystem/EventListener.h"
+
+#define B2_USER_SETTINGS
+#include "../Libraries/box2d/include/box2d/box2d.h"
+
+
 namespace fw 
 {
 	class GameCore;
@@ -22,6 +27,7 @@ namespace fw
 		GameCore* GetGameCore() { return m_pGameCore; }
 		ComponentManager* GetComponentManager() { return m_pComponentManager; }
 		fw::EventManager* GetEventManager() { return m_pEventManager; }
+		b2World* GetWorld() { return m_pWorld; }
 
 
 	protected:
@@ -34,6 +40,9 @@ namespace fw
 		//Objects
 		std::vector<GameObject*> m_Objects;
 		fw::Camera* m_pCamera = nullptr;
+
+		//B2Box
+		b2World* m_pWorld = nullptr;
 
 	};
 }

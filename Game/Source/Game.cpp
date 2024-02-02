@@ -19,6 +19,8 @@
 #include "Scenes/JimmyScene.h"
 #include "Scenes/CubeScene.h"
 #include "Scenes/PhysicsScene.h"
+#include "Scenes/TestScene.h"
+#include "Component/ComponentManager.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -45,6 +47,7 @@ Game::Game(fw::FWCore& fwCore)
     m_pCubeScene = new CubeScene(this);
     m_pJimmyScene = new JimmyScene(this);
     m_pPhysicsScene = new PhysicsScene(this);
+    m_pTestScene = new TestScene(this);
     m_pCurrentScene = m_pPhysicsScene;
 }
 
@@ -119,6 +122,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("Physics"))
     {
         m_pCurrentScene = m_pPhysicsScene;
+    }
+    if (ImGui::Button("Test"))
+    {
+        m_pCurrentScene = m_pTestScene;
     }
     ImGui::End();
 }

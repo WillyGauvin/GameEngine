@@ -2,7 +2,6 @@
 
 #include "Framework.h"
 #include "DataTypes.h"
-#include "../Libraries/box2d/include/box2d/box2d.h"
 
 class PhysicsScene : public fw::Scene
 {
@@ -16,6 +15,4 @@ public:
 	virtual void Draw() override;
 
 protected:
-	b2World* m_pWorld = nullptr;
-	b2Body* m_groundBody = nullptr;
 };

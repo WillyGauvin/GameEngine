@@ -9,6 +9,7 @@
 
 #include "CoreHeaders.h"
 
+
 #include "Camera.h"
 #include "GameCore.h"
 #include "GameObject.h"
@@ -16,6 +17,7 @@
 #include "Utility/Uniforms.h"
 #include "SceneSystem/Scene.h"
 #include "Component/ComponentManager.h"
+#include "Component/TransformComponent.h"
 
 namespace fw {
 
@@ -26,6 +28,9 @@ namespace fw {
         , m_pMesh( pMesh )
         , m_pMaterial( pMaterial )
     {
+       
+
+   
     }
 
     GameObject::~GameObject()
@@ -38,6 +43,11 @@ namespace fw {
 
     void GameObject::Update(float deltaTime)
     {
+        if (m_pBody != nullptr)
+        {
+            b2Vec2 m_b2Pos = m_pBody->GetPosition();
+            m_Position = vec3(m_b2Pos.x, m_b2Pos.y, 0.0f);
+        }
     }
 
     void GameObject::Draw(Camera* pCamera)
@@ -72,6 +82,42 @@ namespace fw {
     {
         m_Components.push_back(pComponent);
         m_pScene->GetComponentManager()->AddComponent(pComponent);
+    }
+
+    fw::TransformComponent* GameObject::GetTransformComponent()
+    {
+        for (fw::Component* component : m_Components)
+        {
+            if (component->GetType() == "TransformComponent")
+            {
+                return static_cast<fw::TransformComponent*>(component);
+            }
+        }
+        return nullptr;
+    }
+
+    void GameObject::CreateBody(bool isDynamic)
+    {
+        b2BodyDef bodyDef;
+        if (isDynamic == true)
+        {
+            bodyDef.type = b2_dynamicBody;
+        }
+        else
+        {
+            bodyDef.type = b2_kinematicBody;
+        }
+
+        bodyDef.position = b2Vec2(m_Position.x, m_Position.y);
+        m_pBody = m_pScene->GetWorld()->CreateBody(&bodyDef);
+
+        b2CircleShape circleShape;
+        circleShape.m_radius = 1.0f;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &circleShape;
+        fixtureDef.density = 1.0f;
+        m_pBody->CreateFixture(&fixtureDef);
     }
 
 } // namespace fw

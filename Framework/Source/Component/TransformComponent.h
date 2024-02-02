@@ -9,7 +9,7 @@ namespace fw
 	class TransformComponent : public Component
 	{
 	public:
-		TransformComponent(GameObject* pGameObject);
+		TransformComponent(GameObject* pGameObject, vec3 position, vec3 rotation, vec3 scale);
 		virtual ~TransformComponent();
 
 		static const char* GetStaticType() { return "TransformComponent"; }

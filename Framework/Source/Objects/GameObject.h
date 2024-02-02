@@ -11,6 +11,10 @@
 
 #include "Math/Vector.h"
 
+#define B2_USER_SETTINGS
+#include "../Libraries/box2d/include/box2d/box2d.h"
+
+
 namespace fw {
 
     class Camera;
@@ -20,6 +24,7 @@ namespace fw {
     class Uniforms;
     class Scene;
     class Component;
+    class TransformComponent;
 
     class GameObject
     {
@@ -51,6 +56,10 @@ namespace fw {
 
         void AddComponent(Component* pComponent);
 
+        fw::TransformComponent* GetTransformComponent();
+
+        void CreateBody(bool isDynamic);
+
     protected:
         Scene* m_pScene = nullptr;
 
@@ -64,6 +73,8 @@ namespace fw {
         vec3 m_Scale = vec3(1, 1, 1);
 
         std::vector<Component*> m_Components;
+
+        b2Body* m_pBody = nullptr;
     };
 
 } // namespace fw
