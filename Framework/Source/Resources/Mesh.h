@@ -27,7 +27,7 @@ namespace fw {
         Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
         virtual ~Mesh();
 
-        static ResourceCategoryIDType GetResourceCategoryID() { return "Material"; }
+        static ResourceCategoryIDType GetResourceCategoryID() { return "Mesh"; }
 
         void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
 

@@ -16,6 +16,6 @@ namespace fw
 
 		virtual void BeginContact(b2Contact* contact) override;
 	protected:
-		EventManager* m_pEventManager;
+		EventManager* m_pEventManager = nullptr;
 	};
 }

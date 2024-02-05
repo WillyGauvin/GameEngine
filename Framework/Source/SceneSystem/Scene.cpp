@@ -3,7 +3,7 @@
 #include "EventSystem/EventManager.h"
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
-
+#include "MyContactListener.h"
 
 namespace fw
 {
@@ -15,6 +15,8 @@ namespace fw
 		m_pCamera = new Camera(this, vec3(0, 0, 0));
 		b2Vec2 gravity = b2Vec2(0, -10);
 		m_pWorld = new b2World(gravity);
+		m_pContactListener = new MyContactListener(m_pEventManager);
+		m_pWorld->SetContactListener(m_pContactListener);
 	}
 
 	Scene::~Scene()
@@ -45,6 +47,66 @@ namespace fw
 
 	void Scene::Draw()
 	{
+	}
+
+	void Scene::CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos)
+	{
+		// Declare a joint definition object
+		b2RevoluteJointDef jointdef;
+
+		// Select a world space anchor point
+		b2Vec2 anchorpos(pos.x, pos.y);
+
+
+		// Initialize the motor on the joint
+		jointdef.enableMotor = true;
+		jointdef.motorSpeed = 20; // positive values will go counter-clockwise, negative clockwise
+		jointdef.maxMotorTorque = 50;
+
+		// Initialize the joint’s angle limits, in radians
+	/*	jointdef.enableLimit = true;
+		jointdef.lowerAngle = -60 * PI / 180;
+		jointdef.upperAngle = 60 * PI / 180;*/
+
+
+		// Initialize the joint definition with the 2 bodies and the world space anchor
+		jointdef.Initialize(ObjA, ObjB, anchorpos);
+
+		// Create the actual joint in the world
+		m_pWorld->CreateJoint(&jointdef);
+
+
+	}
+
+
+	void Scene::CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis)
+	{
+		// Declare a joint definition object
+		b2PrismaticJointDef jointdef;
+
+		// Select a world space anchor point
+		b2Vec2 anchorpos(pos.x, pos.y);
+
+		b2Vec2 newaxis(axis.x, axis.y);
+
+		// Initialize the motor on the joint
+		jointdef.enableMotor = true;
+		jointdef.motorSpeed = -20; // positive values will go counter-clockwise, negative clockwise
+		jointdef.maxMotorForce = 20;
+
+		// Initialize the joint’s angle limits, in radians
+	/*	jointdef.enableLimit = true;
+		jointdef.lowerAngle = -60 * PI / 180;
+		jointdef.upperAngle = 60 * PI / 180;*/
+
+
+		// Initialize the joint definition with the 2 bodies and the world space anchor
+		jointdef.Initialize(ObjA, ObjB, anchorpos, newaxis);
+
+		// Create the actual joint in the world
+		m_pWorld->CreateJoint(&jointdef);
+
+
 	}
 
 }

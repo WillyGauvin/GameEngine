@@ -25,6 +25,7 @@ namespace fw {
     class Scene;
     class Component;
     class TransformComponent;
+    class MyContactListener;
 
     class GameObject
     {
@@ -59,6 +60,8 @@ namespace fw {
         fw::TransformComponent* GetTransformComponent();
 
         void CreateBody(bool isDynamic);
+
+        b2Body* GetBody() { return m_pBody; }
 
     protected:
         Scene* m_pScene = nullptr;

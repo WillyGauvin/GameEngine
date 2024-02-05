@@ -2,7 +2,8 @@
 
 namespace fw
 {
-	MyContactListener::MyContactListener(EventManager* pManager)
+	MyContactListener::MyContactListener(EventManager* pManager) :
+		m_pEventManager(pManager)
 	{
 	}
 

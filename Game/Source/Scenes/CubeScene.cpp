@@ -52,7 +52,7 @@ void CubeScene::StartFrame(float deltaTime)
 
 void CubeScene::Update(float deltaTime)
 {
-    m_rotation += vec3(0, 0.3, 0.3);
+    m_rotation += vec3(0.0f, 0.3f, 0.3f);
     if (m_rotation.y > 359)
     {
         m_rotation = vec3(45, 0, 0);

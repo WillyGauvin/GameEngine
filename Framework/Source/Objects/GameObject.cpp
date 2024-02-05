@@ -9,6 +9,8 @@
 
 #include "CoreHeaders.h"
 
+#define B2_USER_SETTINGS
+#include "../Libraries/box2d/include/box2d/box2d.h"
 
 #include "Camera.h"
 #include "GameCore.h"
@@ -18,6 +20,7 @@
 #include "SceneSystem/Scene.h"
 #include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
+#include "MyContactListener.h"
 
 namespace fw {
 
@@ -28,9 +31,6 @@ namespace fw {
         , m_pMesh( pMesh )
         , m_pMaterial( pMaterial )
     {
-       
-
-   
     }
 
     GameObject::~GameObject()
@@ -39,6 +39,7 @@ namespace fw {
         {
             m_pScene->GetComponentManager()->RemoveComponent(component);
         }
+        delete m_pContactListener;
     }
 
     void GameObject::Update(float deltaTime)
@@ -118,6 +119,9 @@ namespace fw {
         fixtureDef.shape = &circleShape;
         fixtureDef.density = 1.0f;
         m_pBody->CreateFixture(&fixtureDef);
+
+   
+
     }
 
 } // namespace fw

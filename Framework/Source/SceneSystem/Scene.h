@@ -1,5 +1,6 @@
 #pragma once
 #include "EventSystem/EventListener.h"
+#include "Math/Vector.h"
 
 #define B2_USER_SETTINGS
 #include "../Libraries/box2d/include/box2d/box2d.h"
@@ -30,6 +31,11 @@ namespace fw
 		b2World* GetWorld() { return m_pWorld; }
 
 
+		void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
+
+		void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
+
+
 	protected:
 		GameCore* m_pGameCore = nullptr;
 
@@ -43,6 +49,7 @@ namespace fw
 
 		//B2Box
 		b2World* m_pWorld = nullptr;
+		MyContactListener* m_pContactListener = nullptr;
 
 	};
 }
