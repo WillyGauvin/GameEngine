@@ -1,6 +1,7 @@
 #include "ComponentManager.h"
 #include "Component/TransformComponent.h"
 #include "Component/RenderComponent.h"
+#include "Component/PhysicsComponent.h"
 
 namespace fw
 {
@@ -37,6 +38,17 @@ namespace fw
 	std::vector<Component*>& ComponentManager::GetComponentOfType(ComponentType type)
 	{
 		return m_Components[type];
+	}
+
+
+	void ComponentManager::UpdateBodies(b2World* world, float deltaTime)
+	{
+		world->Step(deltaTime, 8, 3);
+		std::vector<Component*>& ComponentList = m_Components["PhysicsComponent"];
+		for (int i = 0; i < ComponentList.size(); i++)
+		{
+			static_cast<PhysicsComponent*>(ComponentList[i])->UpdateBody();
+		}
 	}
 
 	void ComponentManager::UpdateTransforms()

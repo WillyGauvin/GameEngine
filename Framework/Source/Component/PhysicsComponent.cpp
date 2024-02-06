@@ -2,7 +2,8 @@
 #include "Component/TransformComponent.h"
 namespace fw
 {
-	PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic) : Component(pGameObject)
+	PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic) : Component(pGameObject),
+        m_pWorld(pWorld)
 	{
         b2BodyDef bodyDef;
         if (isDynamic == true)
@@ -14,7 +15,7 @@ namespace fw
             bodyDef.type = b2_kinematicBody;
         }
 
-        bodyDef.position = b2Vec2(m_pGameObject->GetPosition().x, m_pGameObject->GetPosition().y);
+        bodyDef.position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
         m_pBody = m_pWorld->CreateBody(&bodyDef);
 
 	}
@@ -23,6 +24,13 @@ namespace fw
 	{
 
 	}
+
+    void PhysicsComponent::UpdateBody()
+    {
+        //b2Vec2 rotation = m_pBody->GetTransform().q.GetXAxis();
+        vec3 position = vec3(m_pBody->GetTransform().p.x, m_pBody->GetTransform().p.y, 0);
+        m_pGameObject->GetTransformComponent()->UpdatePosition(position);
+    }
 
     void PhysicsComponent::SetCircle(float radius)
     {

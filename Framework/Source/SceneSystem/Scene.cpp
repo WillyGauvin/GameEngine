@@ -10,13 +10,14 @@ namespace fw
 	Scene::Scene(GameCore* pGameCore) :
 		m_pGameCore(pGameCore)
 	{
-		m_pComponentManager = new ComponentManager();
-		m_pEventManager = new EventManager(m_pGameCore);
-		m_pCamera = new Camera(this, vec3(0, 0, 0));
 		b2Vec2 gravity = b2Vec2(0, -10);
 		m_pWorld = new b2World(gravity);
 		m_pContactListener = new MyContactListener(m_pEventManager);
 		m_pWorld->SetContactListener(m_pContactListener);
+
+		m_pComponentManager = new ComponentManager();
+		m_pEventManager = new EventManager(m_pGameCore);
+		m_pCamera = new Camera(this, vec3(0, 0, 0), vec3(0, 1, 0), vec3(0, 0, 3));
 	}
 
 	Scene::~Scene()

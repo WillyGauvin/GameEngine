@@ -16,7 +16,7 @@ class VirtualController;
 class Player : public fw::GameObject
 {
 public:
-    Player(fw::Scene* pScene, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial);
+    Player(fw::Scene* pScene, std::string name);
     virtual ~Player();
 
     void SetController(VirtualController* pController) { m_pController = pController; }
@@ -25,4 +25,7 @@ public:
 
 protected:
     VirtualController* m_pController = nullptr;
+
+    //Testing. Player is wrong
+    vec2 m_Position = vec2(0, 0);
 };

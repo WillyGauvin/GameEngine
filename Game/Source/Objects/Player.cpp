@@ -14,8 +14,8 @@
 #include "Objects/Player.h"
 #include "Objects/VirtualController.h"
 
-Player::Player(fw::Scene* pScene, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial)
-    : fw::GameObject( pScene, name, pos, pMesh, pMaterial )
+Player::Player(fw::Scene* pScene, std::string name)
+    : fw::GameObject( pScene, name)
 {
 }
 

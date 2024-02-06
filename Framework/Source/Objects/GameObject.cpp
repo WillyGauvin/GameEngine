@@ -24,12 +24,9 @@
 
 namespace fw {
 
-    GameObject::GameObject(Scene* scene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
+    GameObject::GameObject(Scene* scene, std::string name)
         : m_pScene(scene)
         , m_Name( name )
-        , m_Position( pos )
-        , m_pMesh( pMesh )
-        , m_pMaterial( pMaterial )
     {
     }
 
@@ -39,27 +36,10 @@ namespace fw {
         {
             m_pScene->GetComponentManager()->RemoveComponent(component);
         }
-        delete m_pContactListener;
     }
 
     void GameObject::Update(float deltaTime)
     {
-        if (m_pBody != nullptr)
-        {
-            b2Vec2 m_b2Pos = m_pBody->GetPosition();
-            m_Position = vec3(m_b2Pos.x, m_b2Pos.y, 0.0f);
-        }
-    }
-
-    void GameObject::Draw(Camera* pCamera)
-    {
-        Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
-
-        mat4 transform;
-        transform.CreateSRT(m_Scale, m_Rotation, m_Position);
-        bgfx::setUniform(pUniforms->GetUniform("u_MatWorld"), &transform);
-
-        m_pMesh->Draw( 0, pUniforms, m_pMaterial);
     }
 
     void GameObject::Enable()
@@ -95,33 +75,6 @@ namespace fw {
             }
         }
         return nullptr;
-    }
-
-    void GameObject::CreateBody(bool isDynamic)
-    {
-        b2BodyDef bodyDef;
-        if (isDynamic == true)
-        {
-            bodyDef.type = b2_dynamicBody;
-        }
-        else
-        {
-            bodyDef.type = b2_kinematicBody;
-        }
-
-        bodyDef.position = b2Vec2(m_Position.x, m_Position.y);
-        m_pBody = m_pScene->GetWorld()->CreateBody(&bodyDef);
-
-        b2CircleShape circleShape;
-        circleShape.m_radius = 1.0f;
-
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &circleShape;
-        fixtureDef.density = 1.0f;
-        m_pBody->CreateFixture(&fixtureDef);
-
-   
-
     }
 
 } // namespace fw

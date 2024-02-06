@@ -15,6 +15,7 @@ namespace fw
 		static const char* GetStaticType() { return "TransformComponent"; }
 		virtual const char* GetType() override { return GetStaticType(); }
 
+		void UpdatePosition(vec3 position) { m_position = position; }
 		void UpdateSRT();
 	
 	public:

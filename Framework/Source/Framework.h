@@ -53,3 +53,4 @@
 #include "Component/ComponentManager.h"
 #include "Component/RenderComponent.h"
 #include "Component/TransformComponent.h"
+#include "Component/PhysicsComponent.h"

@@ -13,6 +13,7 @@ namespace fw
 	class Event;
 	class Camera;
 	class GameObject;
+	class MyContactListener;
 
 	class Scene : public EventListener
 	{

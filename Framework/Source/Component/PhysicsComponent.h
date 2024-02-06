@@ -15,6 +15,8 @@ namespace fw
 		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic);
 		virtual ~PhysicsComponent();
 
+		void UpdateBody();
+
 		void SetCircle(float radius);
 		void SetBox(vec2 size);
 		void SetPoly(const b2Vec2* points, int32 count);

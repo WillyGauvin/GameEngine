@@ -16,10 +16,7 @@
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
-#include "Scenes/JimmyScene.h"
-#include "Scenes/CubeScene.h"
 #include "Scenes/PhysicsScene.h"
-#include "Scenes/TestScene.h"
 #include "Component/ComponentManager.h"
 
 Game::Game(fw::FWCore& fwCore)
@@ -44,10 +41,7 @@ Game::Game(fw::FWCore& fwCore)
     LoadResources( m_pResources );
 
     //Create some Scenes
-    m_pCubeScene = new CubeScene(this);
-    m_pJimmyScene = new JimmyScene(this);
     m_pPhysicsScene = new PhysicsScene(this);
-    m_pTestScene = new TestScene(this);
     m_pCurrentScene = m_pPhysicsScene;
 }
 
@@ -56,9 +50,7 @@ Game::~Game()
     delete m_pResources;
     delete m_pImGuiManager;
     delete m_pUniforms;
-
-    delete m_pJimmyScene;
-    delete m_pCubeScene;
+    delete m_pPhysicsScene;
 }
 
 void Game::CreateUniforms()
@@ -111,21 +103,10 @@ void Game::Draw()
 void Game::Editor_SelectScene()
 {
     ImGui::Begin("SceneSelector");
-    if (ImGui::Button("Default"))
-    {
-        m_pCurrentScene = m_pJimmyScene;
-    }
-    if (ImGui::Button("Cube"))
-    {
-        m_pCurrentScene = m_pCubeScene;
-    }
+
     if (ImGui::Button("Physics"))
     {
         m_pCurrentScene = m_pPhysicsScene;
-    }
-    if (ImGui::Button("Test"))
-    {
-        m_pCurrentScene = m_pTestScene;
     }
     ImGui::End();
 }

@@ -18,11 +18,14 @@
 
 namespace fw {
 
-    Camera::Camera(Scene* pScene, vec3 pos)
-        : GameObject( pScene, "Camera", pos, nullptr, nullptr )
+    Camera::Camera(Scene* pScene, vec3 eye, vec3 up, vec3 at) :
+        m_pScene(pScene),
+        m_eye(eye),
+        m_up(up),
+        m_at(at)
     {
         FWCore* pFW = m_pScene->GetGameCore()->GetFramework();
-        SetAspectRatio( (float)pFW->GetWindowClientWidth()/pFW->GetWindowClientHeight() );
+        SetAspectRatio((float)pFW->GetWindowClientWidth() / pFW->GetWindowClientHeight());
 
         //Register For Events
         m_pScene->GetEventManager()->RegisterListener(WindowResizeEvent::GetStaticEventType(), this);
@@ -49,14 +52,9 @@ namespace fw {
     void Camera::Enable(int viewID)
     {
         Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
-        vec2 scaleWithAspectRatio = m_ProjectionScale * vec2( 1.0f/m_AspectRatio, 1 );
-    
-        // Setup uniforms.
-        bgfx::setUniform( pUniforms->GetUniform("u_CameraPosition"), &m_Position, 1 );
-        bgfx::setUniform( pUniforms->GetUniform("u_ProjectionScale"), &scaleWithAspectRatio, 1 );
 
         mat4 viewMatrix;
-        viewMatrix.CreateLookAtView(m_Position + vec3(0,0,-25), vec3(0, 1, 0), m_Position + vec3(0, 0, 3));
+        viewMatrix.CreateLookAtView(m_eye + vec3(0,0,-25), m_up, m_eye + m_at);
         bgfx::setUniform(pUniforms->GetUniform("u_MatView"), &viewMatrix, 1);
 
         mat4 projMatrix;

@@ -10,20 +10,20 @@
 #pragma once
 
 #include "Math/Matrix.h"
-#include "Objects/GameObject.h"
 #include "EventSystem/EventListener.h"
+#include "SceneSystem/Scene.h"
 
 namespace fw {
 
     class Scene;
 
-    class Camera : public GameObject, public EventListener
+    class Camera : public EventListener
     {
     public:
-        Camera(Scene* pScene, vec3 pos);
+        Camera(Scene* pScene, vec3 eye, vec3 up, vec3 at);
         virtual ~Camera();
 
-        virtual void Update(float32 deltaTime) override;
+        virtual void Update(float32 deltaTime);
         virtual void ExecuteEvent(Event* pEvent) override;
 
 
@@ -34,6 +34,13 @@ namespace fw {
         void SetAspectRatio(float32 aspectRatio) { m_AspectRatio = aspectRatio; }
 
     protected:
+        
+        Scene* m_pScene = nullptr;
+
+        vec3 m_eye;
+        vec3 m_up;
+        vec3 m_at;
+
         vec2 m_ProjectionScale = { 0.1f, 0.1f };
         float32 m_AspectRatio = 1.0f;
     };

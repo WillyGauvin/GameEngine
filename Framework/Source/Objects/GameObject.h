@@ -30,54 +30,33 @@ namespace fw {
     class GameObject
     {
     public:
-        GameObject(Scene* scene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
+        GameObject(Scene* scene, std::string name);
         virtual ~GameObject();
 
         virtual void Update(float deltaTime);
-        virtual void Draw(Camera* pCamera);
-
         // Getters.
         std::string GetName() { return m_Name; }
 
-        Mesh* GetMesh() { return m_pMesh; }
-        Material* GetMaterial() { return m_pMaterial; }
         Scene* GetScene() { return m_pScene; }
 
-        vec3 GetPosition() { return m_Position; }
-        vec3 GetRotation() { return m_Rotation; }
-        vec3 GetScale() { return m_Scale; }
 
         void Enable();
         void Disable();
 
         // Setters.
-        void SetPosition(vec3 pos) { m_Position = pos; }
-        void SetRotation(vec3 rot) { m_Rotation = rot; }
-        void SetScale(vec3 scale) { m_Scale = scale; }
 
         void AddComponent(Component* pComponent);
 
         fw::TransformComponent* GetTransformComponent();
 
-        void CreateBody(bool isDynamic);
-
-        b2Body* GetBody() { return m_pBody; }
 
     protected:
         Scene* m_pScene = nullptr;
 
         std::string m_Name;
 
-        Mesh* m_pMesh = nullptr;
-        Material* m_pMaterial = nullptr;
-
-        vec3 m_Position = vec3(0, 0, 0);
-        vec3 m_Rotation = vec3(0, 0, 0);
-        vec3 m_Scale = vec3(1, 1, 1);
-
         std::vector<Component*> m_Components;
 
-        b2Body* m_pBody = nullptr;
     };
 
 } // namespace fw

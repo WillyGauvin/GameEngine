@@ -14,13 +14,7 @@
 
 class Player;
 
-class JimmyScene;
-
-class CubeScene;
-
 class PhysicsScene;
-
-class TestScene;
 
 class VirtualController;
 
@@ -46,10 +40,7 @@ protected:
     // Resources.
     fw::ResourceManager* m_pResources = nullptr;
 
-    JimmyScene* m_pJimmyScene = nullptr;
-    CubeScene* m_pCubeScene = nullptr;
     PhysicsScene* m_pPhysicsScene = nullptr;
-    TestScene* m_pTestScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 };
