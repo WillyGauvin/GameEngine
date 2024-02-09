@@ -10,6 +10,7 @@ namespace fw
 	}
 	ComponentManager::~ComponentManager()
 	{
+		
 	}
 
 

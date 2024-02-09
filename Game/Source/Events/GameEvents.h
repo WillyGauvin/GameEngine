@@ -26,3 +26,4 @@ public:
 protected:
     fw::GameObject* m_pObject;
 };
+

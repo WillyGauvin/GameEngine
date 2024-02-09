@@ -8,7 +8,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #pragma once
-
+#include "Objects/GameObject.h"
 namespace fw {
 
     using EventType = const char*;
@@ -113,6 +113,28 @@ namespace fw {
     protected:
         uint16 m_Width;
         uint16 m_Height;
+    }; 
+
+    class CollisionEvent : public fw::Event
+    {
+    public:
+        CollisionEvent(GameObject* body1, GameObject* body2)
+        {
+            m_Body1 = body1;
+            m_Body2 = body2;
+        }
+        virtual ~CollisionEvent() {}
+
+        static const char* GetStaticEventType() { return "CollisionEvent"; }
+        virtual const char* GetType() override { return GetStaticEventType(); }
+
+        GameObject* GetBody1() { return m_Body1; }
+        GameObject* GetBody2() { return m_Body2; }
+
+
+    protected:
+        GameObject* m_Body1;
+        GameObject* m_Body2;
     };
 
 } // namespace fw
