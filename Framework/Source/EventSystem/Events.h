@@ -118,23 +118,37 @@ namespace fw {
     class CollisionEvent : public fw::Event
     {
     public:
-        CollisionEvent(GameObject* body1, GameObject* body2)
+        CollisionEvent(GameObject* objectA, GameObject* objectB, vec2 aNormal, vec2 bNormal, float speedA, float speedB)
         {
-            m_Body1 = body1;
-            m_Body2 = body2;
+            m_ObjectA = objectA;
+            m_ObjectB = objectB;
+
+            m_ANormal = aNormal;
+            m_BNormal = bNormal;
+
+            m_speedA = speedA;
+            m_speedB = speedB;
         }
         virtual ~CollisionEvent() {}
 
         static const char* GetStaticEventType() { return "CollisionEvent"; }
         virtual const char* GetType() override { return GetStaticEventType(); }
 
-        GameObject* GetBody1() { return m_Body1; }
-        GameObject* GetBody2() { return m_Body2; }
+        GameObject* GetObjectA() { return m_ObjectA; }
+        GameObject* GetObjectB() { return m_ObjectB; }
+        vec2 GetCollisionNormalA() { return m_ANormal; }
+        vec2 GetCollisionNormalB() { return m_BNormal; }
+        float GetSpeedA() { return m_speedA; }
+        float GetSpeedB() { return m_speedB; }
 
 
     protected:
-        GameObject* m_Body1;
-        GameObject* m_Body2;
+        GameObject* m_ObjectA;
+        GameObject* m_ObjectB;
+        float m_speedA;
+        float m_speedB;
+        vec2 m_ANormal;
+        vec2 m_BNormal;
     };
 
 } // namespace fw

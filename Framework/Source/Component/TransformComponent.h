@@ -16,6 +16,7 @@ namespace fw
 		virtual const char* GetType() override { return GetStaticType(); }
 
 		void UpdatePosition(vec3 position) { m_position = position; }
+		void UpdateRotation(vec3 rotation) { m_rotation = rotation; }
 		void UpdateSRT();
 	
 	public:

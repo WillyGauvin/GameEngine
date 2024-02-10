@@ -14,8 +14,8 @@
 #include "Objects/Player.h"
 #include "Objects/VirtualController.h"
 
-Player::Player(fw::Scene* pScene, std::string name)
-    : fw::GameObject( pScene, name)
+Player::Player(fw::Scene* pScene, fw::PhysicsCategories CollisionCategory)
+    : fw::GameObject( pScene, CollisionCategory)
 {
 }
 

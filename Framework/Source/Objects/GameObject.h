@@ -10,7 +10,6 @@
 #pragma once
 
 #include "Math/Vector.h"
-
 #define B2_USER_SETTINGS
 #include "../Libraries/box2d/include/box2d/box2d.h"
 
@@ -25,19 +24,23 @@ namespace fw {
     class Scene;
     class Component;
     class TransformComponent;
+    class PhysicsComponent;
     class MyContactListener;
-
+    enum class PhysicsCategories;
     class GameObject
     {
     public:
-        GameObject(Scene* scene, std::string name);
+        GameObject(Scene* scene, fw::PhysicsCategories collisionCategory);
+
         virtual ~GameObject();
 
         virtual void Update(float deltaTime);
-        // Getters.
-        std::string GetName() { return m_Name; }
 
+        // Getters.
+        fw::PhysicsCategories GetCollisionCategory() { return m_collisionCategory; }
         Scene* GetScene() { return m_pScene; }
+        fw::TransformComponent* GetTransformComponent();
+        fw::PhysicsComponent* GetPhysicsComponent();
 
 
         void Enable();
@@ -47,15 +50,14 @@ namespace fw {
 
         void AddComponent(Component* pComponent);
 
-        fw::TransformComponent* GetTransformComponent();
 
 
     protected:
         Scene* m_pScene = nullptr;
 
-        std::string m_Name;
-
         std::vector<Component*> m_Components;
+
+        fw::PhysicsCategories m_collisionCategory;
 
     };
 

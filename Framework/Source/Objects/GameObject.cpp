@@ -20,13 +20,14 @@
 #include "SceneSystem/Scene.h"
 #include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
+#include "Component/PhysicsComponent.h"
 #include "MyContactListener.h"
 
 namespace fw {
 
-    GameObject::GameObject(Scene* scene, std::string name)
+    GameObject::GameObject(Scene* scene, fw::PhysicsCategories collisionCategory)
         : m_pScene(scene)
-        , m_Name( name )
+        , m_collisionCategory(collisionCategory)
     {
     }
 
@@ -72,6 +73,18 @@ namespace fw {
             if (component->GetType() == "TransformComponent")
             {
                 return static_cast<fw::TransformComponent*>(component);
+            }
+        }
+        return nullptr;
+    }
+
+    fw::PhysicsComponent* GameObject::GetPhysicsComponent()
+    {
+        for (fw::Component* component : m_Components)
+        {
+            if (component->GetType() == "PhysicsComponent")
+            {
+                return static_cast<fw::PhysicsComponent*>(component);
             }
         }
         return nullptr;

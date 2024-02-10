@@ -30,6 +30,8 @@ namespace fw {
         void Enable(int viewID);
 
         // Setters.
+        void SetEye(vec3 eye) { m_eye = eye; }
+        void SetAt(vec3 at) { m_at = at; }
         void SetProjectionScale(vec2 scale) { m_ProjectionScale = scale; }
         void SetAspectRatio(float32 aspectRatio) { m_AspectRatio = aspectRatio; }
 
