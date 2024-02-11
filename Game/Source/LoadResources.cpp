@@ -47,6 +47,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>( "Red", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Red(), false ) );
     pResources->Add<fw::Material>( "Blue", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Blue(), false ) );
     pResources->Add<fw::Material>( "Green", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Green(), false ) );
+    pResources->Add<fw::Material>("Orange", new fw::Material(getShader("SolidColor"), nullptr, fw::color4f::Orange(), false));
+    pResources->Add<fw::Material>("Yellow", new fw::Material(getShader("SolidColor"), nullptr, fw::color4f::Yellow(), false));
     pResources->Add<fw::Material>( "VertexColor", new fw::Material( getShader("VertexColor"), nullptr, fw::color4f::White(), false ) );
     pResources->Add<fw::Material>( "MegaMan", new fw::Material( getShader("Texture"), getTexture("MegaMan"), fw::color4f::White(), true ) );
     pResources->Add<fw::Material>("Dice", new fw::Material(getShader("Texture"), getTexture("Dice"), fw::color4f::White(), true));

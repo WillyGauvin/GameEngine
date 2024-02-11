@@ -27,3 +27,16 @@ protected:
     fw::GameObject* m_pObject;
 };
 
+class SensorTriggerEvent : public fw::Event
+{
+public:
+    SensorTriggerEvent()
+    {
+    }
+    virtual ~SensorTriggerEvent() {}
+
+    static const char* GetStaticEventType() { return "SensorTriggerEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+};
