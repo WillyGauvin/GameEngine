@@ -2,9 +2,7 @@
 #include "Component/TransformComponent.h"
 namespace fw
 {
-
-
-	PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic) : Component(pGameObject),
+    PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic) : Component(pGameObject),
         m_pWorld(pWorld)
 	{
         b2BodyDef bodyDef;
@@ -22,125 +20,145 @@ namespace fw
         
         m_pBody = m_pWorld->CreateBody(&bodyDef);
         m_pBody->GetUserData().pGameObject = pGameObject;
-
-
-        switch (m_pGameObject->GetCollisionCategory())
-        {
-             case(PhysicsCategories::PhysicsCategory_Default):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Default);
-
-                 m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Default);
-                 break;
-             }
-             case(PhysicsCategories::PhysicsCategory_Wall):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_Bumper):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_Paddle):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_RedBall):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedObstacle);
-
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_BlueBall):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueObstacle) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Sensor);
-
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_GreenBall):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenObstacle);
-
-                 break;
-
-             }
-             case(PhysicsCategories::PhysicsCategory_RedObstacle):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedObstacle);
-
-                 m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall);
-                 break;
-             }
-             case(PhysicsCategories::PhysicsCategory_BlueObstacle):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueObstacle);
-
-                 m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
-                 break;
-             }
-             case(PhysicsCategories::PhysicsCategory_GreenObstacle):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenObstacle);
-
-                 m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
-                 break;
-             }
-
-             case(PhysicsCategories::PhysicsCategory_Sensor):
-             {
-                 m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Sensor);
-
-                 m_fixtureDef.filter.maskBits =
-                     static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
-                 break;
-             }
-        }
 	}
+
+    PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, fw::PhysicsCategories category) : Component(pGameObject),
+        m_pWorld(pWorld)
+    {
+        b2BodyDef bodyDef;
+        if (isDynamic == true)
+        {
+            bodyDef.type = b2_dynamicBody;
+        }
+        else
+        {
+            bodyDef.type = b2_kinematicBody;
+        }
+
+        bodyDef.position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
+        bodyDef.angle = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+
+        m_pBody = m_pWorld->CreateBody(&bodyDef);
+        m_pBody->GetUserData().pGameObject = pGameObject;
+
+
+        switch (category)
+        {
+        case(PhysicsCategories::PhysicsCategory_Default):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Default);
+
+            m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Default);
+            break;
+        }
+        case(PhysicsCategories::PhysicsCategory_Wall):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_Bumper):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_Paddle):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_RedBall):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedObstacle);
+
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_BlueBall):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueObstacle) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Sensor);
+
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_GreenBall):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Wall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Bumper) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Paddle) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall) |
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenObstacle);
+
+            break;
+
+        }
+        case(PhysicsCategories::PhysicsCategory_RedObstacle):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedObstacle);
+
+            m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RedBall);
+            break;
+        }
+        case(PhysicsCategories::PhysicsCategory_BlueObstacle):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueObstacle);
+
+            m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
+            break;
+        }
+        case(PhysicsCategories::PhysicsCategory_GreenObstacle):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenObstacle);
+
+            m_fixtureDef.filter.maskBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_GreenBall);
+            break;
+        }
+
+        case(PhysicsCategories::PhysicsCategory_Sensor):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Sensor);
+
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
+            break;
+        }
+        }
+    }
 
 	PhysicsComponent::~PhysicsComponent()
 	{
@@ -165,14 +183,14 @@ namespace fw
 
     void PhysicsComponent::UpdateBody()
     {
-        vec3 rotation = vec3(0,0,-1.0 * radsToDegrees(m_pBody->GetAngle()));
-        vec3 position = vec3(m_pBody->GetTransform().p.x, m_pBody->GetTransform().p.y, 0);
+        vec3 rotation = vec3(0.0f,0.0f,-1.0f * radsToDegrees(m_pBody->GetAngle()));
+        vec3 position = vec3(m_pBody->GetTransform().p.x, m_pBody->GetTransform().p.y, 0.0f);
         m_pGameObject->GetTransformComponent()->UpdatePosition(position);
         m_pGameObject->GetTransformComponent()->UpdateRotation(rotation);
     }
 
     
-    void PhysicsComponent::SetCircle()
+    void PhysicsComponent::SetCircle(bool isProjectile)
     {
         b2CircleShape circle;
         circle.m_radius = m_pGameObject->GetTransformComponent()->m_scale.x * 2;
@@ -180,6 +198,7 @@ namespace fw
         m_fixtureDef.shape = &circle;
         m_fixtureDef.density = 1.0f;
         m_pBody->CreateFixture(&m_fixtureDef);
+        m_pBody->SetBullet(isProjectile);
     }
     void PhysicsComponent::SetBox()
     {

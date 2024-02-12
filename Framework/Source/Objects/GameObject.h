@@ -30,14 +30,13 @@ namespace fw {
     class GameObject
     {
     public:
-        GameObject(Scene* scene, fw::PhysicsCategories collisionCategory);
+        GameObject(Scene* scene);
 
         virtual ~GameObject();
 
         virtual void Update(float deltaTime);
 
         // Getters.
-        fw::PhysicsCategories GetCollisionCategory() { return m_collisionCategory; }
         Scene* GetScene() { return m_pScene; }
         fw::TransformComponent* GetTransformComponent();
         fw::PhysicsComponent* GetPhysicsComponent();
@@ -56,8 +55,6 @@ namespace fw {
         Scene* m_pScene = nullptr;
 
         std::vector<Component*> m_Components;
-
-        fw::PhysicsCategories m_collisionCategory;
 
     };
 

@@ -33,15 +33,7 @@ namespace fw
 
 		Event* pEvent = nullptr;
 
-		fw::PhysicsCategories category = contact->GetFixtureB()->GetBody()->GetUserData().pGameObject->GetCollisionCategory();
-		if (category == PhysicsCategories::PhysicsCategory_RedBall || category == PhysicsCategories::PhysicsCategory_BlueBall || category == PhysicsCategories::PhysicsCategory_GreenBall)
-		{
-			pEvent = new CollisionEvent(ObjectB, ObjectA, CollisionNormalB, CollisionNormalA, speedB, speedA);
-		}
-		else
-		{
-			pEvent = new CollisionEvent(ObjectA, ObjectB, CollisionNormalA, CollisionNormalB, speedA, speedB);
-		}
+		pEvent = new CollisionEvent(ObjectA, ObjectB, CollisionNormalA, CollisionNormalB, speedA, speedB);
 
 		m_pEventManager->AddEvent(pEvent);
 	}

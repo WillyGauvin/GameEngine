@@ -15,7 +15,7 @@
 #include "Objects/VirtualController.h"
 
 Player::Player(fw::Scene* pScene, fw::PhysicsCategories CollisionCategory)
-    : fw::GameObject( pScene, CollisionCategory)
+    : fw::GameObject( pScene)
 {
 }
 

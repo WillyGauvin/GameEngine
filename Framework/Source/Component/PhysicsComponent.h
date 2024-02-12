@@ -3,6 +3,7 @@
 #include "CoreHeaders.h"
 #include "Math/Matrix.h"
 #include "Component.h"
+#include "Physics/Jolt/JoltHelpers.h"
 
 #define B2_USER_SETTINGS
 #include "../Libraries/box2d/include/box2d/box2d.h"
@@ -31,6 +32,8 @@ namespace fw
 	{
 	public:
 		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic);
+		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, fw::PhysicsCategories category);
+
 		virtual ~PhysicsComponent();
 
 
@@ -42,7 +45,7 @@ namespace fw
 
 		void UpdateBody();
 
-		void SetCircle();
+		void SetCircle(bool isProjectile);
 		void SetBox();
 		void SetPoly(const b2Vec2* points, int32 count);
 		void SetSensor();

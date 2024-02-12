@@ -21,13 +21,12 @@
 #include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
 #include "Component/PhysicsComponent.h"
-#include "MyContactListener.h"
+#include "Physics/Box2D/MyContactListener.h"
 
 namespace fw {
 
-    GameObject::GameObject(Scene* scene, fw::PhysicsCategories collisionCategory)
+    GameObject::GameObject(Scene* scene)
         : m_pScene(scene)
-        , m_collisionCategory(collisionCategory)
     {
     }
 

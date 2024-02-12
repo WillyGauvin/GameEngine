@@ -22,6 +22,7 @@ add_subdirectory( Framework )
 ###################
 
 add_subdirectory( Libraries )
+add_subdirectory( Libraries/JoltPhysics/Build Jolt )
 
 include ( GNUInstallDirs )
 add_subdirectory( Libraries/box2d/src )

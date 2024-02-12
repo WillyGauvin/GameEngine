@@ -3,7 +3,7 @@
 #include "EventSystem/EventManager.h"
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
-#include "MyContactListener.h"
+#include "Physics/Box2D/MyContactListener.h"
 
 namespace fw
 {

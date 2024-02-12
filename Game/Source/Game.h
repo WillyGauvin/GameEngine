@@ -16,6 +16,8 @@ class Player;
 
 class PhysicsScene;
 
+class JoltScene;
+
 class VirtualController;
 
 class Game : public fw::GameCore, fw::EventListener
@@ -41,6 +43,8 @@ protected:
     fw::ResourceManager* m_pResources = nullptr;
 
     PhysicsScene* m_pPhysicsScene = nullptr;
+
+    JoltScene* m_pJoltScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 };

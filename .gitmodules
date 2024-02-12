@@ -22,3 +22,6 @@
 [submodule "Libraries/stb"]
 	path = Libraries/stb
 	url = https://github.com/nothings/stb.git
+[submodule "Libraries/JoltPhysics"]
+	path = Libraries/JoltPhysics
+	url = https://github.com/jrouwe/JoltPhysics.git

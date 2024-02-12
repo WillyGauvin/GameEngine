@@ -35,3 +35,6 @@ target_compile_definitions( Framework PUBLIC "BX_CONFIG_DEBUG=1" )
 target_precompile_headers( Framework PRIVATE Source/CoreHeaders.h )
 file( GLOB_RECURSE FrameworkPCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
 source_group( "CMake PCH Files" FILES ${FrameworkPCHFiles} )
+
+# Libraries to Link
+target_link_libraries( Framework Jolt )

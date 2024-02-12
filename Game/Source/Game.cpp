@@ -16,7 +16,7 @@
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
-#include "Scenes/PhysicsScene.h"
+#include "Scenes/JoltScene.h"
 #include "Component/ComponentManager.h"
 
 Game::Game(fw::FWCore& fwCore)
@@ -41,8 +41,8 @@ Game::Game(fw::FWCore& fwCore)
     LoadResources( m_pResources );
 
     //Create some Scenes
-    m_pPhysicsScene = new PhysicsScene(this);
-    m_pCurrentScene = m_pPhysicsScene;
+    m_pJoltScene = new JoltScene(this);
+    m_pCurrentScene = m_pJoltScene;
 }
 
 Game::~Game()
@@ -50,7 +50,6 @@ Game::~Game()
     delete m_pResources;
     delete m_pImGuiManager;
     delete m_pUniforms;
-    delete m_pPhysicsScene;
 }
 
 void Game::CreateUniforms()
@@ -104,9 +103,9 @@ void Game::Editor_SelectScene()
 {
     ImGui::Begin("SceneSelector");
 
-    if (ImGui::Button("Physics"))
+    if (ImGui::Button("Jolt"))
     {
-        m_pCurrentScene = m_pPhysicsScene;
+        m_pCurrentScene = m_pJoltScene;
     }
     ImGui::End();
 }
