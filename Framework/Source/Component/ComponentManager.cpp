@@ -62,13 +62,13 @@ namespace fw
 		}
 	}
 
-	void ComponentManager::RenderMeshes()
+	void ComponentManager::RenderMeshes(int viewID)
 	{
 		std::vector<Component*>& ComponentList = m_Components["RenderComponent"];
 
 		for (int i = 0; i < ComponentList.size(); i++)
 		{
-			static_cast<RenderComponent*>(ComponentList[i])->Render();
+			static_cast<RenderComponent*>(ComponentList[i])->Render(viewID);
 		}
 	}
 }

@@ -19,7 +19,7 @@ namespace fw
 		static const char* GetStaticType() { return "RenderComponent"; }
 		virtual const char* GetType() override { return GetStaticType(); }
 
-		void Render();
+		void Render(int viewID);
 		
 	public:
 		Mesh* m_pMesh = nullptr;

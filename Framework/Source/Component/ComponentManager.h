@@ -18,7 +18,7 @@ namespace fw
 
 		void UpdateBodies(b2World* world, float deltaTime);
 		void UpdateTransforms();
-		void RenderMeshes();
+		void RenderMeshes(int viewID);
 
 	public:
 		std::map<ComponentType, std::vector<Component*>> m_Components;

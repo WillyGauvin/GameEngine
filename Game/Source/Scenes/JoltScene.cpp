@@ -31,6 +31,14 @@ JoltScene::~JoltScene()
 
 void JoltScene::ExecuteEvent(fw::Event* pEvent)
 {
+	if (pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType())
+	{
+		int width = GetGameCore()->GetFramework()->GetWindowClientWidth();
+		int height = GetGameCore()->GetFramework()->GetWindowClientHeight();
+
+		m_pCamera->SetAspectRatio((float)width / height);
+
+	}
 }
 
 void JoltScene::StartFrame(float deltaTime)
@@ -57,9 +65,9 @@ void JoltScene::Update(float deltaTime)
 
 void JoltScene::Draw()
 {
-	int viewID = 0;
+	int viewID = EditorView_Game;
 
 	m_pCamera->Enable(viewID);
 
-	m_pComponentManager->RenderMeshes();
+	m_pComponentManager->RenderMeshes(viewID);
 }

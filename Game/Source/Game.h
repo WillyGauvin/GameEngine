@@ -20,6 +20,12 @@ class JoltScene;
 
 class VirtualController;
 
+enum EditorViews
+{
+    EditorView_Game,
+    EditorView_ImGui,
+};
+
 class Game : public fw::GameCore, fw::EventListener
 {
 public:
@@ -37,6 +43,8 @@ public:
 
     void Editor_SelectScene();
 
+    void Editor_CreateMainFrame();
+
 protected:
 
     // Resources.
@@ -47,4 +55,10 @@ protected:
     JoltScene* m_pJoltScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
+
+    bgfx::TextureHandle m_Game_FBOTexture;
+    bgfx::TextureHandle m_Game_FBODepth;
+
+    bgfx::FrameBufferHandle m_Game_FBO;
+
 };

@@ -22,12 +22,12 @@ namespace fw
 
 	}
 
-	void RenderComponent::Render()
+	void RenderComponent::Render(int viewID)
 	{
 		Uniforms* pUniforms = m_pGameObject->GetScene()->GetGameCore()->GetUniforms();
 		bgfx::setUniform(pUniforms->GetUniform("u_MatWorld"), &m_pGameObject->GetTransformComponent()->m_transform);
 
-		m_pMesh->Draw(0, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
+		m_pMesh->Draw(viewID, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
 	}
 
 }
