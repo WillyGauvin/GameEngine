@@ -17,6 +17,7 @@ namespace fw
 		std::vector<Component*>& GetComponentOfType(ComponentType type);
 
 		void UpdateBodies(b2World* world, float deltaTime);
+
 		void UpdateTransforms();
 		void RenderMeshes(int viewID);
 

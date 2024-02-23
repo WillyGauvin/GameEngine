@@ -17,6 +17,7 @@
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
 #include "Scenes/JoltScene.h"
+#include "Scenes/MidtermScene.h"
 #include "Component/ComponentManager.h"
 
 Game::Game(fw::FWCore& fwCore)
@@ -62,7 +63,8 @@ Game::Game(fw::FWCore& fwCore)
 
     //Create some Scenes
     m_pJoltScene = new JoltScene(this);
-    m_pCurrentScene = m_pJoltScene;
+    m_pMidtermScene = new MidtermScene(this);
+    m_pCurrentScene = m_pMidtermScene;
 }
 
 Game::~Game()
@@ -70,6 +72,8 @@ Game::~Game()
     delete m_pResources;
     delete m_pImGuiManager;
     delete m_pUniforms;
+    delete m_pJoltScene;
+    delete m_pMidtermScene;
 }
 
 void Game::CreateUniforms()
@@ -144,6 +148,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("Jolt"))
     {
         m_pCurrentScene = m_pJoltScene;
+    }
+    if (ImGui::Button("Midtern"))
+    {
+        m_pCurrentScene = m_pMidtermScene;
     }
     ImGui::End();
 }
