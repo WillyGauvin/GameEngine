@@ -25,6 +25,7 @@ namespace fw
     PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, fw::PhysicsCategories category) : Component(pGameObject),
         m_pWorld(pWorld)
     {
+        m_category = category;
         b2BodyDef bodyDef;
         if (isDynamic == true)
         {
@@ -157,6 +158,31 @@ namespace fw
                 static_cast<uint16>(PhysicsCategories::PhysicsCategory_BlueBall);
             break;
         }
+
+        case (PhysicsCategories::PhysicsCategory_LeftSensor):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_LeftSensor);
+
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Box);
+            break;
+        }
+        case (PhysicsCategories::PhysicsCategory_RightSensor):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_RightSensor);
+
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_Box);
+            break;
+        }
+        case (PhysicsCategories::PhysicsCategory_Box):
+        {
+            m_fixtureDef.filter.categoryBits = static_cast<uint16>(PhysicsCategories::PhysicsCategory_Box);
+
+            m_fixtureDef.filter.maskBits =
+                static_cast<uint16>(PhysicsCategories::PhysicsCategory_LeftSensor) | static_cast<uint16>(PhysicsCategories::PhysicsCategory_RightSensor);
+            break;
+        }
         }
     }
 
@@ -228,6 +254,27 @@ namespace fw
         m_fixtureDef.isSensor = true;
         m_pBody->CreateFixture(&m_fixtureDef);
     }
+    void PhysicsComponent::SetLineCensor()
+    {
+        b2PolygonShape box;
+        vec3 scale = m_pGameObject->GetTransformComponent()->m_scale;
+        vec2 size = vec2(scale.x, scale.y);
+        box.SetAsBox(size.x, size.y);
+
+        m_fixtureDef.shape = &box;
+        m_fixtureDef.density = 1.0f;
+        m_fixtureDef.isSensor = true;
+        m_pBody->CreateFixture(&m_fixtureDef);
+
+    }
+    void PhysicsComponent::DestoryJoint()
+    {
+        if (m_pJoint != nullptr)
+        {
+            m_pWorld->DestroyJoint(m_pJoint);
+            m_pJoint = nullptr;
+        }
+    }
     void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit, float motorSpeed, float motorTorque)
     {
         // Declare a joint definition object
@@ -286,6 +333,18 @@ namespace fw
         jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
         jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
         jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
+
+        m_pJoint = m_pWorld->CreateJoint(&jointDef);
+    }
+
+    void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject)
+    {
+        // Declare a joint definition object
+        b2RevoluteJointDef jointDef;
+
+        jointDef.bodyA = m_pBody;
+        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
+        jointDef.Initialize(jointDef.bodyA, jointDef.bodyB, b2Vec2(otherObject->GetTransformComponent()->m_position.x, otherObject->GetTransformComponent()->m_position.y));
 
         m_pJoint = m_pWorld->CreateJoint(&jointDef);
     }

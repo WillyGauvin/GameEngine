@@ -3,6 +3,12 @@
 #include "Framework.h"
 #include "DataTypes.h"
 
+
+enum CurrentSide
+{
+	LeftSide,
+	RightSide
+};
 class MidtermScene : public fw::Scene
 {
 public:
@@ -16,5 +22,11 @@ public:
 	virtual void Draw() override;
 
 protected:
+	fw::GameObject* m_pPlayer;
+	fw::GameObject* m_pLeftBox;
+	fw::GameObject* m_pRightBox;
+	fw::GameObject* m_pLeftSensor;
+	fw::GameObject* m_pRightSensor;
 
+	CurrentSide side = LeftSide;
 };

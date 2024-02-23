@@ -41,7 +41,6 @@ namespace fw {
         fw::TransformComponent* GetTransformComponent();
         fw::PhysicsComponent* GetPhysicsComponent();
 
-
         void Enable();
         void Disable();
 

@@ -24,6 +24,9 @@ namespace fw
 		PhysicsCategory_RedObstacle = 1 << 8,
 		PhysicsCategory_BlueObstacle = 1 << 9,
 		PhysicsCategory_GreenObstacle = 1 << 10,
+		PhysicsCategory_LeftSensor = 1 << 11,
+		PhysicsCategory_RightSensor = 1 << 12,
+		PhysicsCategory_Box = 1 << 13
 
 	};
 
@@ -49,12 +52,15 @@ namespace fw
 		void SetBox();
 		void SetPoly(const b2Vec2* points, int32 count);
 		void SetSensor();
-
+		void SetLineCensor();
+		void DestoryJoint();
 
 		//Joints
 		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit, float motorSpeed, float motorTorque);
 		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit);
 		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
+		void CreateRevolutionJoint(GameObject* otherObject);
+
 
 		void CreatePrismaticJoint(GameObject* otherObject, bool collideConnectd, float upperLimit, float lowerLimit, float motorSpeed, float maxMotorForce, bool isMotorEnabled);
 
@@ -82,6 +88,7 @@ namespace fw
 		b2FixtureDef m_fixtureDef;
 		b2Joint* m_pJoint = nullptr;
 		bool m_MotorEnabled = false;
+		PhysicsCategories m_category;
 
 	};
 }
