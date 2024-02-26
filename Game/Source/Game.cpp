@@ -24,7 +24,7 @@
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
 {
-
+    srand(time(NULL));
     // This is a hard-coded 4096x4096 texture, bigger than we should need.
 // In a complete engine this texture would need to be destroyed
 //     and regenerated if we needed a bigger version.

@@ -17,6 +17,8 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual void Draw() override;
 	void Reset();
+	
+	void CreateObstacles();
 
 protected:
 
@@ -31,6 +33,7 @@ protected:
 	fw::Material* m_pCrash;
 	
 
+	std::vector<fw::GameObject*> m_Obstacles;
 
 	fw::GameObject* m_pArrow;
 };

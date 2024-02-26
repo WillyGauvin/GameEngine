@@ -5,6 +5,7 @@
 
 LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 {
+	m_pWorld->SetGravity(b2Vec2(0.0f, -1.62f));
 	m_pController = new VirtualController(m_pEventManager);
 
 	Game* game = static_cast<Game*>(m_pGameCore);
@@ -14,15 +15,10 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 	m_Objects.push_back(new fw::GameObject(this));
 	fw::GameObject* moon = m_Objects[0];
-	moon->AddComponent(new fw::TransformComponent(moon, vec3(0, 0, 0), vec3(0, 0, 0), vec3(100, 1, 1)));
+	moon->AddComponent(new fw::TransformComponent(moon, vec3(0, -20, 0), vec3(0, 0, 0), vec3(500, 50, 1)));
 	moon->AddComponent(new fw::RenderComponent(moon, getMesh("Square"), getMaterial("Blue")));
 	moon->AddComponent(new fw::PhysicsComponent(moon, m_pWorld, false));
 	moon->GetPhysicsComponent()->SetBox();
-
-	//m_pArrow = new fw::GameObject(this);
-	//m_Objects.push_back(m_pArrow);
-	//m_pArrow->AddComponent(new fw::TransformComponent(m_pArrow, vec3(10,10, 0), vec3(0, 0, 90), vec3(10, 0.5, 1)));
-	//m_pArrow->AddComponent(new fw::RenderComponent(m_pArrow, getMesh("Square"), getMaterial("Blue")));
 
 
 	m_pOff = getMaterial("ShipOff");
@@ -64,7 +60,7 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 
 
-
+	CreateObstacles();
 
 
 	m_pEventManager->RegisterListener("InputEvent", this);
@@ -72,6 +68,7 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pEventManager->RegisterListener("ThrusterActivateEvent", this);
 	m_pEventManager->RegisterListener("ResetEvent", this);
 
+	Reset();
 }
 
 LandingScene::~LandingScene()
@@ -119,20 +116,20 @@ void LandingScene::Update(float deltaTime)
 	if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
 	{
 		m_pPlayer->GetRenderComponent()->SetMaterial(m_pBoth);
-		m_pPlayer->GetPhysicsComponent()->AddUpForce(1000.0f);
+		m_pPlayer->GetPhysicsComponent()->AddUpForce(500.0f);
 		
 	}
 	else if (m_pController->isActionHeld(VirtualController::Right))
 	{
 		m_pPlayer->GetRenderComponent()->SetMaterial(m_pRight);
-		m_pRightEngine->GetPhysicsComponent()->AddUpForce(500.0f);
+		m_pRightEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
 
 	}
 	else if (m_pController->isActionHeld(VirtualController::Left))
 	{
 		m_pPlayer->GetRenderComponent()->SetMaterial(m_pLeft);
-		m_pLeftEngine->GetPhysicsComponent()->AddUpForce(500.0f);
+		m_pLeftEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
 
 	}
@@ -140,7 +137,7 @@ void LandingScene::Update(float deltaTime)
 	{
 		m_pPlayer->GetRenderComponent()->SetMaterial(m_pOff);
 	}
-	if (m_pController->isActionHeld(VirtualController::Reset))
+	if (m_pController->WasActionPressed(VirtualController::Reset))
 	{
 		Reset();
 	}
@@ -174,4 +171,126 @@ void LandingScene::Reset()
 
 	m_pRightEngine->GetTransformComponent()->Reset();
 	m_pRightEngine->GetPhysicsComponent()->Reset();
+
+	for (int i = 0; i < m_Obstacles.size(); i++)
+	{
+		m_Objects.pop_back();
+	}
+	int i = 0;
+	for (fw::GameObject* object : m_Obstacles)
+	{
+		delete object;
+		m_Obstacles.pop_back();
+	}
+	CreateObstacles();
+}
+
+void LandingScene::CreateObstacles()
+{
+
+	Game* game = static_cast<Game*>(m_pGameCore);
+#define getMesh game->GetResourceManager()->Get<fw::Mesh>
+#define getMaterial game->GetResourceManager()->Get<fw::Material>
+
+	fw::Mesh* pTriangle = getMesh("Triangle");
+	fw::Mesh* pSquare = getMesh("Square");
+	fw::Mesh* pCircle = getMesh("Circle");
+
+	fw::GameObject* moonRock = nullptr;
+
+	float xSpacing = 3;
+	for (int i = -50; i < 50; i++)
+	{
+		int num = (rand() % 19) + 1;
+		float randRotation = (rand() % 359) + 1;
+		float randHeight = (rand() % 4) + 3;
+		float randScale = (rand() % 7) + 4;
+		switch (num)
+		{
+		//White Triangle
+		case 1:
+		case 2:
+		case 3:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pTriangle, getMaterial("White")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetTriangle();
+			break;
+		//White Square
+		case 4:
+		case 5:
+		case 6:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pSquare, getMaterial("White")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetBox();
+			break;
+		//White Circle
+		case 7:
+		case 8:
+		case 9:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale / 4, randScale / 4, 1.25)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pCircle, getMaterial("White")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetCircle(false);
+			break;
+		//Grey Triangle
+		case 10:
+		case 11:
+		case 12:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pTriangle, getMaterial("Grey")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetTriangle();
+			break;
+		//Grey Square
+		case 13:
+		case 14:
+		case 15:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pSquare, getMaterial("Grey")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetBox();
+			break;
+		//Grey Circle
+		case 16:
+		case 17:
+		case 18:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale / 4, randScale / 4, 1.25)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, pCircle, getMaterial("Grey")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+
+			moonRock->GetPhysicsComponent()->SetCircle(false);
+			break;
+		case 19:
+			m_Obstacles.push_back(new fw::GameObject(this));
+			moonRock = m_Obstacles[m_Obstacles.size() - 1];
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, 7, 0), vec3(0, 0, 0), vec3(6, 6, 5)));
+			moonRock->AddComponent(new fw::RenderComponent(moonRock, getMesh("Square"), getMaterial("Red")));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->GetPhysicsComponent()->SetBox();
+			break;
+		}
+	}
+	for (fw::GameObject* object : m_Obstacles)
+	{
+		m_Objects.push_back(object);
+	}
 }

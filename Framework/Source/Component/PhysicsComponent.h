@@ -57,6 +57,7 @@ namespace fw
 		void SetBox();
 		void SetBox(vec2 scale);
 		void SetPoly(const b2Vec2* points, int32 count);
+		void SetTriangle();
 		void SetSensor();
 		void SetLineCensor();
 		void DestoryJoint();

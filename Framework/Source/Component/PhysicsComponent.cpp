@@ -278,9 +278,32 @@ namespace fw
    
     void PhysicsComponent::SetPoly(const b2Vec2* points, int32 count)
     {
-        b2PolygonShape poly;
-        poly.Set(points, count);
+        b2PolygonShape dynamicPolygon;
+  
 
+        dynamicPolygon.Set(points, count);
+        m_fixtureDef.shape = &dynamicPolygon;
+        m_fixtureDef.density = 1.0f;
+
+        m_pBody->CreateFixture(&m_fixtureDef);
+    }
+    void PhysicsComponent::SetTriangle()
+    {
+        b2PolygonShape dynamicPolygon;
+  
+
+        b2Vec2 triangleVertices[3] =
+        {
+            b2Vec2(0.0f, 0.5f * m_pGameObject->GetTransformComponent()->m_scale.y),
+            b2Vec2(-0.5f * m_pGameObject->GetTransformComponent()->m_scale.x ,-0.5f * m_pGameObject->GetTransformComponent()->m_scale.y),
+            b2Vec2(0.5f * m_pGameObject->GetTransformComponent()->m_scale.x,-0.5f * m_pGameObject->GetTransformComponent()->m_scale.y)
+        };
+
+        dynamicPolygon.Set(triangleVertices, 3);
+        m_fixtureDef.shape = &dynamicPolygon;
+        m_fixtureDef.density = 1.0f;
+
+        m_pBody->CreateFixture(&m_fixtureDef);
     }
     void PhysicsComponent::SetSensor()
     {
