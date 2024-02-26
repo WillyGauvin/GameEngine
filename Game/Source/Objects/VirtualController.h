@@ -16,6 +16,7 @@ public:
 		Down	 = 1 << 2,
 		Left	 = 1 << 3,
 		Right	 = 1 << 4,
+		Reset	 = 1 << 5,
 
 	};
 public:
@@ -29,7 +30,6 @@ public:
 	bool WasActionPressed(Actions action) { return (~m_OldActions & action && m_Actions & action); }
 	bool WasActionReleased(Actions action) { return (m_OldActions & action && ~m_Actions & action); }
 
-	//Math doesn't work
 protected:
 	uint32 m_Actions = 0;
 	uint32 m_OldActions = 0;

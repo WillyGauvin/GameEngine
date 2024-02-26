@@ -18,11 +18,17 @@ namespace fw
 		void UpdatePosition(vec3 position) { m_position = position; }
 		void UpdateRotation(vec3 rotation) { m_rotation = rotation; }
 		void UpdateSRT();
+		void Reset();
 	
 	public:
 		vec3 m_scale;
 		vec3 m_rotation;
 		vec3 m_position;
 		mat4 m_transform;
+
+	protected:
+		vec3 m_originalScale;
+		vec3 m_originalRotation;
+		vec3 m_originalPosition;
 	};
 }

@@ -21,6 +21,7 @@
 #include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
 #include "Component/PhysicsComponent.h"
+#include "Component/RenderComponent.h"
 #include "Physics/Box2D/MyContactListener.h"
 
 namespace fw {
@@ -84,6 +85,18 @@ namespace fw {
             if (component->GetType() == "PhysicsComponent")
             {
                 return static_cast<fw::PhysicsComponent*>(component);
+            }
+        }
+        return nullptr;
+    }
+
+    fw::RenderComponent* GameObject::GetRenderComponent()
+    {
+        for (fw::Component* component : m_Components)
+        {
+            if (component->GetType() == "RenderComponent")
+            {
+                return static_cast<fw::RenderComponent*>(component);
             }
         }
         return nullptr;

@@ -20,6 +20,8 @@ class JoltScene;
 
 class MidtermScene;
 
+class LandingScene;
+
 class VirtualController;
 
 enum EditorViews
@@ -57,6 +59,8 @@ protected:
     JoltScene* m_pJoltScene = nullptr;
 
     MidtermScene* m_pMidtermScene = nullptr;
+
+    LandingScene* m_pLandingScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 

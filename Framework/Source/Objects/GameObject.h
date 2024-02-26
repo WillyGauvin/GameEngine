@@ -25,6 +25,7 @@ namespace fw {
     class Component;
     class TransformComponent;
     class PhysicsComponent;
+    class RenderComponent;
     class MyContactListener;
     enum class PhysicsCategories;
     class GameObject
@@ -40,6 +41,7 @@ namespace fw {
         Scene* GetScene() { return m_pScene; }
         fw::TransformComponent* GetTransformComponent();
         fw::PhysicsComponent* GetPhysicsComponent();
+        fw::RenderComponent* GetRenderComponent();
 
         void Enable();
         void Disable();

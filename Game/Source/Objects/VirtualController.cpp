@@ -32,6 +32,8 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'S': case VK_DOWN:  { m_Actions = m_Actions | Actions::Down; }	break;
 				case 'D': case VK_RIGHT: { m_Actions = m_Actions | Actions::Right; } break;
 				case 'Z': { m_Actions = m_Actions | Actions::Teleport; } break;
+				case 'R': { m_Actions = m_Actions | Actions::Reset; } break;
+
 
 				}
 			}
@@ -46,6 +48,7 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'S': case VK_DOWN: { m_Actions = m_Actions & ~Actions::Down; }	break;
 				case 'D': case VK_RIGHT: { m_Actions = m_Actions & ~Actions::Right; } break;
 				case 'Z': { m_Actions = m_Actions & ~Actions::Teleport; } break;
+				case 'R': { m_Actions = m_Actions & ~Actions::Reset; } break;
 
 				}
 			}

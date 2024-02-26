@@ -191,6 +191,16 @@ namespace fw
 
 	}
 
+    void PhysicsComponent::Reset()
+    {
+        m_pBody->SetAngularVelocity(0.0f);
+        m_pBody->SetLinearVelocity(b2Vec2(0,0));
+        b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
+        float rotation = -1.0 * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+
+        m_pBody->SetTransform(position, rotation);
+    }
+
     void PhysicsComponent::AddLinearImpulse(vec2 impulse)
     {
         assert(m_pBody);
@@ -205,6 +215,23 @@ namespace fw
     void PhysicsComponent::AddForce(vec2 force)
     {
         m_pBody->ApplyForce(b2Vec2(force.x, force.y), m_pBody->GetWorldCenter(), true);
+    }
+
+    void PhysicsComponent::AddForce(vec2 force, vec2 offset)
+    {
+        m_pBody->ApplyForce(b2Vec2(force.x, force.y), m_pBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
+    }
+
+    void PhysicsComponent::AddUpForce(float force, vec2 offset)
+    {
+        UpVector = vec2(cos(m_pBody->GetAngle() + PI/2), sin(m_pBody->GetAngle() + PI/2)).Normalize();
+        m_pBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
+    }
+
+    void PhysicsComponent::AddUpForce(float force)
+    {
+        UpVector = vec2(cos(m_pBody->GetAngle() + PI/2), sin(m_pBody->GetAngle() + PI/2)).Normalize();
+        m_pBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBody->GetWorldCenter(), true);
     }
 
     void PhysicsComponent::UpdateBody()
@@ -232,6 +259,17 @@ namespace fw
         vec3 scale = m_pGameObject->GetTransformComponent()->m_scale;
         vec2 size = vec2(scale.x, scale.y);
         box.SetAsBox(size.x / 2, size.y / 2);
+
+        m_fixtureDef.shape = &box;
+        m_fixtureDef.density = 1.0f;
+        m_pBody->CreateFixture(&m_fixtureDef);
+    }
+
+    void PhysicsComponent::SetBox(vec2 scale)
+    {
+        b2PolygonShape box;
+
+        box.SetAsBox(scale.x / 2, scale.y / 2);
 
         m_fixtureDef.shape = &box;
         m_fixtureDef.density = 1.0f;
@@ -347,6 +385,16 @@ namespace fw
         jointDef.Initialize(jointDef.bodyA, jointDef.bodyB, b2Vec2(otherObject->GetTransformComponent()->m_position.x, otherObject->GetTransformComponent()->m_position.y));
 
         m_pJoint = m_pWorld->CreateJoint(&jointDef);
+    }
+
+    void PhysicsComponent::CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor)
+    {
+        b2WeldJointDef jointDef;
+        jointDef.bodyA = m_pBody;
+        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
+        jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
+        jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
+        m_pWorld->CreateJoint(&jointDef);
     }
 
 

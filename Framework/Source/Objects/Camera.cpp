@@ -58,7 +58,7 @@ namespace fw {
         bgfx::setUniform(pUniforms->GetUniform("u_MatView"), &viewMatrix, 1);
 
         mat4 projMatrix;
-        projMatrix.CreatePerspectiveVFoV(45, m_AspectRatio, 0.01f, 100.0f);
+        projMatrix.CreatePerspectiveVFoV(45, m_AspectRatio, 0.01f, 300.0f);
         bgfx::setUniform(pUniforms->GetUniform("u_MatProj"), &projMatrix);
     }
 

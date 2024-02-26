@@ -20,6 +20,9 @@ namespace fw
 		virtual const char* GetType() override { return GetStaticType(); }
 
 		void Render(int viewID);
+
+		void SetMesh(Mesh* pMesh) { m_pMesh = pMesh; }
+		void SetMaterial(Material* pMaterial) { m_pMaterial = pMaterial; }
 		
 	public:
 		Mesh* m_pMesh = nullptr;

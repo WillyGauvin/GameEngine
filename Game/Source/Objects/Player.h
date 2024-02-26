@@ -16,7 +16,7 @@ class VirtualController;
 class Player : public fw::GameObject
 {
 public:
-    Player(fw::Scene* pScene, fw::PhysicsCategories CollisionCategory);
+    Player(fw::Scene* pScene);
     virtual ~Player();
 
     void SetController(VirtualController* pController) { m_pController = pController; }

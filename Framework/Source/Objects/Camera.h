@@ -35,6 +35,10 @@ namespace fw {
         void SetProjectionScale(vec2 scale) { m_ProjectionScale = scale; }
         void SetAspectRatio(float32 aspectRatio) { m_AspectRatio = aspectRatio; }
 
+        vec3 GetEye() { return m_eye; }
+        vec3 GetUp() { return m_up; }
+        vec3 GetAt() { return m_at; }
+
     protected:
         
         Scene* m_pScene = nullptr;

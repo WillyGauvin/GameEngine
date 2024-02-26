@@ -18,6 +18,7 @@
 #include "Objects/VirtualController.h"
 #include "Scenes/JoltScene.h"
 #include "Scenes/MidtermScene.h"
+#include "Scenes/LandingScene.h"
 #include "Component/ComponentManager.h"
 
 Game::Game(fw::FWCore& fwCore)
@@ -64,7 +65,8 @@ Game::Game(fw::FWCore& fwCore)
     //Create some Scenes
     m_pJoltScene = new JoltScene(this);
     m_pMidtermScene = new MidtermScene(this);
-    m_pCurrentScene = m_pMidtermScene;
+    m_pLandingScene = new LandingScene(this);
+    m_pCurrentScene = m_pLandingScene;
 }
 
 Game::~Game()
@@ -149,9 +151,13 @@ void Game::Editor_SelectScene()
     {
         m_pCurrentScene = m_pJoltScene;
     }
-    if (ImGui::Button("Midtern"))
+    if (ImGui::Button("Midterm"))
     {
         m_pCurrentScene = m_pMidtermScene;
+    }
+    if (ImGui::Button("Landing"))
+    {
+        m_pCurrentScene = m_pLandingScene;
     }
     ImGui::End();
 }

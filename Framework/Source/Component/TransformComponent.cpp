@@ -11,6 +11,10 @@ namespace fw
 		m_position = position;
 		m_rotation = rotation;
 		m_scale = scale;
+
+		m_originalPosition = m_position;
+		m_originalRotation = m_rotation;
+		m_originalScale = m_scale;
 	}
 
 	TransformComponent::~TransformComponent()
@@ -21,6 +25,14 @@ namespace fw
 	void TransformComponent::UpdateSRT()
 	{
 		m_transform.CreateSRT(m_scale, m_rotation, m_position);
+	}
+
+	void TransformComponent::Reset()
+	{
+		m_position = m_originalPosition;
+		m_rotation = m_originalRotation;
+		m_scale = m_originalScale;
+		UpdateSRT();
 	}
 
 }

@@ -42,6 +42,13 @@ void LoadResources(fw::ResourceManager* pResources)
     // Load some textures.
     pResources->Add<fw::Texture>( "MegaMan", new fw::Texture( "Data/Textures/MegaMan.png" ) );
     pResources->Add<fw::Texture>("Dice", new fw::Texture("Data/Textures/dice.png"));
+    pResources->Add<fw::Texture>("ShipOff", new fw::Texture("Data/Textures/LunarLanding/Off.png"));
+    pResources->Add<fw::Texture>("ShipLeft", new fw::Texture("Data/Textures/LunarLanding/Left.png"));
+    pResources->Add<fw::Texture>("ShipRight", new fw::Texture("Data/Textures/LunarLanding/Right.png"));
+    pResources->Add<fw::Texture>("ShipBoth", new fw::Texture("Data/Textures/LunarLanding/Both.png"));
+    pResources->Add<fw::Texture>("ShipCrash", new fw::Texture("Data/Textures/LunarLanding/Crash.png"));
+
+
 
     // Create some materials.
     pResources->Add<fw::Material>( "Red", new fw::Material( getShader("SolidColor"), nullptr, fw::color4f::Red(), false ) );
@@ -52,5 +59,13 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>( "VertexColor", new fw::Material( getShader("VertexColor"), nullptr, fw::color4f::White(), false ) );
     pResources->Add<fw::Material>( "MegaMan", new fw::Material( getShader("Texture"), getTexture("MegaMan"), fw::color4f::White(), true ) );
     pResources->Add<fw::Material>("Dice", new fw::Material(getShader("Texture"), getTexture("Dice"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipOff", new fw::Material(getShader("Texture"), getTexture("ShipOff"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipLeft", new fw::Material(getShader("Texture"), getTexture("ShipLeft"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipRight", new fw::Material(getShader("Texture"), getTexture("ShipRight"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipBoth", new fw::Material(getShader("Texture"), getTexture("ShipBoth"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipCrash", new fw::Material(getShader("Texture"), getTexture("ShipCrash"), fw::color4f::White(), true));
+
+
+
 
 }

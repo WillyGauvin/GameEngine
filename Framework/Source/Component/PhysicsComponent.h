@@ -38,11 +38,16 @@ namespace fw
 		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, fw::PhysicsCategories category);
 
 		virtual ~PhysicsComponent();
-
+		
+		void Reset();
 
 		void AddLinearImpulse(vec2 impulse);
 		void AddAngularImpulse(float impulse);
 		void AddForce(vec2 force);
+		void AddForce(vec2 force, vec2 offset);
+		void AddUpForce(float force, vec2 offset);
+		void AddUpForce(float force);
+
 
 		bool isEnabled() { return m_MotorEnabled; }
 
@@ -50,6 +55,7 @@ namespace fw
 
 		void SetCircle(bool isProjectile);
 		void SetBox();
+		void SetBox(vec2 scale);
 		void SetPoly(const b2Vec2* points, int32 count);
 		void SetSensor();
 		void SetLineCensor();
@@ -61,6 +67,7 @@ namespace fw
 		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
 		void CreateRevolutionJoint(GameObject* otherObject);
 
+		void CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
 
 		void CreatePrismaticJoint(GameObject* otherObject, bool collideConnectd, float upperLimit, float lowerLimit, float motorSpeed, float maxMotorForce, bool isMotorEnabled);
 
@@ -89,6 +96,6 @@ namespace fw
 		b2Joint* m_pJoint = nullptr;
 		bool m_MotorEnabled = false;
 		PhysicsCategories m_category;
-
+		vec2 UpVector = (0,1);
 	};
 }
