@@ -10,32 +10,11 @@
 
 namespace fw
 {
-
-	enum class PhysicsCategories
-	{
-		PhysicsCategory_Default = 1 << 0,
-		PhysicsCategory_Wall = 1 << 1,
-		PhysicsCategory_Bumper  = 1 << 2,
-		PhysicsCategory_Paddle = 1 << 3,
-		PhysicsCategory_RedBall = 1 << 4,
-		PhysicsCategory_BlueBall = 1 << 5,
-		PhysicsCategory_GreenBall = 1 << 6,
-		PhysicsCategory_Sensor = 1 << 7,
-		PhysicsCategory_RedObstacle = 1 << 8,
-		PhysicsCategory_BlueObstacle = 1 << 9,
-		PhysicsCategory_GreenObstacle = 1 << 10,
-		PhysicsCategory_LeftSensor = 1 << 11,
-		PhysicsCategory_RightSensor = 1 << 12,
-		PhysicsCategory_Box = 1 << 13
-
-	};
-
-
 	class PhysicsComponent : public Component
 	{
 	public:
 		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic);
-		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, fw::PhysicsCategories category);
+		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, uint16 collisionProfile, uint16 collisionProfileMask);
 
 		virtual ~PhysicsComponent();
 		
@@ -96,7 +75,6 @@ namespace fw
 		b2FixtureDef m_fixtureDef;
 		b2Joint* m_pJoint = nullptr;
 		bool m_MotorEnabled = false;
-		PhysicsCategories m_category;
 		vec2 UpVector = (0,1);
 	};
 }

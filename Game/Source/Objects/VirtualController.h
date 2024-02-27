@@ -26,9 +26,9 @@ public:
 	virtual void ExecuteEvent(fw::Event* pEvent) override;
 
 	void StartFrame();
-	bool isActionHeld(Actions action) { return (m_Actions & action); }
-	bool WasActionPressed(Actions action) { return (~m_OldActions & action && m_Actions & action); }
-	bool WasActionReleased(Actions action) { return (m_OldActions & action && ~m_Actions & action); }
+	bool isActionHeld(Actions action);
+	bool WasActionPressed(Actions action);
+	bool WasActionReleased(Actions action);
 
 protected:
 	uint32 m_Actions = 0;

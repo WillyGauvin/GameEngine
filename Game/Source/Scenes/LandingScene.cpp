@@ -15,9 +15,9 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 	m_Objects.push_back(new fw::GameObject(this));
 	fw::GameObject* moon = m_Objects[0];
-	moon->AddComponent(new fw::TransformComponent(moon, vec3(0, -20, 0), vec3(0, 0, 0), vec3(500, 50, 1)));
-	moon->AddComponent(new fw::RenderComponent(moon, getMesh("Square"), getMaterial("Blue")));
-	moon->AddComponent(new fw::PhysicsComponent(moon, m_pWorld, false));
+	moon->AddComponent(new fw::TransformComponent(moon, vec3(0, -20, 0), vec3(0, 0, 0), vec3(700, 50, 1)));
+	moon->AddComponent(new fw::RenderComponent(moon, getMesh("Square"), getMaterial("White")));
+	moon->AddComponent(new fw::PhysicsComponent(moon, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 	moon->GetPhysicsComponent()->SetBox();
 
 
@@ -31,7 +31,7 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_Objects.push_back(m_pPlayer);
 	m_pPlayer->AddComponent(new fw::TransformComponent(m_pPlayer, vec3(0, 50, 0), vec3(0, 0, 0), vec3(10, 10, 1)));
 	m_pPlayer->AddComponent(new fw::RenderComponent(m_pPlayer, getMesh("Sprite"), m_pOff));
-	m_pPlayer->AddComponent(new fw::PhysicsComponent(m_pPlayer, m_pWorld, true));
+	m_pPlayer->AddComponent(new fw::PhysicsComponent(m_pPlayer, m_pWorld, true, LunarCollisionProfile::Ship, LunarCollisionProfile::maskCollideAll));
 	m_pPlayer->GetPhysicsComponent()->SetBox(vec2(5, 7.5));
 
 	//m_Objects.push_back(new fw::GameObject(this));
@@ -45,14 +45,14 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_Objects.push_back(m_pLeftEngine);
 	m_pLeftEngine->AddComponent(new fw::TransformComponent(m_pLeftEngine, vec3(-2.85, 49.7, 0), vec3(0, 0, 0), vec3(0.75, 2.5, 1)));
 //	m_pLeftEngine->AddComponent(new fw::RenderComponent(m_pLeftEngine, getMesh("Square"), getMaterial("Blue")));
-	m_pLeftEngine->AddComponent(new fw::PhysicsComponent(m_pLeftEngine, m_pWorld, true));
+	m_pLeftEngine->AddComponent(new fw::PhysicsComponent(m_pLeftEngine, m_pWorld, true, LunarCollisionProfile::Ship, LunarCollisionProfile::maskCollideAll));
 	m_pLeftEngine->GetPhysicsComponent()->SetBox();
 	
 	m_pRightEngine = new fw::GameObject(this);
 	m_Objects.push_back(m_pRightEngine);
 	m_pRightEngine->AddComponent(new fw::TransformComponent(m_pRightEngine, vec3(2.85, 49.7, 0), vec3(0, 0, 0), vec3(0.75, 2.5, 1)));
 //	m_pRightEngine->AddComponent(new fw::RenderComponent(m_pRightEngine, getMesh("Square"), getMaterial("Blue")));
-	m_pRightEngine->AddComponent(new fw::PhysicsComponent(m_pRightEngine, m_pWorld, true));
+	m_pRightEngine->AddComponent(new fw::PhysicsComponent(m_pRightEngine, m_pWorld, true, LunarCollisionProfile::Ship, LunarCollisionProfile::maskCollideAll));
 	m_pRightEngine->GetPhysicsComponent()->SetBox();
 
 	m_pPlayer->GetPhysicsComponent()->CreateWeldJoint(m_pLeftEngine, vec2(-2.5, 0), vec2(0.375, 0.3));
@@ -65,8 +65,6 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 	m_pEventManager->RegisterListener("InputEvent", this);
 	m_pEventManager->RegisterListener("CollisionEvent", this);
-	m_pEventManager->RegisterListener("ThrusterActivateEvent", this);
-	m_pEventManager->RegisterListener("ResetEvent", this);
 
 	Reset();
 }
@@ -89,14 +87,16 @@ void LandingScene::ExecuteEvent(fw::Event* pEvent)
 	if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
 	{
 		fw::CollisionEvent* event = static_cast<fw::CollisionEvent*>(pEvent);
-
+		if (event->GetObjectA() == m_pPlayer || event->GetObjectB() == m_pPlayer || event->GetObjectA() == m_pLeftEngine || event->GetObjectB() == m_pLeftEngine || event->GetObjectA() == m_pRightEngine || event->GetObjectB() == m_pRightEngine)
+		{
+			int i = 0;
+		}
 	}
 }
 
 void LandingScene::StartFrame(float deltaTime)
 {
 	m_pEventManager->ProcessEvents();
-	m_pController->StartFrame();
 }
 
 void LandingScene::Update(float deltaTime)
@@ -112,35 +112,43 @@ void LandingScene::Update(float deltaTime)
 
 	//m_pCamera->SetEye(vec3())
 	m_pCamera->Update(deltaTime);
-
-	if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
+	if (m_hasCrashed == false)
 	{
-		m_pPlayer->GetRenderComponent()->SetMaterial(m_pBoth);
-		m_pPlayer->GetPhysicsComponent()->AddUpForce(500.0f);
-		
-	}
-	else if (m_pController->isActionHeld(VirtualController::Right))
-	{
-		m_pPlayer->GetRenderComponent()->SetMaterial(m_pRight);
-		m_pRightEngine->GetPhysicsComponent()->AddUpForce(250.0f);
+		if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
+		{
+			m_pPlayer->GetRenderComponent()->SetMaterial(m_pBoth);
+			m_pPlayer->GetPhysicsComponent()->AddUpForce(500.0f);
+
+		}
+		else if (m_pController->isActionHeld(VirtualController::Right))
+		{
+			m_pPlayer->GetRenderComponent()->SetMaterial(m_pRight);
+			m_pRightEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
 
-	}
-	else if (m_pController->isActionHeld(VirtualController::Left))
-	{
-		m_pPlayer->GetRenderComponent()->SetMaterial(m_pLeft);
-		m_pLeftEngine->GetPhysicsComponent()->AddUpForce(250.0f);
+		}
+		else if (m_pController->isActionHeld(VirtualController::Left))
+		{
+			m_pPlayer->GetRenderComponent()->SetMaterial(m_pLeft);
+			m_pLeftEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
 
+		}
+		else
+		{
+			m_pPlayer->GetRenderComponent()->SetMaterial(m_pOff);
+		}
 	}
 	else
 	{
-		m_pPlayer->GetRenderComponent()->SetMaterial(m_pOff);
+		m_pPlayer->GetRenderComponent()->SetMaterial(m_pCrash);
+
 	}
 	if (m_pController->WasActionPressed(VirtualController::Reset))
 	{
 		Reset();
 	}
+	m_pController->StartFrame();
 	//m_pArrow->GetTransformComponent()->m_rotation = vec3(0, 0, fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle()) * -1 + 90);
 }
 
@@ -183,6 +191,7 @@ void LandingScene::Reset()
 		m_Obstacles.pop_back();
 	}
 	CreateObstacles();
+	m_hasCrashed = false;
 }
 
 void LandingScene::CreateObstacles()
@@ -199,7 +208,7 @@ void LandingScene::CreateObstacles()
 	fw::GameObject* moonRock = nullptr;
 
 	float xSpacing = 3;
-	for (int i = -50; i < 50; i++)
+	for (int i = -100; i < 100; i++)
 	{
 		int num = (rand() % 19) + 1;
 		float randRotation = (rand() % 359) + 1;
@@ -215,7 +224,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pTriangle, getMaterial("White")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetTriangle();
 			break;
@@ -227,7 +236,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pSquare, getMaterial("White")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetBox();
 			break;
@@ -239,7 +248,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale / 4, randScale / 4, 1.25)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pCircle, getMaterial("White")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetCircle(false);
 			break;
@@ -251,7 +260,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pTriangle, getMaterial("Grey")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetTriangle();
 			break;
@@ -263,7 +272,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale, randScale, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pSquare, getMaterial("Grey")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetBox();
 			break;
@@ -275,7 +284,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, randHeight, 0), vec3(0, 0, randRotation), vec3(randScale / 4, randScale / 4, 1.25)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, pCircle, getMaterial("Grey")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Obstacle, LunarCollisionProfile::maskCollideAll));
 
 			moonRock->GetPhysicsComponent()->SetCircle(false);
 			break;
@@ -284,7 +293,7 @@ void LandingScene::CreateObstacles()
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
 			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, 7, 0), vec3(0, 0, 0), vec3(6, 6, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, getMesh("Square"), getMaterial("Red")));
-			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false));
+			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Landing, LunarCollisionProfile::maskCollideAll));
 			moonRock->GetPhysicsComponent()->SetBox();
 			break;
 		}

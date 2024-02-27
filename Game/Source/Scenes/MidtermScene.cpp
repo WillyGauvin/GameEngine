@@ -27,7 +27,7 @@ MidtermScene::MidtermScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 	m_Objects.push_back(m_pPlayer);
 	m_pPlayer->AddComponent(new fw::TransformComponent(m_pPlayer, vec3(-10, 2, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
 	m_pPlayer->AddComponent(new fw::RenderComponent(m_pPlayer, getMesh("Square"), getMaterial("Blue")));
-	m_pPlayer->AddComponent(new fw::PhysicsComponent(m_pPlayer, m_pWorld, true, fw::PhysicsCategories::PhysicsCategory_Box));
+	m_pPlayer->AddComponent(new fw::PhysicsComponent(m_pPlayer, m_pWorld, true, MidtermCollisionProfile::Box, MidtermCollisionProfile::BoxProfile));
 	m_pPlayer->GetPhysicsComponent()->SetBox();
 
 	m_pPlayer->GetPhysicsComponent()->CreateRevolutionJoint(m_pLeftBox, vec2(4, 4), vec2(0, 0));
@@ -38,14 +38,14 @@ MidtermScene::MidtermScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 	m_Objects.push_back(m_pLeftSensor);
 	m_pLeftSensor->AddComponent(new fw::TransformComponent(m_pLeftSensor, vec3(-5, 0, 0), vec3(0, 0, 0), vec3(0.5, 20, 1)));
 	m_pLeftSensor->AddComponent(new fw::RenderComponent(m_pLeftSensor, getMesh("Square"), getMaterial("Red")));
-	m_pLeftSensor->AddComponent(new fw::PhysicsComponent(m_pLeftSensor, m_pWorld, false, fw::PhysicsCategories::PhysicsCategory_LeftSensor));
+	m_pLeftSensor->AddComponent(new fw::PhysicsComponent(m_pLeftSensor, m_pWorld, false, MidtermCollisionProfile::LeftSensor, MidtermCollisionProfile::LeftSensorProfile));
 	m_pLeftSensor->GetPhysicsComponent()->SetLineCensor();
 
 	m_pRightSensor = new fw::GameObject(this);
 	m_Objects.push_back(m_pRightSensor);
 	m_pRightSensor->AddComponent(new fw::TransformComponent(m_pRightSensor, vec3(5, 0, 0), vec3(0, 0, 0), vec3(0.5, 20, 1)));
 	m_pRightSensor->AddComponent(new fw::RenderComponent(m_pRightSensor, getMesh("Square"), getMaterial("Red")));
-	m_pRightSensor->AddComponent(new fw::PhysicsComponent(m_pRightSensor, m_pWorld, false, fw::PhysicsCategories::PhysicsCategory_RightSensor));
+	m_pRightSensor->AddComponent(new fw::PhysicsComponent(m_pRightSensor, m_pWorld, false, MidtermCollisionProfile::RightSensor, MidtermCollisionProfile::RightSensorProfile));
 	m_pRightSensor->GetPhysicsComponent()->SetLineCensor();
 
 
@@ -96,7 +96,7 @@ void MidtermScene::ExecuteEvent(fw::Event* pEvent)
 	if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
 	{
 		fw::CollisionEvent* event = static_cast<fw::CollisionEvent*>(pEvent);
-		if (static_cast<int16>(event->GetObjectB()->GetPhysicsComponent()->m_category) & static_cast<int16>(fw::PhysicsCategories::PhysicsCategory_LeftSensor) && side != CurrentSide::LeftSide)
+		if (event->GetObjectB()->GetPhysicsComponent()->m_fixtureDef.filter.categoryBits == MidtermCollisionProfile::LeftSensor && side != CurrentSide::LeftSide)
 		{
 			//Attach
 			side = CurrentSide::LeftSide;
@@ -104,7 +104,7 @@ void MidtermScene::ExecuteEvent(fw::Event* pEvent)
 
 
 		}
-		else if (static_cast<int16>(event->GetObjectB()->GetPhysicsComponent()->m_category) & static_cast<int16>(fw::PhysicsCategories::PhysicsCategory_RightSensor) && side != CurrentSide::RightSide)
+		else if (event->GetObjectB()->GetPhysicsComponent()->m_fixtureDef.filter.categoryBits == MidtermCollisionProfile::RightSensor && side != CurrentSide::RightSide)
 		{
 			//Attach
 			side = CurrentSide::RightSide;

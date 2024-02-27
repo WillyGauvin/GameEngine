@@ -27,7 +27,6 @@ namespace fw {
     class PhysicsComponent;
     class RenderComponent;
     class MyContactListener;
-    enum class PhysicsCategories;
     class GameObject
     {
     public:

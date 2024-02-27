@@ -60,3 +60,19 @@ void VirtualController::StartFrame()
 {
 	m_OldActions = m_Actions;
 }
+
+bool VirtualController::isActionHeld(Actions action)
+{
+	return (m_Actions & action);
+}
+
+bool VirtualController::WasActionPressed(Actions action)
+{
+	return (~m_OldActions & action && m_Actions & action);
+}
+
+bool VirtualController::WasActionReleased(Actions action)
+{
+	return (m_OldActions & action && ~m_Actions & action);
+}
+

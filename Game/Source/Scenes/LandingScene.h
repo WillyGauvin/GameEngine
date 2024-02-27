@@ -5,6 +5,20 @@
 
 class VirtualController;
 
+namespace LunarCollisionProfile
+{
+	enum PhysicsCategory
+	{
+		Ship = 1 << 0,
+		Landing = 1 << 1,
+		Obstacle  = 1 << 2,
+	};
+	enum PhysicsMasks
+	{
+		maskCollideAll = Ship | Landing | Obstacle
+	};
+}
+
 class LandingScene : public fw::Scene
 {
 public:
@@ -32,6 +46,7 @@ protected:
 	fw::Material* m_pBoth;
 	fw::Material* m_pCrash;
 	
+	bool m_hasCrashed = false;
 
 	std::vector<fw::GameObject*> m_Obstacles;
 

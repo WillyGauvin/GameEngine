@@ -9,6 +9,21 @@ enum CurrentSide
 	LeftSide,
 	RightSide
 };
+namespace MidtermCollisionProfile
+{
+	enum PhysicsCategory
+	{
+		Box = 1 << 0,
+		LeftSensor = 1 << 1,
+		RightSensor = 1 << 2,
+	};
+	enum PhysicsMasks
+	{
+		BoxProfile = Box | LeftSensor | RightSensor,
+		LeftSensorProfile = Box,
+		RightSensorProfile = Box
+	};
+}
 class MidtermScene : public fw::Scene
 {
 public:
