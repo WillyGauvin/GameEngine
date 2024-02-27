@@ -26,6 +26,7 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pRight = getMaterial("ShipRight");
 	m_pBoth = getMaterial("ShipBoth");
 	m_pCrash = getMaterial("ShipCrash");
+	m_pLanded = getMaterial("ShipLanded");
 
 	m_pPlayer = new fw::GameObject(this);
 	m_Objects.push_back(m_pPlayer);
@@ -35,8 +36,8 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pPlayer->GetPhysicsComponent()->SetBox(vec2(5, 7.5));
 
 	//m_Objects.push_back(new fw::GameObject(this));
-	//fw::GameObject* mainbody = m_Objects[3];
-	//mainbody->AddComponent(new fw::TransformComponent(mainbody, vec3(0, 10, 0), vec3(0, 0, 0), vec3(5, 7.5, 1)));
+	//fw::GameObject* mainbody = m_Objects[m_Objects.size()-1];
+	//mainbody->AddComponent(new fw::TransformComponent(mainbody, vec3(0, 50, 0), vec3(0, 0, 0), vec3(5, 7.5, 1)));
 	//mainbody->AddComponent(new fw::RenderComponent(mainbody, getMesh("Square"), getMaterial("Red")));
 	//mainbody->AddComponent(new fw::PhysicsComponent(mainbody, m_pWorld, false));
 	//mainbody->GetPhysicsComponent()->SetBox();
@@ -87,9 +88,30 @@ void LandingScene::ExecuteEvent(fw::Event* pEvent)
 	if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
 	{
 		fw::CollisionEvent* event = static_cast<fw::CollisionEvent*>(pEvent);
-		if (event->GetObjectA() == m_pPlayer || event->GetObjectB() == m_pPlayer || event->GetObjectA() == m_pLeftEngine || event->GetObjectB() == m_pLeftEngine || event->GetObjectA() == m_pRightEngine || event->GetObjectB() == m_pRightEngine)
+		if (event->GetProfileA() == LunarCollisionProfile::Ship && event->GetProfileB() == LunarCollisionProfile::Landing)
 		{
-			int i = 0;
+			m_hasTouchedDown = true;
+		}
+		if (event->GetProfileA() == LunarCollisionProfile::Ship && event->GetProfileB() == LunarCollisionProfile::Obstacle)
+		{
+			m_hasTouchedDown = true;
+			m_hasCrashed = true;
+
+			int i = rand() % 3 + 1;
+			switch (i)
+			{
+			case 1:
+				m_ReasonForCrash = "Can't Land there!";
+				break;
+			case 2:
+				m_ReasonForCrash = "That wasn't a landing zone!";
+				break;
+			case 3:
+				m_ReasonForCrash = "Not a landing spot!";
+				break;
+
+			}
+			
 		}
 	}
 }
@@ -110,14 +132,14 @@ void LandingScene::Update(float deltaTime)
 	fw::MyClamp<float>(CameraZPos, -200, -20);
 	m_pCamera->SetEye(vec3(shipPosition.x, shipPosition.y, CameraZPos));
 
-	//m_pCamera->SetEye(vec3())
 	m_pCamera->Update(deltaTime);
-	if (m_hasCrashed == false)
+	if (m_hasCrashed == false && m_hasSafeLanded == false)
 	{
 		if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pBoth);
 			m_pPlayer->GetPhysicsComponent()->AddUpForce(500.0f);
+			m_hasTouchedDown = false;
 
 		}
 		else if (m_pController->isActionHeld(VirtualController::Right))
@@ -125,29 +147,54 @@ void LandingScene::Update(float deltaTime)
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pRight);
 			m_pRightEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
-
+			m_hasTouchedDown = false;
 		}
 		else if (m_pController->isActionHeld(VirtualController::Left))
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pLeft);
 			m_pLeftEngine->GetPhysicsComponent()->AddUpForce(250.0f);
 
-
+			m_hasTouchedDown = false;
 		}
 		else
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pOff);
 		}
 	}
-	else
+
+	if (m_hasTouchedDown == true && m_hasCrashed == true)
 	{
 		m_pPlayer->GetRenderComponent()->SetMaterial(m_pCrash);
+	}
 
+	else if (m_hasTouchedDown == true && m_hasCrashed == false && m_hasSafeLanded == false)
+	{
+		if (m_ShipSpeed > 10)
+		{
+			m_hasCrashed = true;
+			m_ReasonForCrash = "You landed too fast!!";
+		}
+		if (fw::fequal(m_ShipSpeed, 0.0f))
+		{
+			m_hasSafeLanded = true;
+			m_pPlayer->GetRenderComponent()->SetMaterial(m_pLanded);
+		}
+		else if (m_ShipAngle < -15.0f || m_ShipAngle > 15)
+		{
+			m_hasCrashed = true;
+			m_ReasonForCrash = "Bad angle!";
+		}
 	}
 	if (m_pController->WasActionPressed(VirtualController::Reset))
 	{
 		Reset();
 	}
+
+	//Update Ship Values
+	m_ShipSpeed = vec2(m_pPlayer->GetPhysicsComponent()->m_pBody->GetLinearVelocity().x, m_pPlayer->GetPhysicsComponent()->m_pBody->GetLinearVelocity().y).Length();
+	m_ShipAngle = fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle());
+
+
 	m_pController->StartFrame();
 	//m_pArrow->GetTransformComponent()->m_rotation = vec3(0, 0, fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle()) * -1 + 90);
 }
@@ -164,13 +211,68 @@ void LandingScene::Draw()
 	{
 		ImGui::Text("UpVector: %f, %f", m_pPlayer->GetPhysicsComponent()->UpVector.x, m_pPlayer->GetPhysicsComponent()->UpVector.y);
 		ImGui::Text("Angle: %f", fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle()));
-		
+		ImGui::Text("Speed: %f", m_ShipSpeed);
+		ImGui::Text("Angle: %f", m_ShipAngle);
+	}
+	ImGui::End();
+
+	if (ImGui::Begin("Lander Angle"))
+	{
+		int angle = (int)m_ShipAngle;
+		ImGui::Text("Angle %d", angle);
+		if (angle < -15 || angle > 15)
+		{
+			ImGui::Text("BAD ANGLE!");
+		}
+		else
+		{
+			ImGui::Text("Good Angle!");
+		}
+	}
+	ImGui::End();
+
+	if (ImGui::Begin("Lander Speed"))
+	{
+		int speed = (int)m_ShipSpeed;
+		ImGui::Text("Speed %d", speed);
+		if (speed > 10)
+		{
+			ImGui::Text("TOO FAST!");
+		}
+		else
+		{
+			ImGui::Text("Good Speed!");
+		}
+	}
+	ImGui::End();
+	if (ImGui::Begin("Landing Status"))
+	{
+		if (m_hasTouchedDown == false)
+		{
+			ImGui::Text("Landing...");
+		}  
+		else if (m_hasTouchedDown == true && m_hasCrashed == false && m_hasSafeLanded == false)
+		{
+			ImGui::Text("Touched Down...");
+		}
+		else if (m_hasTouchedDown == true && m_hasCrashed == true)
+		{
+			ImGui::Text("CRASHED!");
+			const char* CrashReason = m_ReasonForCrash.c_str();
+			ImGui::Text("Reason For Crash");
+			ImGui::Text(CrashReason);
+		}
+		else if (m_hasTouchedDown == true && m_hasSafeLanded == true)
+		{
+			ImGui::Text("Safely Landed!");
+		}
 	}
 	ImGui::End();
 }
 
 void LandingScene::Reset()
 {
+
 	m_pPlayer->GetTransformComponent()->Reset();
 	m_pPlayer->GetPhysicsComponent()->Reset();
 
@@ -180,18 +282,11 @@ void LandingScene::Reset()
 	m_pRightEngine->GetTransformComponent()->Reset();
 	m_pRightEngine->GetPhysicsComponent()->Reset();
 
-	for (int i = 0; i < m_Obstacles.size(); i++)
-	{
-		m_Objects.pop_back();
-	}
-	int i = 0;
-	for (fw::GameObject* object : m_Obstacles)
-	{
-		delete object;
-		m_Obstacles.pop_back();
-	}
-	CreateObstacles();
+	m_hasTouchedDown = false;
 	m_hasCrashed = false;
+	m_hasSafeLanded = false;
+	m_pCamera->SetEye(vec3(0, 50, -100));
+
 }
 
 void LandingScene::CreateObstacles()
@@ -291,7 +386,7 @@ void LandingScene::CreateObstacles()
 		case 19:
 			m_Obstacles.push_back(new fw::GameObject(this));
 			moonRock = m_Obstacles[m_Obstacles.size() - 1];
-			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, 7, 0), vec3(0, 0, 0), vec3(6, 6, 5)));
+			moonRock->AddComponent(new fw::TransformComponent(moonRock, vec3(i * xSpacing, 7, 0), vec3(0, 0, 0), vec3(8, 8, 5)));
 			moonRock->AddComponent(new fw::RenderComponent(moonRock, getMesh("Square"), getMaterial("Red")));
 			moonRock->AddComponent(new fw::PhysicsComponent(moonRock, m_pWorld, false, LunarCollisionProfile::Landing, LunarCollisionProfile::maskCollideAll));
 			moonRock->GetPhysicsComponent()->SetBox();

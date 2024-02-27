@@ -33,7 +33,11 @@ namespace fw
 
 		Event* pEvent = nullptr;
 
-		pEvent = new CollisionEvent(ObjectA, ObjectB, CollisionNormalA, CollisionNormalB, speedA, speedB);
+		uint16 ProfileA = contact->GetFixtureA()->GetFilterData().categoryBits;
+		uint16 ProfileB = contact->GetFixtureB()->GetFilterData().categoryBits;
+
+
+		pEvent = new CollisionEvent(ObjectA, ObjectB, CollisionNormalA, CollisionNormalB, speedA, speedB, ProfileA, ProfileB);
 
 		m_pEventManager->AddEvent(pEvent);
 	}

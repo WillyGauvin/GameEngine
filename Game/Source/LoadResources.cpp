@@ -47,6 +47,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Texture>("ShipRight", new fw::Texture("Data/Textures/LunarLanding/Right.png"));
     pResources->Add<fw::Texture>("ShipBoth", new fw::Texture("Data/Textures/LunarLanding/Both.png"));
     pResources->Add<fw::Texture>("ShipCrash", new fw::Texture("Data/Textures/LunarLanding/Crash.png"));
+    pResources->Add<fw::Texture>("ShipLanded", new fw::Texture("Data/Textures/LunarLanding/Landed.png"));
+
 
 
 
@@ -67,6 +69,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("ShipRight", new fw::Material(getShader("Texture"), getTexture("ShipRight"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("ShipBoth", new fw::Material(getShader("Texture"), getTexture("ShipBoth"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("ShipCrash", new fw::Material(getShader("Texture"), getTexture("ShipCrash"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("ShipLanded", new fw::Material(getShader("Texture"), getTexture("ShipLanded"), fw::color4f::White(), true));
+
 
 
 

@@ -47,7 +47,6 @@ namespace fw
 
 	PhysicsComponent::~PhysicsComponent()
 	{
-
 	}
 
     void PhysicsComponent::Reset()
@@ -276,6 +275,7 @@ namespace fw
         jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
         jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
         jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
+        jointDef.collideConnected = false;
         m_pWorld->CreateJoint(&jointDef);
     }
 

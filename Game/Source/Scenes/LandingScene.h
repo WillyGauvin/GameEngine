@@ -45,9 +45,14 @@ protected:
 	fw::Material* m_pRight;
 	fw::Material* m_pBoth;
 	fw::Material* m_pCrash;
+	fw::Material* m_pLanded;
 	
+	bool m_hasTouchedDown = false;
 	bool m_hasCrashed = false;
-
+	bool m_hasSafeLanded = false;
+	float m_ShipSpeed = 0.0f;
+	float m_ShipAngle = 0.0f;
+	std::string m_ReasonForCrash = "";
 	std::vector<fw::GameObject*> m_Obstacles;
 
 	fw::GameObject* m_pArrow;

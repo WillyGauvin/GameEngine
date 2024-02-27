@@ -118,7 +118,7 @@ namespace fw {
     class CollisionEvent : public fw::Event
     {
     public:
-        CollisionEvent(GameObject* objectA, GameObject* objectB, vec2 aNormal, vec2 bNormal, float speedA, float speedB)
+        CollisionEvent(GameObject* objectA, GameObject* objectB, vec2 aNormal, vec2 bNormal, float speedA, float speedB, uint16 profileA, uint16 profileB)
         {
             m_ObjectA = objectA;
             m_ObjectB = objectB;
@@ -128,6 +128,10 @@ namespace fw {
 
             m_speedA = speedA;
             m_speedB = speedB;
+
+            m_ProfileA = profileA;
+            m_ProfileB = profileB;
+
         }
         virtual ~CollisionEvent() {}
 
@@ -140,6 +144,10 @@ namespace fw {
         vec2 GetCollisionNormalB() { return m_BNormal; }
         float GetSpeedA() { return m_speedA; }
         float GetSpeedB() { return m_speedB; }
+        uint16 GetProfileA() { return m_ProfileA; }
+        uint16 GetProfileB() { return m_ProfileB; }
+
+        
 
 
     protected:
@@ -149,6 +157,8 @@ namespace fw {
         float m_speedB;
         vec2 m_ANormal;
         vec2 m_BNormal;
+        uint16 m_ProfileA;
+        uint16 m_ProfileB;
     };
 
 } // namespace fw
