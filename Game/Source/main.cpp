@@ -17,31 +17,34 @@
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-    //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Direct3D11 );
-    //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Direct3D12 );
-    //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::OpenGLES );
-    fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::OpenGL );
-    //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Vulkan );
+    {
 
-    ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Agc );
-    ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Gnm );
-    ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Metal );
-    ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Nvn );
+        //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Direct3D11 );
+        //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Direct3D12 );
+        //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::OpenGLES );
+        fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::OpenGL );
+        //fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Vulkan );
 
-    // Run the shader compiler each time we launch the game.
-    int ShaderCompilerErrorCode = 0;
+        ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Agc );
+        ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Gnm );
+        ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Metal );
+        ////untested fw::FWCore* pFWCore = new fw::FWCore( WINDOW_WIDTH, WINDOW_HEIGHT, bgfx::RendererType::Nvn );
 
-    ShaderCompilerGame shaderCompiler( *pFWCore );
-    pFWCore->Run( shaderCompiler );
-    ShaderCompilerErrorCode = shaderCompiler.GetErrorCode();
+        // Run the shader compiler each time we launch the game.
+        int ShaderCompilerErrorCode = 0;
 
-    if( ShaderCompilerErrorCode != 0 )
-        return 1;
+        ShaderCompilerGame shaderCompiler( *pFWCore );
+        pFWCore->Run( shaderCompiler );
+        ShaderCompilerErrorCode = shaderCompiler.GetErrorCode();
 
-    // Run the game.
-    Game game( *pFWCore );
-    pFWCore->Run( game );
-    pFWCore->Shutdown();
+        if( ShaderCompilerErrorCode != 0 )
+            return 1;
+
+        // Run the game.
+        Game game( *pFWCore );
+        pFWCore->Run( game );
+        pFWCore->Shutdown();
+    }
 
     return 0;
 }

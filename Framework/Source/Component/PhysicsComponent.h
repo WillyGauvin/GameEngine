@@ -75,6 +75,6 @@ namespace fw
 		b2FixtureDef m_fixtureDef;
 		b2Joint* m_pJoint = nullptr;
 		bool m_MotorEnabled = false;
-		vec2 UpVector = (0,1);
+		vec2 UpVector = (0.0f,1.0f);
 	};
 }

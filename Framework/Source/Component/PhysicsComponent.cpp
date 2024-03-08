@@ -54,7 +54,7 @@ namespace fw
         m_pBody->SetAngularVelocity(0.0f);
         m_pBody->SetLinearVelocity(b2Vec2(0,0));
         b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
-        float rotation = -1.0 * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+        float rotation = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
 
         m_pBody->SetTransform(position, rotation);
     }
@@ -99,7 +99,6 @@ namespace fw
         m_pGameObject->GetTransformComponent()->UpdatePosition(position);
         m_pGameObject->GetTransformComponent()->UpdateRotation(rotation);
     }
-
     
     void PhysicsComponent::SetCircle(bool isProjectile)
     {

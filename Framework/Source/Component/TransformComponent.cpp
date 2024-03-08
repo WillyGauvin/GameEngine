@@ -2,7 +2,7 @@
 
 #include "SceneSystem/Scene.h"
 #include "GameCore.h"
-
+#include "Component/PhysicsComponent.h"
 namespace fw
 {
 

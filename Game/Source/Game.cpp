@@ -20,11 +20,15 @@
 #include "Scenes/MidtermScene.h"
 #include "Scenes/LandingScene.h"
 #include "Component/ComponentManager.h"
+#include <winsock.h>
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
 {
-    srand(time(NULL));
+    WSAData wsaData;
+    WSAStartup(MAKEWORD(1, 1), &wsaData);
+
+    srand((unsigned int)time(NULL));
     // This is a hard-coded 4096x4096 texture, bigger than we should need.
 // In a complete engine this texture would need to be destroyed
 //     and regenerated if we needed a bigger version.
@@ -76,6 +80,7 @@ Game::~Game()
     delete m_pUniforms;
     delete m_pJoltScene;
     delete m_pMidtermScene;
+    delete m_pLandingScene;
 }
 
 void Game::CreateUniforms()

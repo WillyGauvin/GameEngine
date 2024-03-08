@@ -3,8 +3,21 @@
 #include "Objects/VirtualController.h"
 #include "Events/GameEvents.h"
 
+struct Packet
+{
+	char command;
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	int playerNum;
+	vec3 pos;
+	vec3 rot;
+};
+
 LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 {
+	InitNetwork();
+
 	m_pWorld->SetGravity(b2Vec2(0.0f, -1.62f));
 	m_pController = new VirtualController(m_pEventManager);
 
@@ -44,20 +57,20 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 	m_pLeftEngine = new fw::GameObject(this);
 	m_Objects.push_back(m_pLeftEngine);
-	m_pLeftEngine->AddComponent(new fw::TransformComponent(m_pLeftEngine, vec3(-2.85, 49.7, 0), vec3(0, 0, 0), vec3(0.75, 2.5, 1)));
+	m_pLeftEngine->AddComponent(new fw::TransformComponent(m_pLeftEngine, vec3(-2.85f, 49.7f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.75f, 2.5f, 1.0f)));
 //	m_pLeftEngine->AddComponent(new fw::RenderComponent(m_pLeftEngine, getMesh("Square"), getMaterial("Blue")));
 	m_pLeftEngine->AddComponent(new fw::PhysicsComponent(m_pLeftEngine, m_pWorld, true, LunarCollisionProfile::Ship, LunarCollisionProfile::maskCollideAll));
 	m_pLeftEngine->GetPhysicsComponent()->SetBox();
 	
 	m_pRightEngine = new fw::GameObject(this);
 	m_Objects.push_back(m_pRightEngine);
-	m_pRightEngine->AddComponent(new fw::TransformComponent(m_pRightEngine, vec3(2.85, 49.7, 0), vec3(0, 0, 0), vec3(0.75, 2.5, 1)));
+	m_pRightEngine->AddComponent(new fw::TransformComponent(m_pRightEngine, vec3(2.85f, 49.7f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.75f, 2.5f, 1.0f)));
 //	m_pRightEngine->AddComponent(new fw::RenderComponent(m_pRightEngine, getMesh("Square"), getMaterial("Blue")));
 	m_pRightEngine->AddComponent(new fw::PhysicsComponent(m_pRightEngine, m_pWorld, true, LunarCollisionProfile::Ship, LunarCollisionProfile::maskCollideAll));
 	m_pRightEngine->GetPhysicsComponent()->SetBox();
 
-	m_pPlayer->GetPhysicsComponent()->CreateWeldJoint(m_pLeftEngine, vec2(-2.5, 0), vec2(0.375, 0.3));
-	m_pPlayer->GetPhysicsComponent()->CreateWeldJoint(m_pRightEngine, vec2(2.5, 0), vec2(-0.375, 0.3));
+	m_pPlayer->GetPhysicsComponent()->CreateWeldJoint(m_pLeftEngine, vec2(-2.5f, 0.0f), vec2(0.375f, 0.3f));
+	m_pPlayer->GetPhysicsComponent()->CreateWeldJoint(m_pRightEngine, vec2(2.5f, 0.0f), vec2(-0.375f, 0.3f));
 
 
 
@@ -72,6 +85,11 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 LandingScene::~LandingScene()
 {
+	delete m_pController;
+	/*delete m_pPlayer;
+	delete m_pLeftEngine;
+	delete m_pRightEngine;
+	*/
 }
 
 void LandingScene::ExecuteEvent(fw::Event* pEvent)
@@ -123,6 +141,8 @@ void LandingScene::StartFrame(float deltaTime)
 
 void LandingScene::Update(float deltaTime)
 {
+	UpdateNetwork();
+
 	m_pComponentManager->UpdateTransforms();
 
 	m_pComponentManager->UpdateBodies(m_pWorld, deltaTime);
@@ -133,6 +153,8 @@ void LandingScene::Update(float deltaTime)
 	m_pCamera->SetEye(vec3(shipPosition.x, shipPosition.y, CameraZPos));
 
 	m_pCamera->Update(deltaTime);
+
+	// Inputs
 	if (m_hasCrashed == false && m_hasSafeLanded == false)
 	{
 		if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
@@ -196,7 +218,6 @@ void LandingScene::Update(float deltaTime)
 
 
 	m_pController->StartFrame();
-	//m_pArrow->GetTransformComponent()->m_rotation = vec3(0, 0, fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle()) * -1 + 90);
 }
 
 void LandingScene::Draw()
@@ -209,10 +230,9 @@ void LandingScene::Draw()
 
 	if (ImGui::Begin("Debug"))
 	{
-		ImGui::Text("UpVector: %f, %f", m_pPlayer->GetPhysicsComponent()->UpVector.x, m_pPlayer->GetPhysicsComponent()->UpVector.y);
 		ImGui::Text("Angle: %f", fw::radsToDegrees(m_pPlayer->GetPhysicsComponent()->m_pBody->GetAngle()));
 		ImGui::Text("Speed: %f", m_ShipSpeed);
-		ImGui::Text("Angle: %f", m_ShipAngle);
+		//ImGui::Text()
 	}
 	ImGui::End();
 
@@ -306,9 +326,9 @@ void LandingScene::CreateObstacles()
 	for (int i = -100; i < 100; i++)
 	{
 		int num = (rand() % 19) + 1;
-		float randRotation = (rand() % 359) + 1;
-		float randHeight = (rand() % 4) + 3;
-		float randScale = (rand() % 7) + 4;
+		float randRotation = (float)(rand() % 359) + 1;
+		float randHeight = (float)(rand() % 4) + 3;
+		float randScale = (float)(rand() % 7) + 4;
 		switch (num)
 		{
 		//White Triangle
@@ -396,5 +416,67 @@ void LandingScene::CreateObstacles()
 	for (fw::GameObject* object : m_Obstacles)
 	{
 		m_Objects.push_back(object);
+	}
+}
+
+void LandingScene::InitNetwork()
+{
+
+	m_SocketHandle = (int)socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	sockaddr_in localaddr;
+	localaddr.sin_family = AF_INET;
+	localaddr.sin_addr.s_addr = INADDR_ANY;
+
+	localaddr.sin_port = htons(10000);
+
+	bind(m_SocketHandle, (const sockaddr*)&localaddr, sizeof(sockaddr_in));
+
+	DWORD value = 1;
+	ioctlsocket(m_SocketHandle, FIONBIO, &value);
+
+	hostent* host = gethostbyname("10.50.35.181");
+	in_addr serverInAddr = *(in_addr*)host->h_addr_list[0];
+
+	m_serverAddr.sin_family = AF_INET;
+	m_serverAddr.sin_addr = serverInAddr;
+	m_serverAddr.sin_port = htons(12345);
+}
+
+void LandingScene::UpdateNetwork()
+{
+	Packet packet; 
+
+	packet.command = 'z';
+	packet.r = 0;
+	packet.g = 255;
+	packet.b = 0;
+	packet.playerNum = 13;
+	//packet.pos = vec3(-5, 5, 0);
+	packet.pos = m_pPlayer->GetTransformComponent()->m_position;
+	packet.pos.y -= 40;
+	packet.rot = m_pPlayer->GetTransformComponent()->m_rotation;
+
+
+	int flags = 0;
+	sendto(m_SocketHandle, (const char*)&packet, sizeof(Packet),
+		flags, (sockaddr*)&m_serverAddr, sizeof(sockaddr_in));
+
+
+	char buffer[1000];
+	int bufferSize = 1000;
+	sockaddr_in address;
+	int addrLength = sizeof(sockaddr_in);
+
+	int bytes = -500;
+	while (bytes != -1)
+	{
+		int flags = 0;
+		bytes = (int)recvfrom(m_SocketHandle, buffer, bufferSize,
+			flags, (sockaddr*)&address, &addrLength);
+
+		if (bytes != -1)
+		{
+			Packet* pPacket = reinterpret_cast<Packet*>(buffer);
+		}
 	}
 }

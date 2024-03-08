@@ -2,6 +2,7 @@
 
 #include "Framework.h"
 #include "DataTypes.h"
+#include <winsock.h>
 
 class VirtualController;
 
@@ -34,6 +35,12 @@ public:
 	
 	void CreateObstacles();
 
+	int m_SocketHandle = 0;
+	sockaddr_in m_serverAddr;
+	void InitNetwork();
+	void UpdateNetwork();
+
+
 protected:
 
 	VirtualController* m_pController;
@@ -54,6 +61,4 @@ protected:
 	float m_ShipAngle = 0.0f;
 	std::string m_ReasonForCrash = "";
 	std::vector<fw::GameObject*> m_Obstacles;
-
-	fw::GameObject* m_pArrow;
 };

@@ -27,6 +27,7 @@ JoltScene::~JoltScene()
 {
 	fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pBody);
 	fw::DestroyJoltWorld(m_pWorldBundle);
+	delete m_pWorldBundle;
 }
 
 void JoltScene::ExecuteEvent(fw::Event* pEvent)

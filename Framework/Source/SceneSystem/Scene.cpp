@@ -29,8 +29,10 @@ namespace fw
 		{
 			delete pObject;
 		}
+		m_Objects.clear();
 
 		delete m_pComponentManager;
+	
 		delete m_pWorld;
 		delete m_pContactListener;
 	}
