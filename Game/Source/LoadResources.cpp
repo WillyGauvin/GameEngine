@@ -31,7 +31,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("WideXCube", CreateCubeMesh(vec3(5, 1, 1)));
     pResources->Add<fw::Mesh>("WideYCube", CreateCubeMesh(vec3(1, 5, 1)));
     pResources->Add<fw::Mesh>("WideZCube", CreateCubeMesh(vec3(1, 1, 5)));
-    pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(5,5), vec2(10,10)));
+    pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(50,50), vec2(100,100)));
+    pResources->Add<fw::Mesh>("4x2Plane", CreatePlaneMesh(vec2(5, 3), vec2(10, 10)));
+
 
 
 
@@ -39,6 +41,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::ShaderProgram>( "SolidColor", new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" ) );
     pResources->Add<fw::ShaderProgram>( "VertexColor", new fw::ShaderProgram( "Data/Shaders/", "VertexColor.vert.bin", "VertexColor.frag.bin" ) );
     pResources->Add<fw::ShaderProgram>( "Texture", new fw::ShaderProgram( "Data/Shaders/", "Texture.vert.bin", "Texture.frag.bin" ) );
+    pResources->Add<fw::ShaderProgram>("Water", new fw::ShaderProgram("Data/Shaders/", "Water.vert.bin", "Water.frag.bin"));
 
     // Load some textures.
     pResources->Add<fw::Texture>( "MegaMan", new fw::Texture( "Data/Textures/MegaMan.png" ) );
@@ -49,6 +52,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Texture>("ShipBoth", new fw::Texture("Data/Textures/LunarLanding/Both.png"));
     pResources->Add<fw::Texture>("ShipCrash", new fw::Texture("Data/Textures/LunarLanding/Crash.png"));
     pResources->Add<fw::Texture>("ShipLanded", new fw::Texture("Data/Textures/LunarLanding/Landed.png"));
+    pResources->Add<fw::Texture>("Water", new fw::Texture("Data/Textures/Water.png"));
 
 
 
@@ -71,6 +75,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("ShipBoth", new fw::Material(getShader("Texture"), getTexture("ShipBoth"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("ShipCrash", new fw::Material(getShader("Texture"), getTexture("ShipCrash"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("ShipLanded", new fw::Material(getShader("Texture"), getTexture("ShipLanded"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("Water", new fw::Material(getShader("Water"), getTexture("Water"), fw::color4f::White(), true));
+
 
 
 

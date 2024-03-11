@@ -8,15 +8,16 @@ OBJScene::OBJScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
 	m_pPlane = new fw::GameObject(this);
-	m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("MegaMan")));
-	m_pPlane->AddComponent(new fw::TransformComponent(m_pPlane, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("Water")));
+	m_pPlane->AddComponent(new fw::TransformComponent(m_pPlane, vec3(-50, 0, -20), vec3(0, 0, 0), vec3(1, 1, 1)));
+	m_Objects.push_back(m_pPlane);
+
 	m_pCamera->SetEye(vec3(0.0f, 10.0f, -10.0f));
 	m_pCamera->SetAt(vec3(0.0f, 0.0f, 0.0f));
 }
 
 OBJScene::~OBJScene()
 {
-	delete m_pPlane;
 }
 
 void OBJScene::ExecuteEvent(fw::Event* pEvent)

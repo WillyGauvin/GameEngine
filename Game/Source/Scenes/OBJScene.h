@@ -15,4 +15,6 @@ public:
 
 protected:
 	fw::GameObject* m_pPlane = nullptr;
+	fw::GameObject* m_pOtherPlane = nullptr;
+
 };

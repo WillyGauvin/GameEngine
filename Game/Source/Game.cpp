@@ -146,7 +146,12 @@ void Game::Draw()
     }
 
 
+
     ImGui::End();
+
+    float time = (float)fw::GetSystemTimeSinceGameStart();
+    bgfx::setUniform(m_pUniforms->GetUniform("u_Time"), &time);
+
     m_pCurrentScene->Draw();
     m_pImGuiManager->EndFrame();
 }
