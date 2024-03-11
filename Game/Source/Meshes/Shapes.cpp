@@ -172,3 +172,45 @@ fw::Mesh* CreateCubeMesh(vec3 Objscale)
    
     return new fw::Mesh(VertexFormat_PosUV::format, g_CubeVerts, sizeof(g_CubeVerts), g_CubeIndices, sizeof(g_CubeIndices));
 }
+
+fw::Mesh* CreatePlaneMesh(ivec2 size, vec2 scale)
+{
+    int numPoints = size.x * size.y;
+
+    std::vector<VertexFormat_Pos3NormalUV> verts;
+    std::vector<uint16> indices;
+
+    for (int i = 0; i < numPoints; i++)
+    {
+        int x = i % size.x;
+        int y = (i - x) / size.x;
+        vec2 point = vec2((float)x, (float)y);
+
+        vec3 pos = vec3(point.x * (scale.x / (size.x - 1)),0 , point.y * (scale.y / (size.y - 1)));
+
+        vec3 normal = vec3(0, 1, 0);
+
+        vec2 UV = point;
+
+        verts.push_back({ pos, normal, UV });
+    }
+
+    for (int y = 0; y < size.y - 1; y++)
+    {
+        for (int x = 0; x < size.x - 1; x++)
+        {
+            indices.push_back((x + 1) + ((y + 1) * size.x));
+            indices.push_back(x + (y * size.x));
+            indices.push_back(x  + ((y + 1)* size.x) );
+
+            indices.push_back((x + 1) + ((y + 1) * size.x));
+            indices.push_back((x + 1) + (y * size.x));
+            indices.push_back(x + (y * size.x));
+        }
+    }
+
+    int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)verts.size();
+    int indicesBytes = sizeof(uint16) * (int)indices.size();
+
+    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
+}

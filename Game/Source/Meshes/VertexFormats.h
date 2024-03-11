@@ -46,3 +46,25 @@ struct VertexFormat_PosUV
 
     static bgfx::VertexLayout format;
 };
+
+
+struct VertexFormat_Pos3NormalUV
+{
+    vec3 pos;
+    vec3 normal;
+    vec2 uv;
+
+    static void InitVertexLayout()
+    {
+        format
+            .begin()
+            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .end();
+    };
+
+    static bgfx::VertexLayout format;
+};
+
+

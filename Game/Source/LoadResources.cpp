@@ -31,6 +31,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("WideXCube", CreateCubeMesh(vec3(5, 1, 1)));
     pResources->Add<fw::Mesh>("WideYCube", CreateCubeMesh(vec3(1, 5, 1)));
     pResources->Add<fw::Mesh>("WideZCube", CreateCubeMesh(vec3(1, 1, 5)));
+    pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(5,5), vec2(10,10)));
 
 
 

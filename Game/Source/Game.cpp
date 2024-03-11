@@ -19,6 +19,7 @@
 #include "Scenes/JoltScene.h"
 #include "Scenes/MidtermScene.h"
 #include "Scenes/LandingScene.h"
+#include "Scenes/OBJScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -70,7 +71,8 @@ Game::Game(fw::FWCore& fwCore)
     m_pJoltScene = new JoltScene(this);
     m_pMidtermScene = new MidtermScene(this);
     m_pLandingScene = new LandingScene(this);
-    m_pCurrentScene = m_pLandingScene;
+    m_pOBJScene = new OBJScene(this);
+    m_pCurrentScene = m_pOBJScene;
 }
 
 Game::~Game()
@@ -81,6 +83,7 @@ Game::~Game()
     delete m_pJoltScene;
     delete m_pMidtermScene;
     delete m_pLandingScene;
+    delete m_pOBJScene;
 }
 
 void Game::CreateUniforms()
@@ -163,6 +166,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("Landing"))
     {
         m_pCurrentScene = m_pLandingScene;
+    }
+    if (ImGui::Button("OBJ"))
+    {
+        m_pCurrentScene = m_pOBJScene;
     }
     ImGui::End();
 }

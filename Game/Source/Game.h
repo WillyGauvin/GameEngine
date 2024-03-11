@@ -22,6 +22,8 @@ class MidtermScene;
 
 class LandingScene;
 
+class OBJScene;
+
 class VirtualController;
 
 enum EditorViews
@@ -61,6 +63,8 @@ protected:
     MidtermScene* m_pMidtermScene = nullptr;
 
     LandingScene* m_pLandingScene = nullptr;
+
+    OBJScene* m_pOBJScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 

@@ -14,9 +14,12 @@
 // Storage for the vertex layout structures.
 bgfx::VertexLayout VertexFormat_PosColor::format;
 bgfx::VertexLayout VertexFormat_PosUV::format;
+bgfx::VertexLayout VertexFormat_Pos3NormalUV::format;
+
 
 void InitVertexFormats()
 {
     VertexFormat_PosColor::InitVertexLayout();
     VertexFormat_PosUV::InitVertexLayout();
+    VertexFormat_Pos3NormalUV::InitVertexLayout();
 }
