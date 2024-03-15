@@ -33,6 +33,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("WideZCube", CreateCubeMesh(vec3(1, 1, 5)));
     pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(50,50), vec2(100,100)));
     pResources->Add<fw::Mesh>("4x2Plane", CreatePlaneMesh(vec2(5, 3), vec2(10, 10)));
+    pResources->Add<fw::Mesh>("ObjTest", LoadObj("Data/Textures/TestingObject.obj"));
 
 
 

@@ -214,3 +214,99 @@ fw::Mesh* CreatePlaneMesh(ivec2 size, vec2 scale)
 
     return new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
 }
+
+fw::Mesh* LoadObj(char* objFileName)
+{
+    uint32 length = 0;
+    char* buffer = fw::LoadCompleteFile(objFileName, &length);
+    if (buffer == 0 || length == 0)
+    {
+        delete[] buffer;
+        assert(false);
+    }
+
+    // Split the string at line endings
+    char* next_token = 0;
+    char* line = strtok_s(buffer, "\n", &next_token);
+
+    std::vector<vec2> UVCoordinates;
+    std::vector<vec3> VertexNormals;
+    std::vector<vec3> VertexPositions;
+    std::vector<VertexFormat_Pos3NormalUV> Faces;
+    // Keep looping as long as there are lines:
+    while (line)
+    {
+        // Print out the line to see if it's working.
+        fw::OutputMessage("%s\n", line);
+
+        // TODO: Process the line.
+        int length = strlen(line);
+        if (line[0] == 'v')
+        {
+            //Line is 'vt' : UV Coordinates
+            if (line[1] == 't')
+            {
+                float x;
+                float y;
+                sscanf_s(line, "vt %f %f", &x, &y);
+                UVCoordinates.push_back(vec2(x, y));
+
+            }
+            //Line is 'vn' : Vertex Normal
+            else if (line[1] == 'n')
+            {
+                float x;
+                float y;
+                float z;
+                sscanf_s(line, "vn %f %f %f", &x, &y, &z);
+                VertexNormals.push_back(vec3(x, y, z));
+            }
+            //Line is just 'v' : Vertex Position
+            else
+            {
+                float x;
+                float y;
+                float z;
+                sscanf_s(line, "v %f %f %f", &x, &y, &z);
+                VertexPositions.push_back(vec3(x, y, z));
+            }
+        }
+        //Face
+        else if (line[0] == 'f')
+        {
+            float posIndex1;
+            float UVIndex1;
+            float normIndex1;
+            
+            float posIndex2;
+            float UVIndex2;
+            float normIndex2;
+            
+            float posIndex3;
+            float UVIndex3;
+            float normIndex3;
+
+            sscanf_s(line, "f %f/%f/%f %f/%f/%f %f/%f/%f", &posIndex1, &UVIndex1, &normIndex1, &posIndex2, &UVIndex2, &normIndex2, &posIndex3, &UVIndex3, &normIndex3);
+
+            Faces.push_back({ VertexPositions[(int)posIndex1 - 1], VertexNormals[(int)normIndex1 - 1], UVCoordinates[(int)UVIndex1 - 1] });
+            Faces.push_back({ VertexPositions[(int)posIndex2 - 1], VertexNormals[(int)normIndex2 - 1], UVCoordinates[(int)UVIndex2 - 1] });
+            Faces.push_back({ VertexPositions[(int)posIndex3 - 1], VertexNormals[(int)normIndex3 - 1], UVCoordinates[(int)UVIndex3 - 1] });
+
+            int i = 0;
+        }
+
+        // Go to the next line
+        line = strtok_s(0, "\n", &next_token);
+    }
+    int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)Faces.size();
+
+    std::vector<uint16> indices;
+    for (int i = 0; i < (int)Faces.size(); i++)
+    {
+        indices.push_back(i);
+    }
+
+    int indicesBytes = sizeof(uint16) * (int)indices.size();
+
+    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes);
+}
