@@ -31,9 +31,11 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("WideXCube", CreateCubeMesh(vec3(5, 1, 1)));
     pResources->Add<fw::Mesh>("WideYCube", CreateCubeMesh(vec3(1, 5, 1)));
     pResources->Add<fw::Mesh>("WideZCube", CreateCubeMesh(vec3(1, 1, 5)));
-    pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(50,50), vec2(100,100)));
+    pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(100,100), vec2(400,400)));
     pResources->Add<fw::Mesh>("4x2Plane", CreatePlaneMesh(vec2(5, 3), vec2(10, 10)));
     pResources->Add<fw::Mesh>("ObjTest", LoadObj("Data/Textures/TestingObject.obj"));
+   // pResources->Add<fw::Mesh>("HeightTest", CreateHeightMap("Data/Textures/Test.png"));
+
 
 
 
@@ -43,6 +45,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::ShaderProgram>( "VertexColor", new fw::ShaderProgram( "Data/Shaders/", "VertexColor.vert.bin", "VertexColor.frag.bin" ) );
     pResources->Add<fw::ShaderProgram>( "Texture", new fw::ShaderProgram( "Data/Shaders/", "Texture.vert.bin", "Texture.frag.bin" ) );
     pResources->Add<fw::ShaderProgram>("Water", new fw::ShaderProgram("Data/Shaders/", "Water.vert.bin", "Water.frag.bin"));
+    pResources->Add<fw::ShaderProgram>("DebugNormals", new fw::ShaderProgram("Data/Shaders/", "DebugNormals.vert.bin", "DebugNormals.frag.bin"));
 
     // Load some textures.
     pResources->Add<fw::Texture>( "MegaMan", new fw::Texture( "Data/Textures/MegaMan.png" ) );
@@ -77,6 +80,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("ShipCrash", new fw::Material(getShader("Texture"), getTexture("ShipCrash"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("ShipLanded", new fw::Material(getShader("Texture"), getTexture("ShipLanded"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("Water", new fw::Material(getShader("Water"), getTexture("Water"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("DebugNormals", new fw::Material(getShader("DebugNormals"), nullptr, fw::color4f::White(), true));
+
 
 
 

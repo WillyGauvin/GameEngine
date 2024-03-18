@@ -11,6 +11,9 @@
 
 #include "VertexFormats.h"
 #include "Shapes.h"
+#include "stb/stb_image.h"
+
+
 
 //=======================
 // Triangle
@@ -107,43 +110,43 @@ fw::Mesh* CreateCubeMesh(vec3 Objscale)
     vec2 faceSize = vec2(200, 200);
     vec2 scale = faceSize / texSize;
 
-    VertexFormat_PosUV g_CubeVerts[] =
+    VertexFormat_Pos3NormalUV g_CubeVerts[] =
     {
         //Front
-        {vec3(-1,-1,-1) * Objscale,scale * vec2(0,1)}, //0
-        {vec3(-1,1,-1) * Objscale,scale * vec2(0,2)},  //1
-        {vec3(1,1,-1) * Objscale,scale * vec2(1,2)},   //2
-        {vec3(1,-1,-1) * Objscale,scale * vec2(1,1)},  //3
+        {vec3(-1,-1,-1) * Objscale, vec3(0,0,-1), scale * vec2(0,1)}, //0
+        {vec3(-1,1,-1) * Objscale, vec3(0,0,-1), scale * vec2(0,2)},  //1
+        {vec3(1,1,-1) * Objscale, vec3(0,0,-1), scale * vec2(1,2)},   //2
+        {vec3(1,-1,-1) * Objscale, vec3(0,0,-1), scale * vec2(1,1)},  //3
 
         //Right                             
-        {vec3(1,-1,-1) * Objscale,scale * vec2(1,1)},  //4
-        {vec3(1,1,-1) * Objscale,scale * vec2(1,2)},   //5
-        {vec3(1,1,1) * Objscale,scale * vec2(2,2)},    //6
-        {vec3(1,-1,1) * Objscale,scale * vec2(2,1)},   //7
+        {vec3(1,-1,-1) * Objscale, vec3(1,0,0), scale * vec2(1,1)},  //4
+        {vec3(1,1,-1) * Objscale, vec3(1,0,0), scale * vec2(1,2)},   //5
+        {vec3(1,1,1) * Objscale, vec3(1,0,0), scale * vec2(2,2)},    //6
+        {vec3(1,-1,1) * Objscale, vec3(1,0,0), scale * vec2(2,1)},   //7
 
         //Left                              
-        {vec3(-1,-1,1) * Objscale,scale * vec2(3,1)},  //8
-        {vec3(-1,1,1) * Objscale,scale * vec2(3,2)},   //9
-        {vec3(-1,1,-1) * Objscale,scale * vec2(4,2)},  //10
-        {vec3(-1,-1,-1) * Objscale,scale * vec2(4,1)}, //11
+        {vec3(-1,-1,1) * Objscale, vec3(-1,0,0), scale * vec2(3,1)},  //8
+        {vec3(-1,1,1) * Objscale, vec3(-1,0,0), scale * vec2(3,2)},   //9
+        {vec3(-1,1,-1) * Objscale, vec3(-1,0,0), scale * vec2(4,2)},  //10
+        {vec3(-1,-1,-1) * Objscale, vec3(-1,0,0), scale * vec2(4,1)}, //11
 
         //Back                              
-        {vec3(1,-1,1) * Objscale,scale * vec2(2,1)},   //12
-        {vec3(1,1,1) * Objscale,scale * vec2(2,2)},    //13
-        {vec3(-1,1,1) * Objscale,scale * vec2(3,2)},   //14
-        {vec3(-1,-1,1) * Objscale,scale * vec2(3,1)},  //15
+        {vec3(1,-1,1) * Objscale, vec3(0,0,1), scale * vec2(2,1)},   //12
+        {vec3(1,1,1) * Objscale, vec3(0,0,1), scale * vec2(2,2)},    //13
+        {vec3(-1,1,1) * Objscale, vec3(0,0,1), scale * vec2(3,2)},   //14
+        {vec3(-1,-1,1) * Objscale, vec3(0,0,1), scale * vec2(3,1)},  //15
 
-        //Top                               
-        {vec3(-1,1,-1) * Objscale,scale * vec2(3,3)},  //16
-        {vec3(-1,1,1) * Objscale,scale * vec2(3,2)},   //17
-        {vec3(1,1,1) * Objscale,scale * vec2(2,2)},    //18
-        {vec3(1,1,-1) * Objscale,scale * vec2(2,3)},   //19
+        //Top                              
+        {vec3(-1,1,-1) * Objscale, vec3(0,1,0), scale * vec2(3,3)},  //16
+        {vec3(-1,1,1) * Objscale, vec3(0,1,0), scale * vec2(3,2)},   //17
+        {vec3(1,1,1) * Objscale, vec3(0,1,0), scale * vec2(2,2)},    //18
+        {vec3(1,1,-1) * Objscale, vec3(0,1,0), scale * vec2(2,3)},   //19
 
         //Bottom                            
-        {vec3(1,-1,-1) * Objscale,scale * vec2(2,0)},  //20
-        {vec3(1,-1,1) * Objscale,scale * vec2(2,1)},   //21
-        {vec3(-1,-1,1) * Objscale,scale * vec2(3,1)},  //22
-        {vec3(-1,-1,-1) * Objscale,scale * vec2(3,0)}, //23
+        {vec3(1,-1,-1) * Objscale, vec3(0,-1, 0), scale * vec2(2,0)},  //20
+        {vec3(1,-1,1) * Objscale, vec3(0,-1,0), scale * vec2(2,1)},   //21
+        {vec3(-1,-1,1) * Objscale, vec3(0,-1,0), scale * vec2(3,1)},  //22
+        {vec3(-1,-1,-1) * Objscale, vec3(0,-1,0), scale * vec2(3,0)}, //23
 
 
     };
@@ -170,7 +173,7 @@ fw::Mesh* CreateCubeMesh(vec3 Objscale)
         21,22,23
     };
    
-    return new fw::Mesh(VertexFormat_PosUV::format, g_CubeVerts, sizeof(g_CubeVerts), g_CubeIndices, sizeof(g_CubeIndices));
+    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, g_CubeVerts, sizeof(g_CubeVerts), g_CubeIndices, sizeof(g_CubeIndices));
 }
 
 fw::Mesh* CreatePlaneMesh(ivec2 size, vec2 scale)
@@ -310,3 +313,55 @@ fw::Mesh* LoadObj(char* objFileName)
 
     return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes);
 }
+
+//fw::Mesh* CreateHeightMap(char* filename)
+//{
+//    uint32 length;
+//    char* fileContents = fw::LoadCompleteFile(filename, &length);
+//
+//
+//    int width;
+//    int height;
+//    int channels;
+//    stbi_set_flip_vertically_on_load(true);
+//    unsigned char* pixels = stbi_load_from_memory((unsigned char*)fileContents, length, &width, &height, &channels, 4);
+//    assert(pixels != nullptr);
+//
+//
+//    std::vector<VertexFormat_Pos3NormalUV> verts;
+//    std::vector<uint16> indices;
+//
+//    /*for (int i = 0; i < numPoints; i++)
+//    {
+//        int x = i % size.x;
+//        int y = (i - x) / size.x;
+//        vec2 point = vec2((float)x, (float)y);
+//
+//        vec3 pos = vec3(point.x * (scale.x / (size.x - 1)), 0, point.y * (scale.y / (size.y - 1)));
+//
+//        vec3 normal = vec3(0, 1, 0);
+//
+//        vec2 UV = point;
+//
+//        verts.push_back({ pos, normal, UV });
+//    }
+//
+//    for (int y = 0; y < size.y - 1; y++)
+//    {
+//        for (int x = 0; x < size.x - 1; x++)
+//        {
+//            indices.push_back((x + 1) + ((y + 1) * size.x));
+//            indices.push_back(x + (y * size.x));
+//            indices.push_back(x + ((y + 1) * size.x));
+//
+//            indices.push_back((x + 1) + ((y + 1) * size.x));
+//            indices.push_back((x + 1) + (y * size.x));
+//            indices.push_back(x + (y * size.x));
+//        }
+//    }
+//    */
+//    int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)verts.size();
+//    int indicesBytes = sizeof(uint16) * (int)indices.size();
+//
+//    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
+//}

@@ -19,3 +19,4 @@ fw::Mesh* CreateCircleMesh();
 fw::Mesh* CreateCubeMesh(vec3 Objscale);
 fw::Mesh* CreatePlaneMesh(ivec2 size, vec2 scale);
 fw::Mesh* LoadObj(char* objFileName);
+//fw::Mesh* CreateHeightMap(char* filename);

@@ -93,6 +93,7 @@ void Game::CreateUniforms()
     m_pUniforms = new fw::Uniforms();
 
     m_pUniforms->CreateUniform("u_MatWorld", bgfx::UniformType::Mat4);
+    m_pUniforms->CreateUniform("u_MatWorldRotation", bgfx::UniformType::Mat4);
     m_pUniforms->CreateUniform("u_MatView", bgfx::UniformType::Mat4);
     m_pUniforms->CreateUniform("u_MatProj", bgfx::UniformType::Mat4);
 

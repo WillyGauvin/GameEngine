@@ -18,4 +18,7 @@ public:
 protected:
 	fw::JoltWorldBundle* m_pWorldBundle = nullptr;
 	JPH::Body* m_pBody = nullptr;
+	fw::GameObject* m_ptestObject;
+	float Yrotation = 0.0f;
+	float Xrotation = 0.0f;
 };

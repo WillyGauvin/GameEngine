@@ -7,8 +7,8 @@
 JoltScene::JoltScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 {
 	Game* game = static_cast<Game*>(m_pGameCore);
-	m_pCamera->SetEye(vec3(5, 5, -15));
-	m_pCamera->SetAt(vec3(0, -5, 0));
+	m_pCamera->SetEye(vec3(10, 15, -5));
+	m_pCamera->SetAt(vec3(0, -10, 0));
 	#define getMesh game->GetResourceManager()->Get<fw::Mesh>
 	#define getMaterial game->GetResourceManager()->Get<fw::Material>
 
@@ -16,12 +16,14 @@ JoltScene::JoltScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 
 	m_Objects.push_back(new fw::GameObject(this));
 
-	fw::GameObject* testObject = m_Objects[0];
+	m_ptestObject = m_Objects[0];
 
-	testObject->AddComponent(new fw::TransformComponent(testObject, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
-	testObject->AddComponent(new fw::RenderComponent(testObject, getMesh("Cube"), getMaterial("Dice")));
+	m_ptestObject->AddComponent(new fw::TransformComponent(m_ptestObject, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
+//	m_ptestObject->AddComponent(new fw::RenderComponent(m_ptestObject, getMesh("Cube"), getMaterial("Dice")));
+	m_ptestObject->AddComponent(new fw::RenderComponent(m_ptestObject, getMesh("Cube"), getMaterial("DebugNormals")));
 
-	m_pBody = fw::CreateJoltBody(m_pWorldBundle->m_pWorld, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1), true, 1.0f, testObject);
+
+	m_pBody = fw::CreateJoltBody(m_pWorldBundle->m_pWorld, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1), false, 1.0f, m_ptestObject);
 }
 JoltScene::~JoltScene()
 {
@@ -58,6 +60,10 @@ void JoltScene::Update(float deltaTime)
 
 	m_pComponentManager->UpdateBodies(m_pWorld, deltaTime);
 
+	m_ptestObject->GetTransformComponent()->m_rotation.y = Yrotation;
+	m_ptestObject->GetTransformComponent()->m_rotation.x = Xrotation;
+
+
 	m_pComponentManager->UpdateTransforms();
 
 	m_pCamera->Update(deltaTime);
@@ -71,4 +77,10 @@ void JoltScene::Draw()
 	m_pCamera->Enable(viewID);
 
 	m_pComponentManager->RenderMeshes(viewID);
+
+	ImGui::SliderFloat("YRotation", &Yrotation, 0.0f, 360.0f);
+
+	ImGui::SliderFloat("XRotation", &Xrotation, 0.0f, 360.0f);
+
+
 }

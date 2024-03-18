@@ -27,6 +27,10 @@ namespace fw
 		Uniforms* pUniforms = m_pGameObject->GetScene()->GetGameCore()->GetUniforms();
 		bgfx::setUniform(pUniforms->GetUniform("u_MatWorld"), &m_pGameObject->GetTransformComponent()->m_transform);
 
+		mat4 rotation;
+		rotation.CreateRotation(m_pGameObject->GetTransformComponent()->m_rotation);
+		bgfx::setUniform(pUniforms->GetUniform("u_MatWorldRotation"), &rotation);
+
 		m_pMesh->Draw(viewID, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
 	}
 
