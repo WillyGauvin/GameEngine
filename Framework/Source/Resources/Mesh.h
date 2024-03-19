@@ -33,9 +33,14 @@ namespace fw {
 
         void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial);
 
+        void SetVertexs(std::vector<vec3> vertexs) { m_vertexs = vertexs; }
+
+        std::vector<vec3> GetVertex() { return m_vertexs; }
     protected:
         bgfx::VertexBufferHandle m_VBO;
         bgfx::IndexBufferHandle m_IBO;
+
+        std::vector<vec3> m_vertexs;
     };
 
 } // namespace fw

@@ -13,8 +13,11 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual void Draw() override;
 
+	void PlaceTrees();
+
 protected:
 	fw::GameObject* m_pPlane = nullptr;
-
+	fw::GameObject* m_pIsland = nullptr;
 	fw::GameObject* m_pTestDice = nullptr;
+	std::vector<fw::GameObject*> m_pTrees;
 };

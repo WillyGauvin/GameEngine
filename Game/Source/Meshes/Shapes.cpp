@@ -314,54 +314,67 @@ fw::Mesh* LoadObj(char* objFileName)
     return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes);
 }
 
-//fw::Mesh* CreateHeightMap(char* filename)
-//{
-//    uint32 length;
-//    char* fileContents = fw::LoadCompleteFile(filename, &length);
-//
-//
-//    int width;
-//    int height;
-//    int channels;
-//    stbi_set_flip_vertically_on_load(true);
-//    unsigned char* pixels = stbi_load_from_memory((unsigned char*)fileContents, length, &width, &height, &channels, 4);
-//    assert(pixels != nullptr);
-//
-//
-//    std::vector<VertexFormat_Pos3NormalUV> verts;
-//    std::vector<uint16> indices;
-//
-//    /*for (int i = 0; i < numPoints; i++)
-//    {
-//        int x = i % size.x;
-//        int y = (i - x) / size.x;
-//        vec2 point = vec2((float)x, (float)y);
-//
-//        vec3 pos = vec3(point.x * (scale.x / (size.x - 1)), 0, point.y * (scale.y / (size.y - 1)));
-//
-//        vec3 normal = vec3(0, 1, 0);
-//
-//        vec2 UV = point;
-//
-//        verts.push_back({ pos, normal, UV });
-//    }
-//
-//    for (int y = 0; y < size.y - 1; y++)
-//    {
-//        for (int x = 0; x < size.x - 1; x++)
-//        {
-//            indices.push_back((x + 1) + ((y + 1) * size.x));
-//            indices.push_back(x + (y * size.x));
-//            indices.push_back(x + ((y + 1) * size.x));
-//
-//            indices.push_back((x + 1) + ((y + 1) * size.x));
-//            indices.push_back((x + 1) + (y * size.x));
-//            indices.push_back(x + (y * size.x));
-//        }
-//    }
-//    */
-//    int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)verts.size();
-//    int indicesBytes = sizeof(uint16) * (int)indices.size();
-//
-//    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
-//}
+fw::Mesh* CreateHeightMap(char* filename)
+{
+    uint32 length;
+    char* fileContents = fw::LoadCompleteFile(filename, &length);
+
+
+    int width;
+    int height;
+    int channels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* pixels = stbi_load_from_memory((unsigned char*)fileContents, length, &width, &height, &channels, 4);
+    assert(pixels != nullptr);
+
+
+    std::vector<VertexFormat_Pos3NormalUV> verts;
+    std::vector<uint16> indices;
+    std::vector<vec3> vertexs;
+  
+
+    for (int i = 0; i < width * height; i++)
+    {
+        int x = i % width;
+        int y = (i - x) / width;
+        vec2 point = vec2((float)x, (float)y);
+
+        float Mapheight;
+
+        Mapheight = (pixels[4 * i] * 5.0f) / 255.0f;
+        vec3 pos = vec3((point.x * 10) / width, Mapheight, (point.y * 10) / height);
+
+        
+        vertexs.push_back(pos);
+        
+
+
+        vec3 normal = vec3(0, 1, 0);
+
+        vec2 UV = point;
+
+        verts.push_back({ pos, normal, UV });
+    }
+
+    for (int y = 0; y < height - 1; y++)
+    {
+        for (int x = 0; x < width - 1; x++)
+        {
+            indices.push_back((x + 1) + ((y + 1) * width));
+            indices.push_back(x + (y * width));
+            indices.push_back(x + ((y + 1) * width));
+
+            indices.push_back((x + 1) + ((y + 1) * width));
+            indices.push_back((x + 1) + (y * width));
+            indices.push_back(x + (y * width));
+        }
+    }
+    
+    int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)verts.size();
+    int indicesBytes = sizeof(uint16) * (int)indices.size();
+
+    fw::Mesh* heightMap = new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
+    heightMap->SetVertexs(vertexs);
+
+    return heightMap;
+}

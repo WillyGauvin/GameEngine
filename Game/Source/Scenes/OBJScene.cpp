@@ -7,10 +7,21 @@ OBJScene::OBJScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-	//m_pPlane = new fw::GameObject(this);
-	//m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("Water")));
-	//m_pPlane->AddComponent(new fw::TransformComponent(m_pPlane, vec3(-200, 0, -20), vec3(0, 0, 0), vec3(1, 1, 1)));
-	//m_Objects.push_back(m_pPlane);
+	m_pPlane = new fw::GameObject(this);
+	m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("Water")));
+	m_pPlane->AddComponent(new fw::TransformComponent(m_pPlane, vec3(-200, 0, -20), vec3(0, 0, 0), vec3(1, 1, 1)));
+	m_Objects.push_back(m_pPlane);
+
+	m_pIsland = new fw::GameObject(this);
+	m_pIsland->AddComponent(new fw::RenderComponent(m_pIsland, getMesh("HeightTest"), getMaterial("Rock")));
+	m_pIsland->AddComponent(new fw::TransformComponent(m_pIsland, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
+	m_Objects.push_back(m_pIsland);
+
+
+	//fw::GameObject* m_pTree = new fw::GameObject(this);
+	//m_pTree->AddComponent(new fw::RenderComponent(m_pTree, getMesh("Tree"), getMaterial("Tree")));
+	//m_pTree->AddComponent(new fw::TransformComponent(m_pTree, vec3(10, 0, 10), vec3(0, 0, 0), vec3(1, 1, 1)));
+	//m_Objects.push_back(m_pTree);
 
 	fw::GameObject* cube1 = new fw::GameObject(this);
 	cube1->AddComponent(new fw::RenderComponent(cube1, getMesh("Cube"), getMaterial("Green")));
@@ -37,9 +48,10 @@ OBJScene::OBJScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	//m_pTestDice->AddComponent(new fw::TransformComponent(m_pTestDice, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
 	//m_Objects.push_back(m_pTestDice);
 
-	m_pCamera->SetEye(vec3(0, 30, -15));
-	m_pCamera->SetAt(vec3(0, -15, 0));
+	m_pCamera->SetEye(vec3(5, 15, 0));
+	m_pCamera->SetAt(vec3(0, -10, 0));
 
+	PlaceTrees();
 	
 	
 }
@@ -73,3 +85,45 @@ void OBJScene::Draw()
 
 	m_pComponentManager->RenderMeshes(viewID);
 }
+
+void OBJScene::PlaceTrees()
+{
+	Game* game = static_cast<Game*>(m_pGameCore);
+	#define getMesh game->GetResourceManager()->Get<fw::Mesh>
+	#define getMaterial game->GetResourceManager()->Get<fw::Material>
+
+	std::vector<vec3> vertexs = m_pIsland->GetRenderComponent()->m_pMesh->GetVertex();
+	
+	std::vector<vec3> PossiblePositions;
+
+	for (int i = 0; i < vertexs.size() - 1; i++)
+	{
+		if (vertexs[i].y >= 2.0f)
+		{
+			PossiblePositions.push_back(vertexs[i]);	
+		}
+	}
+
+	for (int i = 0; i < 30; i++)
+	{
+		int randomIndex = rand() % PossiblePositions.size();
+		
+
+		m_Objects.push_back(new fw::GameObject(this));
+		fw::GameObject* tree = m_Objects[m_Objects.size() - 1];
+
+		float LO = 0.0f;
+		float HI = 360.0f;
+		float randRotation = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+
+
+		LO = 0.8f;
+		HI = 1.2f;
+		float randScale = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+
+		tree->AddComponent(new fw::RenderComponent(tree, getMesh("Tree"), getMaterial("Tree")));
+		tree->AddComponent(new fw::TransformComponent(tree, PossiblePositions[randomIndex], vec3(0, randRotation, 0), vec3(randScale, randScale, randScale)));
+	}
+	
+}
+

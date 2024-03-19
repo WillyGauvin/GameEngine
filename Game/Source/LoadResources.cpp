@@ -34,7 +34,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("Plane", CreatePlaneMesh(vec2(100,100), vec2(400,400)));
     pResources->Add<fw::Mesh>("4x2Plane", CreatePlaneMesh(vec2(5, 3), vec2(10, 10)));
     pResources->Add<fw::Mesh>("ObjTest", LoadObj("Data/Textures/TestingObject.obj"));
-   // pResources->Add<fw::Mesh>("HeightTest", CreateHeightMap("Data/Textures/Test.png"));
+    pResources->Add<fw::Mesh>("HeightTest", CreateHeightMap("Data/Textures/HeightMap.png"));
+    pResources->Add<fw::Mesh>("Tree", LoadObj("Data/Textures/Tree.obj"));
 
 
 
@@ -57,6 +58,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Texture>("ShipCrash", new fw::Texture("Data/Textures/LunarLanding/Crash.png"));
     pResources->Add<fw::Texture>("ShipLanded", new fw::Texture("Data/Textures/LunarLanding/Landed.png"));
     pResources->Add<fw::Texture>("Water", new fw::Texture("Data/Textures/Water.png"));
+    pResources->Add<fw::Texture>("Tree", new fw::Texture("Data/Textures/TreeUV.png"));
+    pResources->Add<fw::Texture>("Rock", new fw::Texture("Data/Textures/rock.png"));
+
 
 
 
@@ -81,6 +85,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("ShipLanded", new fw::Material(getShader("Texture"), getTexture("ShipLanded"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("Water", new fw::Material(getShader("Water"), getTexture("Water"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("DebugNormals", new fw::Material(getShader("DebugNormals"), nullptr, fw::color4f::White(), true));
+    pResources->Add<fw::Material>("Tree", new fw::Material(getShader("Texture"), getTexture("Tree"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("Rock", new fw::Material(getShader("Texture"), getTexture("Rock"), fw::color4f::White(), true));
+
 
 
 
