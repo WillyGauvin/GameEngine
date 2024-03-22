@@ -22,6 +22,8 @@ namespace fw {
     Mesh::Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
     {
         Create( vertexFormat, verts, vertsSize, indices, indicesSize );
+        void* m = new char[vertsSize];
+        memcpy(m, verts, vertsSize);
     }
 
     Mesh::~Mesh()

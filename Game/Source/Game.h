@@ -26,6 +26,8 @@ class OBJScene;
 
 class VirtualController;
 
+class LightScene;
+
 enum EditorViews
 {
     EditorView_Game,
@@ -65,6 +67,8 @@ protected:
     LandingScene* m_pLandingScene = nullptr;
 
     OBJScene* m_pOBJScene = nullptr;
+
+    LightScene* m_pLightScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 

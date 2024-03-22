@@ -47,6 +47,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::ShaderProgram>( "Texture", new fw::ShaderProgram( "Data/Shaders/", "Texture.vert.bin", "Texture.frag.bin" ) );
     pResources->Add<fw::ShaderProgram>("Water", new fw::ShaderProgram("Data/Shaders/", "Water.vert.bin", "Water.frag.bin"));
     pResources->Add<fw::ShaderProgram>("DebugNormals", new fw::ShaderProgram("Data/Shaders/", "DebugNormals.vert.bin", "DebugNormals.frag.bin"));
+    pResources->Add<fw::ShaderProgram>("Light", new fw::ShaderProgram("Data/Shaders/", "Light.vert.bin", "Light.frag.bin"));
 
     // Load some textures.
     pResources->Add<fw::Texture>( "MegaMan", new fw::Texture( "Data/Textures/MegaMan.png" ) );
@@ -87,7 +88,8 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("DebugNormals", new fw::Material(getShader("DebugNormals"), nullptr, fw::color4f::White(), true));
     pResources->Add<fw::Material>("Tree", new fw::Material(getShader("Texture"), getTexture("Tree"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("Rock", new fw::Material(getShader("Texture"), getTexture("Rock"), fw::color4f::White(), true));
-
+    pResources->Add<fw::Material>("LightTest", new fw::Material(getShader("Light"), nullptr, fw::color4f::White(), false));
+    
 
 
 

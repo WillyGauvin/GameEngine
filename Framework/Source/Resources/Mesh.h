@@ -33,7 +33,7 @@ namespace fw {
 
         void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial);
 
-        void SetVertexs(std::vector<vec3> vertexs) { m_vertexs = vertexs; }
+        void SetVertexs(std::vector<vec3>& vertexs) { m_vertexs = vertexs; }
 
         std::vector<vec3> GetVertex() { return m_vertexs; }
     protected:

@@ -20,6 +20,7 @@
 #include "Scenes/MidtermScene.h"
 #include "Scenes/LandingScene.h"
 #include "Scenes/OBJScene.h"
+#include "Scenes/LightScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -72,7 +73,8 @@ Game::Game(fw::FWCore& fwCore)
     m_pMidtermScene = new MidtermScene(this);
     m_pLandingScene = new LandingScene(this);
     m_pOBJScene = new OBJScene(this);
-    m_pCurrentScene = m_pOBJScene;
+    m_pLightScene = new LightScene(this);
+    m_pCurrentScene = m_pLightScene;
 }
 
 Game::~Game()
@@ -176,6 +178,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("OBJ"))
     {
         m_pCurrentScene = m_pOBJScene;
+    }
+    if (ImGui::Button("Light"))
+    {
+        m_pCurrentScene = m_pLightScene;
     }
     ImGui::End();
 }
