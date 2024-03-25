@@ -27,7 +27,7 @@ namespace fw {
         virtual void ExecuteEvent(Event* pEvent) override;
 
 
-        void Enable(int viewID);
+        virtual void Enable(int viewID);
 
         // Setters.
         void SetEye(vec3 eye) { m_eye = eye; }

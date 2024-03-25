@@ -21,6 +21,7 @@
 #include "Scenes/LandingScene.h"
 #include "Scenes/OBJScene.h"
 #include "Scenes/LightScene.h"
+#include "Scenes/OrbitCameraScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -74,6 +75,7 @@ Game::Game(fw::FWCore& fwCore)
     m_pLandingScene = new LandingScene(this);
     m_pOBJScene = new OBJScene(this);
     m_pLightScene = new LightScene(this);
+    m_pOrbitCameraScene = new OrbitCameraScene(this);
     m_pCurrentScene = m_pLightScene;
 }
 

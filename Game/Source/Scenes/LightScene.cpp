@@ -9,8 +9,8 @@ LightScene::LightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 
 	m_pCube = new fw::GameObject(this);
-	m_pCube->AddComponent(new fw::RenderComponent(m_pCube, getMesh("Cube"), getMaterial("LightTest")));
-	m_pCube->AddComponent(new fw::TransformComponent(m_pCube, vec3(0.0f,0.0f,0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(100.0f, 2.0f, 100.0f)));
+	m_pCube->AddComponent(new fw::RenderComponent(m_pCube, getMesh("Tree"), getMaterial("LightTest")));
+	m_pCube->AddComponent(new fw::TransformComponent(m_pCube, vec3(0.0f,0.0f,0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(10.0f, 10.0f, 10.0f)));
 	m_Objects.push_back(m_pCube);
 
 	m_cameraAt = vec3(0.0f, -15.0f, 0.0f);

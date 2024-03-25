@@ -88,7 +88,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("DebugNormals", new fw::Material(getShader("DebugNormals"), nullptr, fw::color4f::White(), true));
     pResources->Add<fw::Material>("Tree", new fw::Material(getShader("Texture"), getTexture("Tree"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("Rock", new fw::Material(getShader("Texture"), getTexture("Rock"), fw::color4f::White(), true));
-    pResources->Add<fw::Material>("LightTest", new fw::Material(getShader("Light"), nullptr, fw::color4f::White(), false));
+    pResources->Add<fw::Material>("LightTest", new fw::Material(getShader("Light"), getTexture("Tree"), fw::color4f::White(), false));
     
 
 

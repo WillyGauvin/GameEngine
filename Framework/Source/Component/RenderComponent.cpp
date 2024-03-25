@@ -6,6 +6,7 @@
 #include "Utility/Uniforms.h"
 #include "Objects/GameObject.h"
 #include "Component/TransformComponent.h"
+#include "Objects/Camera.h"
 namespace fw
 {
 
@@ -30,6 +31,10 @@ namespace fw
 		mat4 rotation;
 		rotation.CreateRotation(m_pGameObject->GetTransformComponent()->m_rotation);
 		bgfx::setUniform(pUniforms->GetUniform("u_MatWorldRotation"), &rotation);
+
+		// Camera Position
+		vec4 cameraPos = vec4(m_pGameObject->GetScene()->GetCamera()->GetEye(),1);
+		bgfx::setUniform(pUniforms->GetUniform("u_CameraPosition"), &cameraPos);
 
 		m_pMesh->Draw(viewID, m_pGameObject->GetScene()->GetGameCore()->GetUniforms(), m_pMaterial);
 	}

@@ -28,6 +28,8 @@ class VirtualController;
 
 class LightScene;
 
+class OrbitCameraScene;
+
 enum EditorViews
 {
     EditorView_Game,
@@ -69,6 +71,8 @@ protected:
     OBJScene* m_pOBJScene = nullptr;
 
     LightScene* m_pLightScene = nullptr;
+
+    OrbitCameraScene* m_pOrbitCameraScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 

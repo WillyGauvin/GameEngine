@@ -30,6 +30,7 @@ namespace fw
 		ComponentManager* GetComponentManager() { return m_pComponentManager; }
 		fw::EventManager* GetEventManager() { return m_pEventManager; }
 		b2World* GetWorld() { return m_pWorld; }
+		fw::Camera* GetCamera() { return m_pCamera; }
 
 
 		void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
