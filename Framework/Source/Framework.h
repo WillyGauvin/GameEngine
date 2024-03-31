@@ -54,6 +54,7 @@
 #include "Component/RenderComponent.h"
 #include "Component/TransformComponent.h"
 #include "Component/PhysicsComponent.h"
+#include "Component/LightComponent.h"
 
 //Jolt
 #include "Physics/Jolt/JoltHelpers.h"

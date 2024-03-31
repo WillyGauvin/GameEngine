@@ -27,5 +27,5 @@ protected:
     VirtualController* m_pController = nullptr;
 
     //Testing. Player is wrong
-    vec2 m_Position = vec2(0, 0);
+    vec3 m_Position = vec3(0, 0, 0);
 };

@@ -314,7 +314,7 @@ fw::Mesh* LoadObj(char* objFileName)
     return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes);
 }
 
-fw::Mesh* CreateHeightMap(char* filename)
+fw::Mesh* CreateHeightMap(char* filename, vec2 size)
 {
     uint32 length;
     char* fileContents = fw::LoadCompleteFile(filename, &length);
@@ -342,7 +342,7 @@ fw::Mesh* CreateHeightMap(char* filename)
         float Mapheight;
 
         Mapheight = (pixels[4 * i] * 5.0f) / 255.0f;
-        vec3 pos = vec3((point.x * 10) / width, Mapheight, (point.y * 10) / height);
+        vec3 pos = vec3((point.x * size.x) / width, Mapheight, (point.y * size.y) / height);
 
         
         vertexs.push_back(pos);

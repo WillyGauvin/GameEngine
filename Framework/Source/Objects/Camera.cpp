@@ -55,6 +55,8 @@ namespace fw {
 
         mat4 viewMatrix;
         viewMatrix.CreateLookAtView(m_eye + vec3(0,0,-25), m_up, m_eye + m_at);
+       // viewMatrix.CreateLookAtView(m_eye, m_up, m_eye + m_at);
+
         bgfx::setUniform(pUniforms->GetUniform("u_MatView"), &viewMatrix, 1);
 
         mat4 projMatrix;

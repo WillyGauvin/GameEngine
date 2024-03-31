@@ -22,6 +22,7 @@
 #include "Scenes/OBJScene.h"
 #include "Scenes/LightScene.h"
 #include "Scenes/OrbitCameraScene.h"
+#include "Scenes/DynamicLightScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -76,7 +77,9 @@ Game::Game(fw::FWCore& fwCore)
     m_pOBJScene = new OBJScene(this);
     m_pLightScene = new LightScene(this);
     m_pOrbitCameraScene = new OrbitCameraScene(this);
-    m_pCurrentScene = m_pLightScene;
+    m_pDynamicLightScene = new DynamicLightScene(this);
+    m_pCurrentScene = m_pDynamicLightScene;
+
 }
 
 Game::~Game()
@@ -88,6 +91,8 @@ Game::~Game()
     delete m_pMidtermScene;
     delete m_pLandingScene;
     delete m_pOBJScene;
+    delete m_pOrbitCameraScene;
+    delete m_pDynamicLightScene;
 }
 
 void Game::CreateUniforms()
@@ -112,6 +117,20 @@ void Game::CreateUniforms()
 
     m_pUniforms->CreateUniform( "u_Time", bgfx::UniformType::Vec4 );
  
+    //light pos vec3
+    m_pUniforms->CreateUniform("u_LightPosition", bgfx::UniformType::Vec4);
+    //light color vec4
+    m_pUniforms->CreateUniform("u_LightColor", bgfx::UniformType::Vec4);
+
+    //light range float
+    m_pUniforms->CreateUniform("u_LightRange", bgfx::UniformType::Vec4);
+    //ambient percentage float
+    m_pUniforms->CreateUniform("u_AmbientPercentage", bgfx::UniformType::Vec4);
+    //falloff exponent float
+    m_pUniforms->CreateUniform("u_FalloffExponent", bgfx::UniformType::Vec4);
+    //specular exponent float
+    m_pUniforms->CreateUniform("u_SpecularExponent", bgfx::UniformType::Vec4);
+
     
 }
 
@@ -184,6 +203,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("Light"))
     {
         m_pCurrentScene = m_pLightScene;
+    }
+    if (ImGui::Button("DynamicLight"))
+    {
+        m_pCurrentScene = m_pDynamicLightScene;
     }
     ImGui::End();
 }

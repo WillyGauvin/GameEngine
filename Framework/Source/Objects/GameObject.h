@@ -26,7 +26,9 @@ namespace fw {
     class TransformComponent;
     class PhysicsComponent;
     class RenderComponent;
+    class LightComponent;
     class MyContactListener;
+
     class GameObject
     {
     public:
@@ -41,6 +43,7 @@ namespace fw {
         fw::TransformComponent* GetTransformComponent();
         fw::PhysicsComponent* GetPhysicsComponent();
         fw::RenderComponent* GetRenderComponent();
+        fw::LightComponent* GetLightComponent();
 
         void Enable();
         void Disable();

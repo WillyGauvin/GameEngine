@@ -33,6 +33,12 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'D': case VK_RIGHT: { m_Actions = m_Actions | Actions::Right; } break;
 				case 'Z': { m_Actions = m_Actions | Actions::Teleport; } break;
 				case 'R': { m_Actions = m_Actions | Actions::Reset; } break;
+				case 'I': { m_Actions = m_Actions | Actions::OrbitUp; } break;
+				case 'K': { m_Actions = m_Actions | Actions::OrbitDown; } break;
+				case 'J': { m_Actions = m_Actions | Actions::OrbitLeft; } break;
+				case 'L': { m_Actions = m_Actions | Actions::OrbitRight; } break;
+				case 'U': { m_Actions = m_Actions | Actions::ZoomIn; } break;
+				case 'M': { m_Actions = m_Actions | Actions::ZoomOut; } break;
 
 
 				}
@@ -49,7 +55,12 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'D': case VK_RIGHT: { m_Actions = m_Actions & ~Actions::Right; } break;
 				case 'Z': { m_Actions = m_Actions & ~Actions::Teleport; } break;
 				case 'R': { m_Actions = m_Actions & ~Actions::Reset; } break;
-
+				case 'I': { m_Actions = m_Actions & ~Actions::OrbitUp; } break;
+				case 'K': { m_Actions = m_Actions & ~Actions::OrbitDown; } break;
+				case 'J': { m_Actions = m_Actions & ~Actions::OrbitLeft; } break;
+				case 'L': { m_Actions = m_Actions & ~Actions::OrbitRight; } break;
+				case 'U': { m_Actions = m_Actions & ~Actions::ZoomIn; } break;
+				case 'M': { m_Actions = m_Actions & ~Actions::ZoomOut; } break;
 				}
 			}
 		}

@@ -30,6 +30,8 @@ class LightScene;
 
 class OrbitCameraScene;
 
+class DynamicLightScene;
+
 enum EditorViews
 {
     EditorView_Game,
@@ -73,6 +75,8 @@ protected:
     LightScene* m_pLightScene = nullptr;
 
     OrbitCameraScene* m_pOrbitCameraScene = nullptr;
+
+    DynamicLightScene* m_pDynamicLightScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 

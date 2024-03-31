@@ -15,8 +15,14 @@
 #include "Objects/VirtualController.h"
 
 Player::Player(fw::Scene* pScene)
-    : fw::GameObject( pScene)
+    : fw::GameObject(pScene)
 {
+    Game* game = static_cast<Game*>(m_pScene->GetGameCore());
+#define getMesh game->GetResourceManager()->Get<fw::Mesh>
+#define getMaterial game->GetResourceManager()->Get<fw::Material>
+
+    AddComponent(new fw::RenderComponent(this, getMesh("Cube"), getMaterial("Dice")));
+    AddComponent(new fw::TransformComponent(this, vec3(0.0f,0.0f,0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
 }
 
 Player::~Player()
@@ -27,13 +33,13 @@ void Player::Update(float deltaTime)
 {
     float speed = 4.0f;
 
-    vec2 dir;
+    vec3 dir;
 
 
     if (m_pController != nullptr)
     {
-        if (m_pController->isActionHeld(VirtualController::Up)) dir.y++;
-        if (m_pController->isActionHeld(VirtualController::Down)) dir.y--;
+        if (m_pController->isActionHeld(VirtualController::Up)) dir.z++;
+        if (m_pController->isActionHeld(VirtualController::Down)) dir.z--;
         if (m_pController->isActionHeld(VirtualController::Left)) dir.x--;
         if (m_pController->isActionHeld(VirtualController::Right)) dir.x++;
 
@@ -42,13 +48,4 @@ void Player::Update(float deltaTime)
     dir.Normalize();
 
     m_Position += dir * speed * deltaTime;
-
-    if (m_pController != nullptr)
-    {
-        if (m_pController->WasActionPressed(VirtualController::Teleport))
-        {
-            m_Position.x = fw::Random::Float(0, 10);
-            m_Position.y = fw::Random::Float(0, 10);
-        }
-    }
 }

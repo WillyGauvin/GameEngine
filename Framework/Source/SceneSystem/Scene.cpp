@@ -4,6 +4,7 @@
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
 #include "Physics/Box2D/MyContactListener.h"
+#include "Component/TransformComponent.h"
 
 namespace fw
 {
@@ -30,6 +31,7 @@ namespace fw
 			delete pObject;
 		}
 		m_Objects.clear();
+		m_Lights.clear();
 
 		delete m_pComponentManager;
 	
@@ -43,14 +45,50 @@ namespace fw
 
 	void Scene::StartFrame(float deltaTime)
 	{
+		m_pEventManager->ProcessEvents();
 	}
 
 	void Scene::Update(float deltaTime)
 	{
+		m_pComponentManager->UpdateTransforms();
+		m_pCamera->Update(deltaTime);
 	}
 
 	void Scene::Draw()
 	{
+
+	}
+
+	GameObject* Scene::GetClosetLight(vec3 position)
+	{
+		if (m_Lights.size() == 0)
+		{
+			return nullptr;
+		}
+
+		GameObject* closestLight = m_Lights[0];
+
+		for (GameObject* light : m_Lights)
+		{
+			if (closestLight->GetTransformComponent() == nullptr)
+			{
+				//closest light has no transform component
+				assert(false);
+			}
+			if (light->GetTransformComponent() == nullptr)
+			{
+				//light has no transform component
+				assert(false);
+			}
+			float currentDistance = (closestLight->GetTransformComponent()->m_position - position).Length();
+			float challengingDistance = (light->GetTransformComponent()->m_position - position).Length();
+
+			if (challengingDistance < currentDistance)
+			{
+				closestLight = light;
+			}
+		}
+		return closestLight;
 	}
 
 	void Scene::CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos)

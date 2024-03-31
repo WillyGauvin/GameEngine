@@ -17,7 +17,12 @@ public:
 		Left	 = 1 << 3,
 		Right	 = 1 << 4,
 		Reset	 = 1 << 5,
-
+		OrbitUp  = 1 << 6,
+		OrbitDown = 1 << 7,
+		OrbitLeft  = 1 << 8,
+		OrbitRight  = 1 << 9,
+		ZoomIn	 = 1 << 10,
+		ZoomOut  = 1 << 11,
 	};
 public:
 	VirtualController(fw::EventManager* pEventManager);

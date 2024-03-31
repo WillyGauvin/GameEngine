@@ -17,6 +17,7 @@ public:
 protected:
 
 	fw::GameObject* m_pCube;
+	fw::GameObject* m_pLight;
 
 	vec3 m_cameraAt;
 	vec3 m_cameraEye;

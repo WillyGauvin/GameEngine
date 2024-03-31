@@ -33,6 +33,9 @@ namespace fw
 		fw::Camera* GetCamera() { return m_pCamera; }
 
 
+		std::vector<GameObject*> GetLights() { return m_Lights; }
+		GameObject* GetClosetLight(vec3 position);
+
 		void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
 
 		void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
@@ -48,6 +51,8 @@ namespace fw
 		//Objects
 		std::vector<GameObject*> m_Objects;
 		fw::Camera* m_pCamera = nullptr;
+
+		std::vector<GameObject*> m_Lights;
 
 		//B2Box
 		b2World* m_pWorld = nullptr;
