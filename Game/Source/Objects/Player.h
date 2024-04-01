@@ -19,7 +19,7 @@ public:
     Player(fw::Scene* pScene);
     virtual ~Player();
 
-    void SetController(VirtualController* pController) { m_pController = pController; }
+    void SetController(VirtualController* pController);
 
     virtual void Update(float deltaTime) override;
 

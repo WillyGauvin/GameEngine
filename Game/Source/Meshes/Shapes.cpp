@@ -332,6 +332,7 @@ fw::Mesh* CreateHeightMap(char* filename, vec2 size)
     std::vector<uint16> indices;
     std::vector<vec3> vertexs;
   
+   
 
     for (int i = 0; i < width * height; i++)
     {
@@ -343,19 +344,72 @@ fw::Mesh* CreateHeightMap(char* filename, vec2 size)
 
         Mapheight = (pixels[4 * i] * 5.0f) / 255.0f;
         vec3 pos = vec3((point.x * size.x) / width, Mapheight, (point.y * size.y) / height);
+      
+       
+        vec3 normal = vec3(0.0f, 1.0f, 0.0f);
 
         
         vertexs.push_back(pos);
-        
-
-
-        vec3 normal = vec3(0, 1, 0);
 
         vec2 UV = point;
 
         verts.push_back({ pos, normal, UV });
     }
 
+    for (int i = 0; i < width * height; i++)
+    {
+        int x = i % width;
+        int y = (i - x) / width;
+
+        vec3 up;
+        vec3 down;
+        vec3 left;
+        vec3 right;
+
+        int Iup;
+        int Idown;
+        int Ileft;
+        int Iright;
+
+        if (x == 0)
+        {
+            Ileft = (y * width) + x;
+        }
+        else
+        {
+            Ileft = (y * width) + x - 1;
+        }
+
+        if (x == width - 1)
+        {
+            Iright = (y * width) + x;
+        }
+        else
+        {
+            Iright = (y * width) + x + 1;
+        }
+
+        if (y == 0)
+        {
+            Idown = (y * width) + x;
+        }
+        else
+        {
+            Idown = ((y - 1)* width) + x;
+        }
+
+        if (y == height - 1)
+        {
+            Iup = (y * width) + x;
+        }
+        else
+        {
+            Iup = ((y + 1) * width) + x;
+        }
+
+        //Get the vertex positions from verts and calculate the normal and assign it.
+
+    }
     for (int y = 0; y < height - 1; y++)
     {
         for (int x = 0; x < width - 1; x++)

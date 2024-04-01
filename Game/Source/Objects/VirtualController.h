@@ -35,7 +35,10 @@ public:
 	bool WasActionPressed(Actions action);
 	bool WasActionReleased(Actions action);
 
+	void SetControlledObject(fw::GameObject* pawn) { controlledPawn = pawn; }
+
 protected:
+	fw::GameObject* controlledPawn = nullptr;
 	uint32 m_Actions = 0;
 	uint32 m_OldActions = 0;
 

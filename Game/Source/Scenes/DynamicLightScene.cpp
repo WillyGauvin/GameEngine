@@ -20,7 +20,7 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-	/*m_pPlane = new fw::GameObject(this);
+	m_pPlane = new fw::GameObject(this);
 	m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("Water")));
 	m_pPlane->AddComponent(new fw::TransformComponent(m_pPlane, vec3(-200, 0, -20), vec3(0, 0, 0), vec3(1, 1, 1)));
 	m_Objects.push_back(m_pPlane);
@@ -28,7 +28,7 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pIsland = new fw::GameObject(this);
 	m_pIsland->AddComponent(new fw::RenderComponent(m_pIsland, getMesh("HeightTest"), getMaterial("Rock")));
 	m_pIsland->AddComponent(new fw::TransformComponent(m_pIsland, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1)));
-	m_Objects.push_back(m_pIsland);*/
+	m_Objects.push_back(m_pIsland);
 
 
 	m_pLight = new fw::GameObject(this);
@@ -38,12 +38,7 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_Objects.push_back(m_pLight);
 	m_Lights.push_back(m_pLight);
 
-
-	//m_pOrbitCamera = new OrbitCamera(this, )
-	//m_pCamera->SetEye(vec3(5, 15, 0));
-	//m_pCamera->SetAt(vec3(0, -10, 0));
-
-	//PlaceTrees();
+	PlaceTrees();
 	
 	
 }

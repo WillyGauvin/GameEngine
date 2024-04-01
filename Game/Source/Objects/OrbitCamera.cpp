@@ -9,7 +9,7 @@ OrbitCamera::OrbitCamera(fw::Scene* pScene, vec3 eye, vec3 up, vec3 at, VirtualC
 	m_pController(pController),
 	m_pTarget(pTarget)
 {
-
+	m_pTarget->SetCamera(this);
 }
 
 OrbitCamera::~OrbitCamera()

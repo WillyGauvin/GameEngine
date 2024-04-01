@@ -49,12 +49,13 @@ namespace fw {
         void Disable();
 
         // Setters.
-
+        void SetCamera(fw::Camera* followCam) { m_pFollowCamera = followCam; }
         void AddComponent(Component* pComponent);
 
 
 
     protected:
+        Camera* m_pFollowCamera = nullptr;
         Scene* m_pScene = nullptr;
 
         std::vector<Component*> m_Components;

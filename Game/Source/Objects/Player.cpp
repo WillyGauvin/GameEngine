@@ -29,6 +29,15 @@ Player::~Player()
 {
 }
 
+void Player::SetController(VirtualController* pController)
+{
+    m_pController = pController;
+    if (m_pController)
+    {
+        m_pController->SetControlledObject(this);
+    }
+}
+
 void Player::Update(float deltaTime)
 {
     float speed = 4.0f;
@@ -36,16 +45,52 @@ void Player::Update(float deltaTime)
     vec3 dir;
 
 
-    if (m_pController != nullptr)
+    if (m_pFollowCamera)
     {
-        if (m_pController->isActionHeld(VirtualController::Up)) dir.z++;
-        if (m_pController->isActionHeld(VirtualController::Down)) dir.z--;
-        if (m_pController->isActionHeld(VirtualController::Left)) dir.x--;
-        if (m_pController->isActionHeld(VirtualController::Right)) dir.x++;
+        vec3 forwardDirection = (GetTransformComponent()->m_position - m_pFollowCamera->GetEye()).Normalize();
+        forwardDirection.y = 0;
+        vec3 upDirection = vec3(0.0f, 1.0f, 0.0f);
+        vec3 leftDirection = forwardDirection.Cross(upDirection);
 
+        if (m_pController != nullptr)
+        {
+            if (m_pController->isActionHeld(VirtualController::Up))
+            {
+                dir = forwardDirection;
+            }
+            if (m_pController->isActionHeld(VirtualController::Down))
+            {
+                dir = -forwardDirection;
+            }
+            if (m_pController->isActionHeld(VirtualController::Left))
+            {
+                dir = leftDirection;
+            }
+            if (m_pController->isActionHeld(VirtualController::Right))
+            {
+                dir = -leftDirection;
+            }
+
+        }
+
+        dir.Normalize();
+
+        GetTransformComponent()->m_position += dir * speed * deltaTime;
     }
+    
+    else
+    {
+        if (m_pController != nullptr)
+        {
+            if (m_pController->isActionHeld(VirtualController::Up)) dir.z++;
+            if (m_pController->isActionHeld(VirtualController::Down)) dir.z--;
+            if (m_pController->isActionHeld(VirtualController::Left)) dir.x--;
+            if (m_pController->isActionHeld(VirtualController::Right)) dir.x++;
 
-    dir.Normalize();
+        }
 
-    GetTransformComponent()->m_position += dir * speed * deltaTime;
+        dir.Normalize();
+
+        GetTransformComponent()->m_position += dir * speed * deltaTime;
+    }
 }
