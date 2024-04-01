@@ -12,6 +12,9 @@ public:
     virtual void Update(float32 deltaTime) override;
     virtual void ExecuteEvent(fw::Event* pEvent) override;
 
+    virtual void Enable(int viewID) override;
+
+
 protected:
     fw::GameObject* m_pTarget = nullptr;
     float m_Distance = 10.0f;

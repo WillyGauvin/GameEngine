@@ -14,7 +14,7 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pPlayer = new Player(this);
 	m_pPlayer->SetController(m_pController);
 
-	m_pOrbitCamera = new OrbitCamera(this, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), m_pPlayer->GetTransformComponent()->m_position, m_pController, m_pPlayer);
+	m_pOrbitCamera = new OrbitCamera(this, vec3(0.0f, 0.0f, -10.0f), vec3(0.0f, 1.0f, 0.0f), m_pPlayer->GetTransformComponent()->m_position, m_pController, m_pPlayer);
 
 	Game* game = static_cast<Game*>(m_pGameCore);
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
@@ -32,7 +32,7 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 
 	m_pLight = new fw::GameObject(this);
-	m_pLight->AddComponent(new fw::TransformComponent(m_pLight, vec3(0.0f, 5.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(5.0f, 5.0f, 5.0f)));
+	m_pLight->AddComponent(new fw::TransformComponent(m_pLight, vec3(0.0f, 10.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(5.0f, 5.0f, 5.0f)));
 	m_pLight->AddComponent(new fw::RenderComponent(m_pLight, getMesh("Cube"), getMaterial("Blue")));
 	m_pLight->AddComponent(new fw::LightComponent(m_pLight, 100.0f, 0.1f, 1.0f, 5.0f));
 	m_Objects.push_back(m_pLight);
@@ -65,6 +65,7 @@ void DynamicLightScene::StartFrame(float deltaTime)
 void DynamicLightScene::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
+	m_pPlayer->Update(deltaTime);
 	m_pOrbitCamera->Update(deltaTime);
 	m_pController->StartFrame();
 

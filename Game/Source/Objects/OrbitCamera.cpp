@@ -1,6 +1,8 @@
 #include "Framework.h"
 
 #include "OrbitCamera.h"
+#include "Utility/Uniforms.h"
+
 
 OrbitCamera::OrbitCamera(fw::Scene* pScene, vec3 eye, vec3 up, vec3 at, VirtualController* pController, fw::GameObject* pTarget) :
 	fw::Camera(pScene, eye, up, at),
@@ -58,4 +60,19 @@ void OrbitCamera::Update(float32 deltaTime)
 void OrbitCamera::ExecuteEvent(fw::Event* pEvent)
 {
 	Super::ExecuteEvent(pEvent);
+}
+
+void OrbitCamera::Enable(int viewID)
+{
+	fw::Uniforms* pUniforms = m_pScene->GetGameCore()->GetUniforms();
+
+	mat4 viewMatrix;
+	viewMatrix.CreateLookAtView(m_eye, m_up, m_at);
+	// viewMatrix.CreateLookAtView(m_eye, m_up, m_eye + m_at);
+
+	bgfx::setUniform(pUniforms->GetUniform("u_MatView"), &viewMatrix, 1);
+
+	mat4 projMatrix;
+	projMatrix.CreatePerspectiveVFoV(45, m_AspectRatio, 0.01f, 300.0f);
+	bgfx::setUniform(pUniforms->GetUniform("u_MatProj"), &projMatrix);
 }

@@ -21,8 +21,8 @@ Player::Player(fw::Scene* pScene)
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-    AddComponent(new fw::RenderComponent(this, getMesh("Cube"), getMaterial("Dice")));
     AddComponent(new fw::TransformComponent(this, vec3(0.0f,0.0f,0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
+    AddComponent(new fw::RenderComponent(this, getMesh("Cube"), getMaterial("Dice")));
 }
 
 Player::~Player()
@@ -47,5 +47,5 @@ void Player::Update(float deltaTime)
 
     dir.Normalize();
 
-    m_Position += dir * speed * deltaTime;
+    GetTransformComponent()->m_position += dir * speed * deltaTime;
 }
