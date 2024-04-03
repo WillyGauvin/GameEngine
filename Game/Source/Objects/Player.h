@@ -10,6 +10,7 @@
 #pragma once
 
 #include "DataTypes.h"
+class HeightMapMesh;
 
 class VirtualController;
 
@@ -17,12 +18,16 @@ class Player : public fw::GameObject
 {
 public:
     Player(fw::Scene* pScene);
+
     virtual ~Player();
 
     void SetController(VirtualController* pController);
+    void SetWalkingSurface(HeightMapMesh* pWalkingSurface) { m_pWalkingSurface = pWalkingSurface; }
 
     virtual void Update(float deltaTime) override;
 
 protected:
     VirtualController* m_pController = nullptr;
+
+    HeightMapMesh* m_pWalkingSurface = nullptr;
 };

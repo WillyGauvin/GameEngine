@@ -26,7 +26,7 @@ void main()
 
 	vec3 normal = mul(u_MatWorldRotation, vec4(a_normal,0)).xyz;
 
-	v_normal = normal;
+	v_normal = normalize(normal);
 
 }
 

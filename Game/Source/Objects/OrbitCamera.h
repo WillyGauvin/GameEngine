@@ -17,8 +17,8 @@ public:
 
 protected:
     fw::GameObject* m_pTarget = nullptr;
-    float m_Distance = 40.0f;
-    vec3 m_Rotation = vec3(0.0f, 0.0f, 0.0f);
+    float m_Distance = 10.0f;
+    vec3 m_Rotation = vec3(-20.0f, 0.0f, 0.0f);
     VirtualController* m_pController = nullptr;
 };
  // namespace fw

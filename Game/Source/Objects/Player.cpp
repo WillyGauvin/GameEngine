@@ -13,6 +13,7 @@
 #include "GameCore.h"
 #include "Objects/Player.h"
 #include "Objects/VirtualController.h"
+#include "Meshes/HeightMapMesh.h"
 
 Player::Player(fw::Scene* pScene)
     : fw::GameObject(pScene)
@@ -22,7 +23,7 @@ Player::Player(fw::Scene* pScene)
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
     AddComponent(new fw::TransformComponent(this, vec3(0.0f,0.0f,0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
-    AddComponent(new fw::RenderComponent(this, getMesh("Cube"), getMaterial("Dice")));
+    AddComponent(new fw::RenderComponent(this, getMesh("Player"), getMaterial("Player")));
 }
 
 Player::~Player()
@@ -76,6 +77,12 @@ void Player::Update(float deltaTime)
         dir.Normalize();
 
         GetTransformComponent()->m_position += dir * speed * deltaTime;
+
+        if (m_pWalkingSurface)
+        {
+            vec3 position = GetTransformComponent()->m_position;
+            GetTransformComponent()->m_position.y = m_pWalkingSurface->GetHeightAtXZ(position.x, position.z);
+        }
     }
     
     else

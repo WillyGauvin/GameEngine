@@ -30,7 +30,7 @@ namespace fw
 		ComponentManager* GetComponentManager() { return m_pComponentManager; }
 		fw::EventManager* GetEventManager() { return m_pEventManager; }
 		b2World* GetWorld() { return m_pWorld; }
-		fw::Camera* GetCamera() { return m_pCamera; }
+		virtual fw::Camera* GetCamera() { return m_pCamera; }
 
 
 		std::vector<GameObject*> GetLights() { return m_Lights; }

@@ -12,7 +12,7 @@
 #include "VertexFormats.h"
 #include "Shapes.h"
 #include "stb/stb_image.h"
-
+#include "HeightMapMesh.h"
 
 
 //=======================
@@ -243,7 +243,7 @@ fw::Mesh* LoadObj(char* objFileName)
         fw::OutputMessage("%s\n", line);
 
         // TODO: Process the line.
-        int length = strlen(line);
+        int length = (int)strlen(line);
         if (line[0] == 'v')
         {
             //Line is 'vt' : UV Coordinates
@@ -327,13 +327,12 @@ fw::Mesh* CreateHeightMap(char* filename, vec2 size)
     unsigned char* pixels = stbi_load_from_memory((unsigned char*)fileContents, length, &width, &height, &channels, 4);
     assert(pixels != nullptr);
 
-
+    ivec2 VertCount = ivec2(width, height);
     std::vector<VertexFormat_Pos3NormalUV> verts;
     std::vector<uint16> indices;
     std::vector<vec3> vertexs;
   
-   
-
+  
     for (int i = 0; i < width * height; i++)
     {
         int x = i % width;
@@ -408,6 +407,19 @@ fw::Mesh* CreateHeightMap(char* filename, vec2 size)
         }
 
         //Get the vertex positions from verts and calculate the normal and assign it.
+        up = verts[Iup].pos;
+        down = verts[Idown].pos;
+        left = verts[Ileft].pos;
+        right = verts[Iright].pos;
+
+        vec3 rightLeft = right - left;
+        vec3 upDown = up - down;
+
+        vec3 newNormal = upDown.Cross(rightLeft);
+
+        newNormal.Normalize();
+
+        verts[i].normal = newNormal;
 
     }
     for (int y = 0; y < height - 1; y++)
@@ -427,8 +439,7 @@ fw::Mesh* CreateHeightMap(char* filename, vec2 size)
     int vertBytes = sizeof(VertexFormat_Pos3NormalUV) * (int)verts.size();
     int indicesBytes = sizeof(uint16) * (int)indices.size();
 
-    fw::Mesh* heightMap = new fw::Mesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes);
-    heightMap->SetVertexs(vertexs);
+    HeightMapMesh* heightMap = new HeightMapMesh(VertexFormat_Pos3NormalUV::format, verts.data(), vertBytes, indices.data(), indicesBytes, size, VertCount, verts);
 
     return heightMap;
 }

@@ -36,6 +36,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("ObjTest", LoadObj("Data/Textures/TestingObject.obj"));
     pResources->Add<fw::Mesh>("HeightTest", CreateHeightMap("Data/Textures/HeightMap.png", vec2(50,50)));
     pResources->Add<fw::Mesh>("Tree", LoadObj("Data/Textures/Tree.obj"));
+    pResources->Add<fw::Mesh>("Player", LoadObj("Data/Textures/Player.obj"));
 
     // Load some shaders.
     pResources->Add<fw::ShaderProgram>( "SolidColor", new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" ) );
@@ -55,8 +56,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Texture>("ShipCrash", new fw::Texture("Data/Textures/LunarLanding/Crash.png"));
     pResources->Add<fw::Texture>("ShipLanded", new fw::Texture("Data/Textures/LunarLanding/Landed.png"));
     pResources->Add<fw::Texture>("Water", new fw::Texture("Data/Textures/Water.png"));
-    pResources->Add<fw::Texture>("Tree", new fw::Texture("Data/Textures/TreeUV.png"));
+    pResources->Add<fw::Texture>("Tree", new fw::Texture("Data/Textures/TreeUVFinal.png"));
     pResources->Add<fw::Texture>("Rock", new fw::Texture("Data/Textures/rock.png"));
+    pResources->Add<fw::Texture>("Player", new fw::Texture("Data/Textures/PlayerTextureFinal.png"));
 
 
 
@@ -83,12 +85,11 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("Water", new fw::Material(getShader("Water"), getTexture("Water"), fw::color4f::White(), true));
     pResources->Add<fw::Material>("DebugNormals", new fw::Material(getShader("DebugNormals"), nullptr, fw::color4f::White(), true));
     pResources->Add<fw::Material>("Tree", new fw::Material(getShader("Texture"), getTexture("Tree"), fw::color4f::White(), true));
-    pResources->Add<fw::Material>("Rock", new fw::Material(getShader("Texture"), getTexture("Rock"), fw::color4f::White(), true));
+    pResources->Add<fw::Material>("Rock", new fw::Material(getShader("Light"), getTexture("Rock"), fw::color4f::White(), false));
     pResources->Add<fw::Material>("LightTest", new fw::Material(getShader("Light"), getTexture("Tree"), fw::color4f::White(), false));
     pResources->Add<fw::Material>("LightingWhite", new fw::Material(getShader("Light"), nullptr, fw::color4f::White(), false));
     pResources->Add<fw::Material>("LightedTree", new fw::Material(getShader("Light"), getTexture("Tree"), fw::color4f::White(), false));
-    pResources->Add<fw::Material>("LightedDice", new fw::Material(getShader("Light"), getTexture("Dice"), fw::color4f::White(), true));
-
+    pResources->Add<fw::Material>("Player", new fw::Material(getShader("Light"), getTexture("Player"), fw::color4f::White(), false));
 
 
     

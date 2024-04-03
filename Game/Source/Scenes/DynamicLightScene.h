@@ -20,6 +20,7 @@ public:
 	virtual void Draw() override;
 
 	void PlaceTrees();
+	virtual fw::Camera* GetCamera() override;
 
 protected:
 	VirtualController* m_pController = nullptr;
@@ -28,6 +29,7 @@ protected:
 	fw::GameObject* m_pPlane = nullptr;
 	fw::GameObject* m_pIsland = nullptr;
 	fw::GameObject* m_pLight = nullptr;
+	fw::GameObject* m_pTest = nullptr;
 
 	std::vector<fw::GameObject*> m_pTrees;
 };

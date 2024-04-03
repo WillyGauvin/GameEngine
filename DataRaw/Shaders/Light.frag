@@ -35,20 +35,20 @@ void main()
     vec3 normal = v_normal;
     normal = normalize(normal);
 
-    float specularPerc = max(0.0, dot(halfVector, normal));
+    float specularPerc = max(0, dot(halfVector, v_normal));
     specularPerc = pow (specularPerc, specularExponent);
 
-    float diffusePerc = max(dot(dirToLight, normal), 0.0);
+    float diffusePerc = max(0, dot(dirToLight, normal));
 
     float distanceFromLight = length( lightPos - surfacePos);
-    float falloff = max(0.0, 1.0 - distanceFromLight/lightRange);
+    float falloff = max(0, 1 - distanceFromLight/lightRange);
     falloff = pow(falloff, falloffExponent);
 
     vec4 ambient = surfaceColor * ambientPercentage;
     vec4 diffuse = surfaceColor * diffusePerc;
     vec4 specular = lightColor * specularPerc;
 
-    vec4 finalColour = vec4 (ambient + (diffuse + specular) * falloff);
+    vec4 finalColour = ambient + (diffuse + specular) * falloff;
 
 
     gl_FragColor = finalColour;

@@ -29,18 +29,14 @@ namespace fw {
 
         static ResourceCategoryIDType GetResourceCategoryID() { return "Mesh"; }
 
-        void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
+        virtual void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
 
-        void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial);
+        virtual void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial);
 
-        void SetVertexs(std::vector<vec3>& vertexs) { m_vertexs = vertexs; }
-
-        std::vector<vec3> GetVertex() { return m_vertexs; }
     protected:
         bgfx::VertexBufferHandle m_VBO;
         bgfx::IndexBufferHandle m_IBO;
 
-        std::vector<vec3> m_vertexs;
     };
 
 } // namespace fw

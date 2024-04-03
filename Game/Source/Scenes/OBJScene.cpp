@@ -1,5 +1,6 @@
 #include "OBJScene.h"
 #include "Game.h"
+#include "Meshes/HeightMapMesh.h"
 
 OBJScene::OBJScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 {
@@ -92,7 +93,7 @@ void OBJScene::PlaceTrees()
 	#define getMesh game->GetResourceManager()->Get<fw::Mesh>
 	#define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-	std::vector<vec3> vertexs = m_pIsland->GetRenderComponent()->m_pMesh->GetVertex();
+	std::vector<vec3> vertexs = static_cast<HeightMapMesh*>(m_pIsland->GetRenderComponent()->m_pMesh)->GetVerts();
 	
 	std::vector<vec3> PossiblePositions;
 
