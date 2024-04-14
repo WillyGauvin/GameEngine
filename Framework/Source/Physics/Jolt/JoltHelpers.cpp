@@ -3,6 +3,8 @@
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "Component/Component.h"
+#include "Component/RenderComponent.h"
+#include "Resources/Mesh.h"
 
 #include "JoltHelpers.h"
 
@@ -15,6 +17,7 @@
 #include "JoltPhysics/Jolt/Physics/Body/BodyCreationSettings.h"
 #include "JoltPhysics/Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "JoltPhysics/Jolt/Physics/Collision/Shape/SphereShape.h"
+#include "JoltPhysics/Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "JoltPhysics/Jolt/Physics/PhysicsSettings.h"
 #include "JoltPhysics/Jolt/Physics/PhysicsSystem.h"
 
@@ -168,6 +171,68 @@ namespace fw {
     {
         // Create the shape.
         JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2, scale.y / 2, scale.x / 2));
+        JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
+        JPH::ShapeRefC shape = shapeResult.Get();
+
+        // Setup the body.
+        JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
+        JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
+        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
+
+        // Create the rigid body.
+        JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
+        bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
+
+        return pRigidBody;
+    }
+
+    JPH::Body* CreateMeshJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject)
+    {
+
+        std::vector<vec3> vertexesVec3 = pGameObject->GetRenderComponent()->m_pMesh->GetVerts();
+        JPH::VertexList vertexs;
+        
+        for (vec3 pos : vertexesVec3)
+        {
+            JPH::Float3 vec = JPH::Float3(pos.x, pos.y, pos.z);
+            vertexs.push_back(vec);
+        }
+
+        std::vector<std::vector<int>> triangles = pGameObject->GetRenderComponent()->m_pMesh->GetTriangles();
+        JPH::IndexedTriangleList indices;
+
+
+        for (std::vector<int> triangle : triangles)
+        {
+            JPH::IndexedTriangle newtriangle = JPH::IndexedTriangle((uint32)triangle[0], (uint32)triangle[1], (uint32)triangle[2]);
+            indices.push_back(newtriangle);
+        }
+
+        // Create the shape.
+        JPH::MeshShapeSettings meshSettings(vertexs, indices);
+
+        JPH::ShapeSettings::ShapeResult shapeResult = meshSettings.Create();
+        JPH::ShapeRefC shape = shapeResult.Get();
+
+        // Setup the body.
+        JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
+        JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
+        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
+        //JPH::BodyCreationSettings bodySettings()
+
+        // Create the rigid body.
+        JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
+        bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
+
+        return pRigidBody;
+    }
+
+    JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density, GameObject* pGameObject)
+    {
+        // Create the shape.
+        JPH::SphereShapeSettings shapeSettings(radius);
         JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
         JPH::ShapeRefC shape = shapeResult.Get();
 

@@ -12,7 +12,7 @@ JoltScene::JoltScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 	#define getMesh game->GetResourceManager()->Get<fw::Mesh>
 	#define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-	m_pWorldBundle = fw::CreateJoltWorld(m_pEventManager);
+	//m_pWorldBundle = fw::CreateJoltWorld(m_pEventManager);
 
 	m_Objects.push_back(new fw::GameObject(this));
 
@@ -23,13 +23,13 @@ JoltScene::JoltScene(fw::GameCore* pGameCore) : fw::Scene(pGameCore)
 	m_ptestObject->AddComponent(new fw::RenderComponent(m_ptestObject, getMesh("Cube"), getMaterial("DebugNormals")));
 
 
-	m_pBody = fw::CreateJoltBody(m_pWorldBundle->m_pWorld, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1), false, 1.0f, m_ptestObject);
+	//m_pBody = fw::CreateJoltBody(m_pWorldBundle->m_pWorld, vec3(0, 0, 0), vec3(0, 0, 0), vec3(1, 1, 1), false, 1.0f, m_ptestObject);
 }
 JoltScene::~JoltScene()
 {
-	fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pBody);
-	fw::DestroyJoltWorld(m_pWorldBundle);
-	delete m_pWorldBundle;
+	//fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pBody);
+	//fw::DestroyJoltWorld(m_pWorldBundle);
+	//delete m_pWorldBundle;
 }
 
 void JoltScene::ExecuteEvent(fw::Event* pEvent)
@@ -51,7 +51,7 @@ void JoltScene::StartFrame(float deltaTime)
 
 void JoltScene::Update(float deltaTime)
 {
-	fw::UpdateJoltWorld(m_pWorldBundle, deltaTime);
+	//fw::UpdateJoltWorld(m_pWorldBundle, deltaTime);
 	
 	fw::GameObject* object = m_Objects[0];
 

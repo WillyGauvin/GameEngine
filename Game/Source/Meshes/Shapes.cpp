@@ -13,6 +13,7 @@
 #include "Shapes.h"
 #include "stb/stb_image.h"
 #include "HeightMapMesh.h"
+#include "OBJMesh.h"
 
 
 //=======================
@@ -236,6 +237,9 @@ fw::Mesh* LoadObj(char* objFileName)
     std::vector<vec3> VertexNormals;
     std::vector<vec3> VertexPositions;
     std::vector<VertexFormat_Pos3NormalUV> Faces;
+
+    std::vector<std::vector<int>> triangles;
+
     // Keep looping as long as there are lines:
     while (line)
     {
@@ -295,7 +299,12 @@ fw::Mesh* LoadObj(char* objFileName)
             Faces.push_back({ VertexPositions[(int)posIndex2 - 1], VertexNormals[(int)normIndex2 - 1], UVCoordinates[(int)UVIndex2 - 1] });
             Faces.push_back({ VertexPositions[(int)posIndex3 - 1], VertexNormals[(int)normIndex3 - 1], UVCoordinates[(int)UVIndex3 - 1] });
 
-            int i = 0;
+            std::vector<int> triangle;
+            triangle.push_back((int)posIndex1 - 1);
+            triangle.push_back((int)posIndex2 - 1);
+            triangle.push_back((int)posIndex3 - 1);
+
+            triangles.push_back(triangle);
         }
 
         // Go to the next line
@@ -311,7 +320,7 @@ fw::Mesh* LoadObj(char* objFileName)
 
     int indicesBytes = sizeof(uint16) * (int)indices.size();
 
-    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes);
+    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, Faces.data(), vertBytes, indices.data(), indicesBytes, VertexPositions, triangles);
 }
 
 fw::Mesh* CreateHeightMap(char* filename, vec2 size)

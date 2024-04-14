@@ -23,6 +23,7 @@ public:
 		OrbitRight  = 1 << 9,
 		ZoomIn	 = 1 << 10,
 		ZoomOut  = 1 << 11,
+		Swing = 1 << 12
 	};
 public:
 	VirtualController(fw::EventManager* pEventManager);

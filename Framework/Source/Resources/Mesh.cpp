@@ -26,6 +26,15 @@ namespace fw {
         memcpy(m, verts, vertsSize);
     }
 
+    Mesh::Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize, std::vector<vec3> vertexes, std::vector<std::vector<int>> triangles)
+        : m_Verts(vertexes),
+        m_Triangles(triangles)
+    {
+        Create(vertexFormat, verts, vertsSize, indices, indicesSize);
+        void* m = new char[vertsSize];
+        memcpy(m, verts, vertsSize);
+    }
+
     Mesh::~Mesh()
     {
         bgfx::destroy( m_VBO );

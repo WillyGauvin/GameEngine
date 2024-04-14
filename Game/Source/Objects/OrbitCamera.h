@@ -14,7 +14,8 @@ public:
 
     virtual void Enable(int viewID) override;
 
-
+    void SetStartingDistance(float startingDistance) { m_Distance = startingDistance; }
+    void SetStartingRotation(vec3 startingRotation) { m_Rotation = startingRotation; }
 protected:
     fw::GameObject* m_pTarget = nullptr;
     float m_Distance = 10.0f;

@@ -25,6 +25,8 @@ namespace fw {
     {
     public:
         Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
+        Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize, std::vector<vec3> vertexes, std::vector<std::vector<int>> triangles);
+
         virtual ~Mesh();
 
         static ResourceCategoryIDType GetResourceCategoryID() { return "Mesh"; }
@@ -33,7 +35,16 @@ namespace fw {
 
         virtual void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial);
 
+        std::vector<vec3> GetVerts() { return m_Verts; }
+
+        std::vector<std::vector<int>> GetTriangles() { return m_Triangles; }
+
+
     protected:
+        
+        std::vector<vec3> m_Verts;
+
+        std::vector<std::vector<int>> m_Triangles;
         bgfx::VertexBufferHandle m_VBO;
         bgfx::IndexBufferHandle m_IBO;
 

@@ -39,6 +39,9 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'L': { m_Actions = m_Actions | Actions::OrbitRight; } break;
 				case 'U': { m_Actions = m_Actions | Actions::ZoomIn; } break;
 				case 'M': { m_Actions = m_Actions | Actions::ZoomOut; } break;
+					//SpaceBar
+				case 32: { m_Actions = m_Actions | Actions::Swing; } break;
+
 
 
 				}
@@ -61,6 +64,8 @@ void VirtualController::ExecuteEvent(fw::Event* pEvent)
 				case 'L': { m_Actions = m_Actions & ~Actions::OrbitRight; } break;
 				case 'U': { m_Actions = m_Actions & ~Actions::ZoomIn; } break;
 				case 'M': { m_Actions = m_Actions & ~Actions::ZoomOut; } break;
+					//SpaceBar
+				case 32: { m_Actions = m_Actions & ~Actions::Swing; } break;
 				}
 			}
 		}

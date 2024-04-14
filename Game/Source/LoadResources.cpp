@@ -37,6 +37,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("HeightTest", CreateHeightMap("Data/Textures/HeightMap.png", vec2(50,50)));
     pResources->Add<fw::Mesh>("Tree", LoadObj("Data/Textures/Tree.obj"));
     pResources->Add<fw::Mesh>("Player", LoadObj("Data/Textures/Player.obj"));
+    pResources->Add<fw::Mesh>("MiniPuttCourse", LoadObj("Data/Textures/GolfCourse.obj"));
+    pResources->Add<fw::Mesh>("GolfBall", LoadObj("Data/Textures/Titleist.obj"));
+
 
     // Load some shaders.
     pResources->Add<fw::ShaderProgram>( "SolidColor", new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" ) );
@@ -59,6 +62,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Texture>("Tree", new fw::Texture("Data/Textures/TreeUVFinal.png"));
     pResources->Add<fw::Texture>("Rock", new fw::Texture("Data/Textures/rock.png"));
     pResources->Add<fw::Texture>("Player", new fw::Texture("Data/Textures/PlayerTextureFinal.png"));
+    pResources->Add<fw::Texture>("MiniPuttCourse", new fw::Texture("Data/Textures/GolfCourseUVFinal.png"));
+    pResources->Add<fw::Texture>("GolfBall", new fw::Texture("Data/Textures/GolfBallUV.png"));
+
 
 
 
@@ -90,6 +96,9 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Material>("LightingWhite", new fw::Material(getShader("Light"), nullptr, fw::color4f::White(), false));
     pResources->Add<fw::Material>("LightedTree", new fw::Material(getShader("Light"), getTexture("Tree"), fw::color4f::White(), false));
     pResources->Add<fw::Material>("Player", new fw::Material(getShader("Light"), getTexture("Player"), fw::color4f::White(), false));
+    pResources->Add<fw::Material>("MiniPuttCourse", new fw::Material(getShader("Light"), getTexture("MiniPuttCourse"), fw::color4f::White(), false));
+    pResources->Add<fw::Material>("GolfBall", new fw::Material(getShader("Texture"), getTexture("GolfBall"), fw::color4f::White(), false));
+
 
 
     

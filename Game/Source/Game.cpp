@@ -23,6 +23,7 @@
 #include "Scenes/LightScene.h"
 #include "Scenes/OrbitCameraScene.h"
 #include "Scenes/DynamicLightScene.h"
+#include "Scenes/MiniPuttScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -78,7 +79,8 @@ Game::Game(fw::FWCore& fwCore)
     m_pLightScene = new LightScene(this);
     m_pOrbitCameraScene = new OrbitCameraScene(this);
     m_pDynamicLightScene = new DynamicLightScene(this);
-    m_pCurrentScene = m_pDynamicLightScene;
+    m_pMiniPuttScene = new MiniPuttScene(this);
+    m_pCurrentScene = m_pMiniPuttScene;
 
 }
 
@@ -207,6 +209,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("DynamicLight"))
     {
         m_pCurrentScene = m_pDynamicLightScene;
+    }
+    if (ImGui::Button("MiniPutt"))
+    {
+        m_pCurrentScene = m_pMiniPuttScene;
     }
     ImGui::End();
 }
