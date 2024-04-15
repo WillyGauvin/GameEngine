@@ -24,6 +24,7 @@
 #include "Scenes/OrbitCameraScene.h"
 #include "Scenes/DynamicLightScene.h"
 #include "Scenes/MiniPuttScene.h"
+#include "Scenes/FinalExamScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -80,7 +81,8 @@ Game::Game(fw::FWCore& fwCore)
     m_pOrbitCameraScene = new OrbitCameraScene(this);
     m_pDynamicLightScene = new DynamicLightScene(this);
     m_pMiniPuttScene = new MiniPuttScene(this);
-    m_pCurrentScene = m_pMiniPuttScene;
+    m_pFinalExamScene = new FinalExamScene(this);
+    m_pCurrentScene = m_pFinalExamScene;
 
 }
 
@@ -95,6 +97,8 @@ Game::~Game()
     delete m_pOBJScene;
     delete m_pOrbitCameraScene;
     delete m_pDynamicLightScene;
+    delete m_pMiniPuttScene;
+    delete m_pFinalExamScene;
 }
 
 void Game::CreateUniforms()
@@ -213,6 +217,10 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("MiniPutt"))
     {
         m_pCurrentScene = m_pMiniPuttScene;
+    }
+    if (ImGui::Button("FinalExam"))
+    {
+        m_pCurrentScene = m_pFinalExamScene;
     }
     ImGui::End();
 }

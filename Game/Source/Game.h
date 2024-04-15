@@ -34,6 +34,8 @@ class DynamicLightScene;
 
 class MiniPuttScene;
 
+class FinalExamScene;
+
 enum EditorViews
 {
     EditorView_Game,
@@ -81,6 +83,8 @@ protected:
     DynamicLightScene* m_pDynamicLightScene = nullptr;
 
     MiniPuttScene* m_pMiniPuttScene = nullptr;
+
+    FinalExamScene* m_pFinalExamScene = nullptr;
 
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 
