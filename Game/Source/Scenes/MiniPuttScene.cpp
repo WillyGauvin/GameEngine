@@ -38,14 +38,14 @@ MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pRedLight = new fw::GameObject(this);
 	m_pRedLight->AddComponent(new fw::TransformComponent(m_pRedLight, vec3(4.0f, 2.0f, 3.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
 	m_pRedLight->AddComponent(new fw::RenderComponent(m_pRedLight, getMesh("Cube"), getMaterial("Red")));
-	m_pRedLight->AddComponent(new fw::LightComponent(m_pRedLight, 100.0f, 0.0f, 5.0f, 2.0f));
+	m_pRedLight->AddComponent(new fw::LightComponent(m_pRedLight, 100.0f, 0.0f, 5.0f, 10.0f));
 	m_Objects.push_back(m_pRedLight);
 	m_Lights.push_back(m_pRedLight);
 
 	m_pBlueLight = new fw::GameObject(this);
 	m_pBlueLight->AddComponent(new fw::TransformComponent(m_pBlueLight, vec3(-1.0f, 2.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
 	m_pBlueLight->AddComponent(new fw::RenderComponent(m_pBlueLight, getMesh("Cube"), getMaterial("Blue")));
-	m_pBlueLight->AddComponent(new fw::LightComponent(m_pBlueLight, 100.0f, 0.0f, 5.0f, 2.0f));
+	m_pBlueLight->AddComponent(new fw::LightComponent(m_pBlueLight, 100.0f, 0.0f, 5.0f, 10.0f));
 	m_Objects.push_back(m_pBlueLight);
 	m_Lights.push_back(m_pBlueLight);
 

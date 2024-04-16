@@ -16,7 +16,7 @@ SAMPLER2D( u_TextureColor, 0 );
 
 void main()
 {
-    vec4 finalColor = vec4(0,0,0,1);
+    vec4 finalColor = vec4(0,0,0,0);
     vec4 surfaceColor = texture2D( u_TextureColor, v_texcoord0 );
     vec3 normal = v_normal;
     normal = normalize(normal);
@@ -40,14 +40,21 @@ void main()
         vec3 halfVector = normalize(dirToCamera + dirToLight);
        
 
-        float specularPerc = max(0, dot(halfVector, v_normal));
-        specularPerc = pow (specularPerc, specularExponent);
+        float specularPerc = max(0, dot(halfVector, normal));
+        if (specularExponent == 0)
+        {
+            specularPerc = pow (specularPerc, 1);
+        }
+        else
+        {
+            specularPerc = pow (specularPerc, specularExponent);
+        }
 
         float diffusePerc = max(0, dot(dirToLight, normal));
 
         float distanceFromLight = length( lightPos - surfacePos);
 
-        float falloff = 0;
+        float falloff = 0.0;
         if (lightRange > 0.0f)
         {
             falloff = max(0, 1 - distanceFromLight/lightRange);
@@ -58,7 +65,8 @@ void main()
         vec4 diffuse = surfaceColor * diffusePerc;
         vec4 specular = lightColor * specularPerc;
 
-        finalColor += ambient + ((diffuse + specular) * falloff);
+        vec4 newColor = ambient + ((diffuse + specular) * falloff);
+        finalColor += newColor;
     }
 
 
