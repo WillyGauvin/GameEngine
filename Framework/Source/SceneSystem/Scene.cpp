@@ -5,6 +5,10 @@
 #include "Objects/GameObject.h"
 #include "Physics/Box2D/MyContactListener.h"
 #include "Component/TransformComponent.h"
+#include "Component/LightComponent.h"
+#include "Component/RenderComponent.h"
+#include "Utility/Uniforms.h"
+
 
 namespace fw
 {
@@ -34,7 +38,7 @@ namespace fw
 		m_Lights.clear();
 
 		delete m_pComponentManager;
-	
+
 		delete m_pWorld;
 		delete m_pContactListener;
 	}
@@ -56,10 +60,18 @@ namespace fw
 
 	void Scene::Draw()
 	{
+		PopulateAllLightArrays();
+		Uniforms* pUniforms = GetGameCore()->GetUniforms();
 
+		bgfx::setUniform(pUniforms->GetUniform("u_LightPosition"), &m_LightPos, UINT16_MAX);
+		bgfx::setUniform(pUniforms->GetUniform("u_LightColor"), &m_LightColor, UINT16_MAX);
+		bgfx::setUniform(pUniforms->GetUniform("u_LightRange"), &m_LightRange, UINT16_MAX);
+		bgfx::setUniform(pUniforms->GetUniform("u_AmbientPercentage"), &m_AmbPerc, UINT16_MAX);
+		bgfx::setUniform(pUniforms->GetUniform("u_FalloffExponent"), &m_FalloffExp, UINT16_MAX);
+		bgfx::setUniform(pUniforms->GetUniform("u_SpecularExponent"), &m_SpecExp, UINT16_MAX);
 	}
 
-	GameObject* Scene::GetClosetLight(vec3 position)
+	GameObject* Scene::GetClosestLight(vec3 position)
 	{
 		if (m_Lights.size() == 0)
 		{
@@ -151,4 +163,35 @@ namespace fw
 
 	}
 
+	void Scene::PopulateAllLightArrays()
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (i < m_Lights.size())
+			{
+				fw::GameObject* object = m_Lights[i];
+				fw::LightComponent* component = object->GetLightComponent();
+				m_LightPos[i] = vec4(object->GetTransformComponent()->m_position, 0);
+
+				vec4 color = object->GetRenderComponent()->GetColor();
+
+				m_LightColor[i] = color;
+				m_LightRange[i] = vec4(component->m_LightRange, 0.0f, 0.0f, 0.0f);
+				m_AmbPerc[i] = vec4(component->m_AmbientPerc, 0.0f, 0.0f ,0.0f);
+				m_FalloffExp[i] = vec4(component->m_FalloffExp, 0.0f, 0.0f, 0.0f);
+				m_SpecExp[i] = vec4(component->m_SpecularExp, 0.0f, 0.0f, 0.0f);
+			}
+			else
+			{
+				m_LightPos[i] = vec4();
+				m_LightColor[i] = vec4();
+				m_LightRange[i] = vec4();
+				m_AmbPerc[i] = vec4();
+				m_FalloffExp[i] = vec4();
+				m_SpecExp[i] = vec4();
+			}
+
+		}
+
+	}
 }

@@ -31,9 +31,9 @@ float HeightMapMesh::GetHeightAtXZ(float x, float z)
 
     vec2 tileSize = vec2(m_Size.x / m_VertCount.x, m_Size.y / m_VertCount.y);
 
-    int xIndex = (x - fmodf(x, tileSize.x)) / tileSize.x;
+    int xIndex = (x - fmodf(x, (int)tileSize.x)) / (int)tileSize.x;
 
-    int zIndex = (z - fmodf(z, tileSize.y)) / tileSize.y;
+    int zIndex = (z - fmodf(z, (int)tileSize.y)) / (int)tileSize.y;
 
     // Get the 4 vertices that make up the quad.
     int stride = m_VertCount.x;

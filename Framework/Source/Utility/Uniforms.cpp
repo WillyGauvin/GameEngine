@@ -25,9 +25,9 @@ namespace fw {
         }
     }
 
-    void Uniforms::CreateUniform(const char* name, bgfx::UniformType::Enum type)
+    void Uniforms::CreateUniform(const char* name, bgfx::UniformType::Enum type, uint16 numOfUniforms)
     {
-        m_Map[name] = bgfx::createUniform( name, type );
+        m_Map[name] = bgfx::createUniform( name, type, numOfUniforms);
     }
 
 } // namespace fw

@@ -68,6 +68,11 @@ void GolfBall::Update(float deltaTime)
                 GetScene()->GetEventManager()->AddEvent(event);
                 m_Power = 0.0f;
             }
+            if (m_pController->isActionHeld(VirtualController::Reset))
+            {
+                ResetGameEvent* reset = new ResetGameEvent();
+                GetScene()->GetEventManager()->AddEvent(reset);
+            }
         }
     }
     

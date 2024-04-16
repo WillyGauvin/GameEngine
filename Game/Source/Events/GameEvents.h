@@ -59,3 +59,18 @@ public:
 protected:
     vec3 m_Force;
 };
+
+class ResetGameEvent : public fw::Event
+{
+public:
+    ResetGameEvent()
+    {
+
+    };
+    virtual ~ResetGameEvent() {}
+
+    static const char* GetStaticEventType() { return "ResetGameEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+protected:
+};

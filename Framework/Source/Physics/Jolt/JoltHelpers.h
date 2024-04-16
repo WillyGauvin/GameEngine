@@ -5,6 +5,7 @@ namespace JPH {
     class TempAllocatorImpl;
     class JobSystemThreadPool;
     class Body;
+    class ContactListener;
 }
 
 namespace fw {
@@ -26,13 +27,14 @@ namespace fw {
         ObjectLayerPairFilterImpl* m_pObjectVsObjectLayerFilter = nullptr;
     };
 
-    JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager);
+    JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager, JPH::ContactListener* pListener);
+
+
     void UpdateJoltWorld(JoltWorldBundle* pBundle, float deltaTime);
     void DestroyJoltWorld(JoltWorldBundle* pBundle);
-
+    
     JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject);
     JPH::Body* CreateMeshJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject);
     JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density, GameObject* pGameObject);
     void DestroyJoltBody(JPH::PhysicsSystem* pWorld, JPH::Body* pBody);
-
 } // namespace fw

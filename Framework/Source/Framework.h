@@ -58,3 +58,4 @@
 
 //Jolt
 #include "Physics/Jolt/JoltHelpers.h"
+#include "Physics/Jolt/JoltContactListener.h"

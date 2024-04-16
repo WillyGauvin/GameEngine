@@ -22,7 +22,7 @@ namespace fw {
         Uniforms();
         ~Uniforms();
     
-        void CreateUniform(const char* name, bgfx::UniformType::Enum type);
+        void CreateUniform(const char* name, bgfx::UniformType::Enum type, uint16 numOfUniforms = 1);
         bgfx::UniformHandle GetUniform(const char* name) const { return m_Map.at(name); }
 
     protected:

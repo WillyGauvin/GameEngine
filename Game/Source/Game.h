@@ -34,8 +34,6 @@ class DynamicLightScene;
 
 class MiniPuttScene;
 
-class FinalExamScene;
-
 enum EditorViews
 {
     EditorView_Game,
@@ -84,8 +82,6 @@ protected:
 
     MiniPuttScene* m_pMiniPuttScene = nullptr;
 
-    FinalExamScene* m_pFinalExamScene = nullptr;
-
     fw::ImGuiManager* m_pImGuiManager = nullptr;
 
     bgfx::TextureHandle m_Game_FBOTexture;
@@ -93,4 +89,5 @@ protected:
 
     bgfx::FrameBufferHandle m_Game_FBO;
 
+    uint16 m_maxLights = 10;
 };

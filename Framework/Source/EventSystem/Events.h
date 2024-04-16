@@ -133,6 +133,11 @@ namespace fw {
             m_ProfileB = profileB;
 
         }
+        CollisionEvent(uint16 profileA, uint16 profileB)
+        {
+            m_ProfileA = profileA;
+            m_ProfileB = profileB;
+        }
         virtual ~CollisionEvent() {}
 
         static const char* GetStaticEventType() { return "CollisionEvent"; }
@@ -151,8 +156,8 @@ namespace fw {
 
 
     protected:
-        GameObject* m_ObjectA;
-        GameObject* m_ObjectB;
+        GameObject* m_ObjectA = nullptr;
+        GameObject* m_ObjectB = nullptr;
         float m_speedA;
         float m_speedB;
         vec2 m_ANormal;

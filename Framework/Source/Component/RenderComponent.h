@@ -24,9 +24,11 @@ namespace fw
 		void SetMesh(Mesh* pMesh) { m_pMesh = pMesh; }
 		void SetMaterial(Material* pMaterial) { m_pMaterial = pMaterial; }
 		
+		vec4 GetColor();
 	public:
 		Mesh* m_pMesh = nullptr;
 		Material* m_pMaterial = nullptr;
+		color4f m_color;
 
 	};
 }

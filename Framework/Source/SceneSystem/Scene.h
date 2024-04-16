@@ -34,12 +34,13 @@ namespace fw
 
 
 		std::vector<GameObject*> GetLights() { return m_Lights; }
-		GameObject* GetClosetLight(vec3 position);
+		GameObject* GetClosestLight(vec3 position);
 
 		void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
 
 		void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
 
+		void PopulateAllLightArrays();
 
 	protected:
 		GameCore* m_pGameCore = nullptr;
@@ -57,6 +58,13 @@ namespace fw
 		//B2Box
 		b2World* m_pWorld = nullptr;
 		MyContactListener* m_pContactListener = nullptr;
+
+		vec4 m_LightPos[10];
+		vec4 m_LightColor[10];
+		vec4 m_LightRange[10];
+		vec4 m_AmbPerc[10];
+		vec4 m_FalloffExp[10];
+		vec4 m_SpecExp[10];
 
 	};
 }

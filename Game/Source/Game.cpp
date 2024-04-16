@@ -24,7 +24,6 @@
 #include "Scenes/OrbitCameraScene.h"
 #include "Scenes/DynamicLightScene.h"
 #include "Scenes/MiniPuttScene.h"
-#include "Scenes/FinalExamScene.h"
 #include "Component/ComponentManager.h"
 #include <winsock.h>
 
@@ -81,8 +80,7 @@ Game::Game(fw::FWCore& fwCore)
     m_pOrbitCameraScene = new OrbitCameraScene(this);
     m_pDynamicLightScene = new DynamicLightScene(this);
     m_pMiniPuttScene = new MiniPuttScene(this);
-    m_pFinalExamScene = new FinalExamScene(this);
-    m_pCurrentScene = m_pFinalExamScene;
+    m_pCurrentScene = m_pMiniPuttScene;
 
 }
 
@@ -98,7 +96,7 @@ Game::~Game()
     delete m_pOrbitCameraScene;
     delete m_pDynamicLightScene;
     delete m_pMiniPuttScene;
-    delete m_pFinalExamScene;
+
 }
 
 void Game::CreateUniforms()
@@ -124,18 +122,17 @@ void Game::CreateUniforms()
     m_pUniforms->CreateUniform( "u_Time", bgfx::UniformType::Vec4 );
  
     //light pos vec3
-    m_pUniforms->CreateUniform("u_LightPosition", bgfx::UniformType::Vec4);
+    m_pUniforms->CreateUniform("u_LightPosition", bgfx::UniformType::Vec4, m_maxLights);
     //light color vec4
-    m_pUniforms->CreateUniform("u_LightColor", bgfx::UniformType::Vec4);
-
+    m_pUniforms->CreateUniform("u_LightColor", bgfx::UniformType::Vec4, m_maxLights);
     //light range float
-    m_pUniforms->CreateUniform("u_LightRange", bgfx::UniformType::Vec4);
+    m_pUniforms->CreateUniform("u_LightRange", bgfx::UniformType::Vec4, m_maxLights);
     //ambient percentage float
-    m_pUniforms->CreateUniform("u_AmbientPercentage", bgfx::UniformType::Vec4);
+    m_pUniforms->CreateUniform("u_AmbientPercentage", bgfx::UniformType::Vec4, m_maxLights);
     //falloff exponent float
-    m_pUniforms->CreateUniform("u_FalloffExponent", bgfx::UniformType::Vec4);
+    m_pUniforms->CreateUniform("u_FalloffExponent", bgfx::UniformType::Vec4, m_maxLights);
     //specular exponent float
-    m_pUniforms->CreateUniform("u_SpecularExponent", bgfx::UniformType::Vec4);
+    m_pUniforms->CreateUniform("u_SpecularExponent", bgfx::UniformType::Vec4, m_maxLights);
 
     
 }
@@ -217,10 +214,6 @@ void Game::Editor_SelectScene()
     if (ImGui::Button("MiniPutt"))
     {
         m_pCurrentScene = m_pMiniPuttScene;
-    }
-    if (ImGui::Button("FinalExam"))
-    {
-        m_pCurrentScene = m_pFinalExamScene;
     }
     ImGui::End();
 }

@@ -20,6 +20,7 @@
 #include "JoltPhysics/Jolt/Physics/Collision/Shape/MeshShape.h"
 #include "JoltPhysics/Jolt/Physics/PhysicsSettings.h"
 #include "JoltPhysics/Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/Collision/ContactListener.h"
 
 namespace JPH {
     class TempAllocatorImpl;
@@ -32,14 +33,16 @@ namespace fw {
     {
         static constexpr JPH::ObjectLayer NON_MOVING = 0;
         static constexpr JPH::ObjectLayer MOVING = 1;
-        static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
+        static constexpr JPH::ObjectLayer SENSOR = 2;
+        static constexpr JPH::ObjectLayer NUM_LAYERS = 3;
     };
 
     namespace BroadPhaseLayers
     {
         static constexpr JPH::BroadPhaseLayer NON_MOVING(0);
         static constexpr JPH::BroadPhaseLayer MOVING(1);
-        static constexpr JPH::uint NUM_LAYERS(2);
+        static constexpr JPH::BroadPhaseLayer SENSOR(2);
+        static constexpr JPH::uint NUM_LAYERS(3);
     };
 
     // BroadPhaseLayerInterface implementation.
@@ -52,6 +55,7 @@ namespace fw {
             // Create a mapping table from object to broad phase layer
             mObjectToBroadPhase[Layers::NON_MOVING] = BroadPhaseLayers::NON_MOVING;
             mObjectToBroadPhase[Layers::MOVING] = BroadPhaseLayers::MOVING;
+            mObjectToBroadPhase[Layers::SENSOR] = BroadPhaseLayers::SENSOR;
         }
 
         virtual JPH::uint GetNumBroadPhaseLayers() const override
@@ -72,6 +76,7 @@ namespace fw {
             {
             case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING:  return "NON_MOVING";
             case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::MOVING:      return "MOVING";
+            case (JPH::BroadPhaseLayer::Type)BroadPhaseLayers::SENSOR:      return "SENSOR";
             default:                                                        JPH_ASSERT(false); return "INVALID";
             }
         }
@@ -119,7 +124,7 @@ namespace fw {
         }
     };
 
-    JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager)
+    JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager, JPH::ContactListener* pListener)
     {
         // This code isn't setup to handle multiple Jolt worlds.
         assert(JPH::Factory::sInstance == nullptr);
@@ -143,6 +148,7 @@ namespace fw {
 
         pBundle->m_pWorld->Init(1024, 0, 1024, 1024, interface, objectVsBroadphase, objectVsObject);
         pBundle->m_pWorld->SetGravity(JPH::Vec3Arg(0, -9.8f, 0));
+        pBundle->m_pWorld->SetContactListener(pListener);
 
         return pBundle;
     }
@@ -170,16 +176,16 @@ namespace fw {
     JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject)
     {
         // Create the shape.
-        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2, scale.y / 2, scale.x / 2));
+        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2.0f, scale.y / 2.0f, scale.x / 2.0f));
         JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
         JPH::ShapeRefC shape = shapeResult.Get();
 
         // Setup the body.
         JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
         JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
-        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+        int objectLayer = Layers::SENSOR;
         JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
-
+        bodySettings.mIsSensor = true;
         // Create the rigid body.
         JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
         bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
@@ -220,7 +226,9 @@ namespace fw {
         JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
         int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
         JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
-        //JPH::BodyCreationSettings bodySettings()
+        bodySettings.mEnhancedInternalEdgeRemoval = true;
+        bodySettings.mRestitution = 0.5f;
+
 
         // Create the rigid body.
         JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
@@ -241,11 +249,14 @@ namespace fw {
         JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
         int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
         JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
+        bodySettings.mEnhancedInternalEdgeRemoval = true;
+        bodySettings.mRestitution = 0.4f;
+        bodySettings.mFriction = 0.9f;
+        bodySettings.mAllowSleeping = false;
 
         // Create the rigid body.
         JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
         bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
-
         return pRigidBody;
     }
 
