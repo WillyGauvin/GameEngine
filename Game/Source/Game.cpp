@@ -96,6 +96,7 @@ Game::~Game()
     delete m_pOrbitCameraScene;
     delete m_pDynamicLightScene;
     delete m_pMiniPuttScene;
+    delete m_pLightScene;
 
 }
 

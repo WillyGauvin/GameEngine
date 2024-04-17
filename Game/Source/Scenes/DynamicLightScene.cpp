@@ -48,6 +48,9 @@ DynamicLightScene::DynamicLightScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 DynamicLightScene::~DynamicLightScene()
 {
+	delete m_pOrbitCamera;
+	delete m_pController;
+	delete m_pPlayer;
 }
 
 void DynamicLightScene::ExecuteEvent(fw::Event* pEvent)

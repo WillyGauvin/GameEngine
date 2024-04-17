@@ -94,6 +94,10 @@ MiniPuttScene::~MiniPuttScene()
 
 	fw::DestroyJoltWorld(m_pWorldBundle);
 	delete m_pWorldBundle;
+	delete m_pOrbitCamera;
+	delete m_pGolfBall;
+	delete m_pJoltContactListener;
+	delete m_pController;
 }
 
 void MiniPuttScene::ExecuteEvent(fw::Event* pEvent)
