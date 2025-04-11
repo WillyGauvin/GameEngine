@@ -75,11 +75,7 @@ MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pOrbitCamera = new OrbitCamera(this, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), m_pGolfBall->GetTransformComponent()->m_position, m_pController, m_pGolfBall);
 
 	m_pOrbitCamera->SetStartingDistance(1.0f);
-	m_pCourseBody = fw::CreateMeshJoltBody(m_pWorldBundle->m_pWorld, m_pCourse->GetTransformComponent()->m_position, m_pCourse->GetTransformComponent()->m_rotation, m_pCourse->GetTransformComponent()->m_scale, false, 1.0f, m_pCourse);
 
-	m_pBallBody = fw::CreateSphereJoltBody(m_pWorldBundle->m_pWorld, m_pGolfBall->GetTransformComponent()->m_position, 0.025f, true, 0.01f, m_pGolfBall);
-
-	m_pHoleBody = fw::CreateJoltBody(m_pWorldBundle->m_pWorld, m_pHole->GetTransformComponent()->m_position, m_pHole->GetTransformComponent()->m_rotation, m_pHole->GetTransformComponent()->m_scale, false, 1.0f, m_pHole);
 	m_pEventManager->RegisterListener(SwingClubEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(fw::CollisionEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(ResetGameEvent::GetStaticEventType(), this);
