@@ -1,101 +1,101 @@
 #include "PhysicsComponent.h"
 #include "Component/TransformComponent.h"
+#include "SceneSystem/Scene.h"
+#include "Component/ComponentManager.h"
+#include "Jolt/Physics/Body/Body.h"
+
 namespace fw
 {
-    PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic) : Component(pGameObject),
-        m_pWorld(pWorld)
-	{
-        b2BodyDef bodyDef;
-        if (isDynamic == true)
-        {
-            bodyDef.type = b2_dynamicBody;
-        }
-        else
-        {
-            bodyDef.type = b2_kinematicBody;
-        }
-
-        bodyDef.position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
-        bodyDef.angle = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
-        
-        m_pBody = m_pWorld->CreateBody(&bodyDef);
-        m_pBody->GetUserData().pGameObject = pGameObject;
-	}
-
-    PhysicsComponent::PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, uint16 collisionProfile, uint16 collisionProfileMask) : Component(pGameObject),
-        m_pWorld(pWorld)
+    PhysicsComponent::PhysicsComponent(PhysicsLibrary libType, GameObject* pGameObject, bool isDynamic = true) : Component(pGameObject)
     {
-        b2BodyDef bodyDef;
-        if (isDynamic == true)
+        m_pBox2DWorld = pGameObject->GetScene()->GetComponentManager()->GetBox2DWorld();
+        m_pJoltWorld = pGameObject->GetScene()->GetComponentManager()->GetJoltWorld();
+
+        TransformComponent* transform = pGameObject->GetTransformComponent();
+
+        if (libType == PhysicsLibrary::Box2D)
         {
-            bodyDef.type = b2_dynamicBody;
+            b2BodyDef bodyDef;
+
+            bodyDef.type = (isDynamic) ? b2_dynamicBody : b2_kinematicBody;
+
+            bodyDef.position = b2Vec2(transform->m_position.x, transform->m_position.y);
+            bodyDef.angle = -1.0f * degreesToRads(transform->m_rotation.z);
+
+            m_pBox2DBody = m_pBox2DWorld->CreateBody(&bodyDef);
+            m_pBox2DBody->GetUserData().pGameObject = pGameObject;
         }
-        else
+        else if (libType == PhysicsLibrary::Jolt)
         {
-            bodyDef.type = b2_kinematicBody;
+            m_pJoltBody = fw::CreateMeshJoltBody(m_pJoltWorld->m_pWorld, transform->m_position, transform->m_rotation, transform->m_scale, isDynamic, 1.0f, pGameObject);
         }
+    }
 
-        bodyDef.position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
-        bodyDef.angle = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+    void PhysicsComponent::SetMask(uint16 profile, uint16 mask)
+    {
+        b2Filter filter;
+        filter.categoryBits = profile;
+        filter.maskBits = mask;
 
-        m_pBody = m_pWorld->CreateBody(&bodyDef);
-        m_pBody->GetUserData().pGameObject = pGameObject;
-
-        m_fixtureDef.filter.categoryBits = collisionProfile;
-        m_fixtureDef.filter.maskBits = collisionProfileMask;
+        for (b2Fixture* f = m_pBox2DBody->GetFixtureList(); f; f = f->GetNext())
+        {
+            f->SetFilterData(filter);
+        }
     }
 
 	PhysicsComponent::~PhysicsComponent()
 	{
+        m_pBox2DWorld->DestroyBody(m_pBox2DBody);
+        DestroyJoltBody(m_pJoltWorld->m_pWorld, m_pJoltBody);
 	}
 
     void PhysicsComponent::Reset()
     {
-        m_pBody->SetAngularVelocity(0.0f);
-        m_pBody->SetLinearVelocity(b2Vec2(0,0));
+        m_pBox2DBody->SetAngularVelocity(0.0f);
+        m_pBox2DBody->SetLinearVelocity(b2Vec2(0,0));
+
         b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
         float rotation = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
 
-        m_pBody->SetTransform(position, rotation);
+        m_pBox2DBody->SetTransform(position, rotation);
     }
 
     void PhysicsComponent::AddLinearImpulse(vec2 impulse)
     {
-        assert(m_pBody);
-        m_pBody->ApplyLinearImpulse(b2Vec2(impulse.x, impulse.y), m_pBody->GetWorldCenter(), true);
+        m_pBox2DBody->ApplyLinearImpulse(b2Vec2(impulse.x, impulse.y), m_pBox2DBody->GetWorldCenter(), true);
     }
 
     void PhysicsComponent::AddAngularImpulse(float impulse)
     {
-        m_pBody->ApplyAngularImpulse(impulse, true);
+        m_pBox2DBody->ApplyAngularImpulse(impulse, true);
     }
 
     void PhysicsComponent::AddForce(vec2 force)
     {
-        m_pBody->ApplyForce(b2Vec2(force.x, force.y), m_pBody->GetWorldCenter(), true);
+        m_pBox2DBody->ApplyForce(b2Vec2(force.x, force.y), m_pBox2DBody->GetWorldCenter(), true);
     }
 
     void PhysicsComponent::AddForce(vec2 force, vec2 offset)
     {
-        m_pBody->ApplyForce(b2Vec2(force.x, force.y), m_pBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
+        m_pBox2DBody->ApplyForce(b2Vec2(force.x, force.y), m_pBox2DBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
     }
 
     void PhysicsComponent::AddUpForce(float force, vec2 offset)
     {
-        UpVector = vec2(cos(m_pBody->GetAngle() + PI/2), sin(m_pBody->GetAngle() + PI/2)).Normalize();
-        m_pBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
+        vec2 UpVector = vec2(cos(m_pBox2DBody->GetAngle() + PI/2), sin(m_pBox2DBody->GetAngle() + PI/2)).Normalize();
+        m_pBox2DBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBox2DBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
     }
 
     void PhysicsComponent::AddUpForce(float force)
     {
-        UpVector = vec2(cos(m_pBody->GetAngle() + PI/2), sin(m_pBody->GetAngle() + PI/2)).Normalize();
-        m_pBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBody->GetWorldCenter(), true);
+        vec2 UpVector = vec2(cos(m_pBox2DBody->GetAngle() + PI/2), sin(m_pBox2DBody->GetAngle() + PI/2)).Normalize();
+        m_pBox2DBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBox2DBody->GetWorldCenter(), true);
     }
 
     void PhysicsComponent::UpdateBody()
     {
-        vec3 rotation = vec3(0.0f,0.0f,-1.0f * radsToDegrees(m_pBody->GetAngle()));
-        vec3 position = vec3(m_pBody->GetTransform().p.x, m_pBody->GetTransform().p.y, 0.0f);
+        vec3 rotation = vec3(0.0f,0.0f,-1.0f * radsToDegrees(m_pBox2DBody->GetAngle()));
+        vec3 position = vec3(m_pBox2DBody->GetTransform().p.x, m_pBox2DBody->GetTransform().p.y, 0.0f);
         m_pGameObject->GetTransformComponent()->UpdatePosition(position);
         m_pGameObject->GetTransformComponent()->UpdateRotation(rotation);
     }
@@ -193,79 +193,6 @@ namespace fw
             m_pJoint = nullptr;
         }
     }
-    void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit, float motorSpeed, float motorTorque)
-    {
-        // Declare a joint definition object
-        b2RevoluteJointDef jointDef;
-
-        // Initialize the joint definition manually
-        jointDef.bodyA = m_pBody;
-        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
-        jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
-        jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
-
-        jointDef.enableLimit = true;
-        jointDef.lowerAngle = LowerLimit;
-        jointDef.upperAngle = UpperLimit;
-
-        // Initialize the motor on the joint
-        jointDef.enableMotor = false;
-        jointDef.motorSpeed = motorSpeed; // positive values will go counter-clockwise, negative clockwise
-        jointDef.maxMotorTorque = motorTorque;
-
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-    }
-    void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit)
-    {
-        // Declare a joint definition object
-        b2RevoluteJointDef jointDef;
-
-        jointDef.bodyA = m_pBody;
-        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
-        jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
-        jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
-      
-        jointDef.enableLimit = true;
-        jointDef.lowerAngle = LowerLimit;
-        jointDef.upperAngle = UpperLimit;
-
-
-        jointDef.enableMotor = true;
-        jointDef.motorSpeed = 2; // positive values will go counter-clockwise, negative clockwise
-        jointDef.maxMotorTorque = 5;
-
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-
-        
-    }
-
-
-    void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor)
-    {
-        // Declare a joint definition object
-        b2RevoluteJointDef jointDef;
-
-        jointDef.enableMotor = true;
-
-        jointDef.bodyA = m_pBody;
-        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
-        jointDef.localAnchorA = b2Vec2(thisObjectAnchor.x, thisObjectAnchor.y);
-        jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
-
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-    }
-
-    void PhysicsComponent::CreateRevolutionJoint(GameObject* otherObject)
-    {
-        // Declare a joint definition object
-        b2RevoluteJointDef jointDef;
-
-        jointDef.bodyA = m_pBody;
-        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
-        jointDef.Initialize(jointDef.bodyA, jointDef.bodyB, b2Vec2(otherObject->GetTransformComponent()->m_position.x, otherObject->GetTransformComponent()->m_position.y));
-
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-    }
 
     void PhysicsComponent::CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor)
     {
@@ -276,42 +203,5 @@ namespace fw
         jointDef.localAnchorB = b2Vec2(otherObjectAnchor.x, otherObjectAnchor.y);
         jointDef.collideConnected = false;
         m_pWorld->CreateJoint(&jointDef);
-    }
-
-
-    void PhysicsComponent::CreatePrismaticJoint(GameObject* otherObject, bool collideConnectd, float upperLimit, float lowerLimit, float motorSpeed, float maxMotorForce, bool isMotorEnabled)
-    {
-        b2PrismaticJointDef jointDef;
-        
-        jointDef.enableMotor = isMotorEnabled;
-
-        jointDef.bodyA = m_pBody;
-        jointDef.bodyB = otherObject->GetPhysicsComponent()->m_pBody;
-
-        jointDef.enableLimit = true;
-        jointDef.upperTranslation = upperLimit;
-        jointDef.lowerTranslation = lowerLimit;
-
-        jointDef.motorSpeed = motorSpeed;
-        jointDef.maxMotorForce = maxMotorForce;
-
-       
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-
-        
-    }
-    void PhysicsComponent::CreateGearJoint(GameObject* object1, GameObject* object2, float ratio)
-    {
-        b2GearJointDef jointDef;
-
-        jointDef.joint1 = object1->GetPhysicsComponent()->m_pJoint;
-        jointDef.joint2 = object2->GetPhysicsComponent()->m_pJoint;
-        jointDef.bodyA = object1->GetPhysicsComponent()->m_pBody;
-        jointDef.bodyB = object2->GetPhysicsComponent()->m_pBody;
-
-        jointDef.ratio = ratio;
-
-        m_pJoint = m_pWorld->CreateJoint(&jointDef);
-
     }
 }

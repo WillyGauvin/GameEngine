@@ -12,15 +12,16 @@ namespace fw
 {
 	enum class PhysicsLibrary
 	{
-		Jolt,
 		Box2D,
+		Jolt,
 	};
 
 	class PhysicsComponent : public Component
 	{
 	public:
-		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic);
-		PhysicsComponent(GameObject* pGameObject, b2World* pWorld, bool isDynamic, uint16 collisionProfile, uint16 collisionProfileMask);
+		PhysicsComponent(PhysicsLibrary libType, GameObject* pGameObject, bool isDynamic = true);
+
+		void SetMask(uint16 profile, uint16 mask);
 
 		virtual ~PhysicsComponent();
 		
@@ -33,9 +34,6 @@ namespace fw
 		void AddUpForce(float force, vec2 offset);
 		void AddUpForce(float force);
 
-
-		bool isEnabled() { return m_MotorEnabled; }
-
 		void UpdateBody();
 
 		void SetCircle(bool isProjectile);
@@ -45,42 +43,22 @@ namespace fw
 		void SetTriangle();
 		void SetSensor();
 		void SetLineCensor();
-		void DestoryJoint();
 
-		//Joints
-		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit, float motorSpeed, float motorTorque);
-		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor, float UpperLimit, float LowerLimit);
-		void CreateRevolutionJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
-		void CreateRevolutionJoint(GameObject* otherObject);
 
 		void CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
-
-		void CreatePrismaticJoint(GameObject* otherObject, bool collideConnectd, float upperLimit, float lowerLimit, float motorSpeed, float maxMotorForce, bool isMotorEnabled);
-
-		void CreateGearJoint(GameObject* object1, GameObject* object2, float ratio);
 
 		static const char* GetStaticType() { return "PhysicsComponent"; }
 		virtual const char* GetType() override { return GetStaticType(); }
 
 
-		template <class b2Joint>
-		void EnableMotor(bool flag)
-		{
-			int i = 0;
-			assert(dynamic_cast<b2Joint*>(m_pJoint));
-			if (b2Joint* pJoint = static_cast<b2Joint*>(m_pJoint))
-			{
-				pJoint->EnableMotor(!pJoint->IsMotorEnabled());
-				m_MotorEnabled = flag;
-			}
-		}
-
 	private:
-		b2World* m_pWorld = nullptr;
-		b2Body* m_pBody = nullptr;
-		b2FixtureDef m_fixtureDef;
-		b2Joint* m_pJoint = nullptr;
-		bool m_MotorEnabled = false;
-		vec2 UpVector = (0.0f,1.0f);
+		b2World* m_pBox2DWorld = nullptr;
+		b2Body* m_pBox2DBody = nullptr;
+
+		JoltWorldBundle* m_pJoltWorld = nullptr;
+		JPH::Body* m_pJoltBody = nullptr;
+
+
+	private: 
 	};
 }

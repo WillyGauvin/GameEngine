@@ -18,7 +18,7 @@ LandingScene::LandingScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 {
 	InitNetwork();
 
-	m_pWorld->SetGravity(b2Vec2(0.0f, -1.62f));
+	m_pBox2DWorld->SetGravity(b2Vec2(0.0f, -1.62f));
 	m_pController = new VirtualController(m_pEventManager);
 
 	Game* game = static_cast<Game*>(m_pGameCore);

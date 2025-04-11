@@ -136,8 +136,6 @@ void MiniPuttScene::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
 
-	fw::UpdateJoltWorld(m_pWorldBundle, deltaTime);
-
 	vec3 pos = vec3(m_pBallBody->GetPosition().GetX(), m_pBallBody->GetPosition().GetY(), m_pBallBody->GetPosition().GetZ());
 	m_pGolfBall->GetTransformComponent()->m_position = pos;
 

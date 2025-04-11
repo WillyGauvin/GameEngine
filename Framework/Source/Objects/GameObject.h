@@ -10,8 +10,6 @@
 #pragma once
 
 #include "Math/Vector.h"
-#define B2_USER_SETTINGS
-#include "../Libraries/box2d/include/box2d/box2d.h"
 
 
 namespace fw {
@@ -27,7 +25,6 @@ namespace fw {
     class PhysicsComponent;
     class RenderComponent;
     class LightComponent;
-    class MyContactListener;
 
     class GameObject
     {

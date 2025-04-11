@@ -2,15 +2,30 @@
 #include "Component/TransformComponent.h"
 #include "Component/RenderComponent.h"
 #include "Component/PhysicsComponent.h"
+#include "Physics/Jolt/JoltHelpers.h"
+#include "Physics/Jolt/JoltContactListener.h"
+#include "Physics/Box2D/MyContactListener.h"	
+
+#define B2_USER_SETTINGS
+#include "../Libraries/box2d/include/box2d/box2d.h"
 
 namespace fw
 {
-	ComponentManager::ComponentManager()
+
+	ComponentManager::ComponentManager(EventManager* pEventManager)
 	{
+		m_pBox2DWorld = new b2World(b2Vec2(0, -9.8));
+		m_pBox2DContactListener = new MyContactListener(pEventManager);
+		m_pBox2DWorld->SetContactListener(m_pBox2DContactListener);
+		m_pJoltContactListener = new JoltContactListener(pEventManager);
+		m_pJoltWorld = fw::CreateJoltWorld(pEventManager, m_pJoltContactListener);
 	}
+
 	ComponentManager::~ComponentManager()
 	{
-		
+		delete m_pBox2DWorld;
+		delete m_pBox2DContactListener;
+		delete m_pJoltContactListener;
 	}
 
 
@@ -41,10 +56,27 @@ namespace fw
 		return m_Components[type];
 	}
 
-
-	void ComponentManager::UpdateBodies(b2World* world, float deltaTime)
+	void ComponentManager::Update(float deltaTime)
 	{
-		world->Step(deltaTime, 8, 3);
+		UpdatePhysics(deltaTime);
+		UpdateTransforms();
+	}
+
+	void ComponentManager::RenderMeshes(int viewID)
+	{
+		std::vector<Component*>& ComponentList = m_Components["RenderComponent"];
+
+		for (int i = 0; i < ComponentList.size(); i++)
+		{
+			static_cast<RenderComponent*>(ComponentList[i])->Render(viewID);
+		}
+	}
+
+	void ComponentManager::UpdatePhysics(float deltaTime)
+	{
+		m_pBox2DWorld->Step(deltaTime, 8, 3);
+		UpdateJoltWorld(m_pJoltWorld, deltaTime);
+
 		std::vector<Component*>& ComponentList = m_Components["PhysicsComponent"];
 		for (int i = 0; i < ComponentList.size(); i++)
 		{
@@ -59,16 +91,6 @@ namespace fw
 		for (int i = 0; i < ComponentList.size(); i++)
 		{
 			static_cast<TransformComponent*>(ComponentList[i])->UpdateSRT();
-		}
-	}
-
-	void ComponentManager::RenderMeshes(int viewID)
-	{
-		std::vector<Component*>& ComponentList = m_Components["RenderComponent"];
-
-		for (int i = 0; i < ComponentList.size(); i++)
-		{
-			static_cast<RenderComponent*>(ComponentList[i])->Render(viewID);
 		}
 	}
 }

@@ -14,6 +14,7 @@ namespace fw
 	class Camera;
 	class GameObject;
 	class MyContactListener;
+	class JoltWorldBundle;
 
 	class Scene : public EventListener
 	{
@@ -30,19 +31,15 @@ namespace fw
 		ComponentManager* GetComponentManager() { return m_pComponentManager; }
 		fw::EventManager* GetEventManager() { return m_pEventManager; }
 
-
-		b2World* GetBox2DWorld() { return m_pBox2DWorld; }
-		JoltWorldBundle* GetJoltWorld() { return m_pJoltWorld; }
-
 		virtual fw::Camera* GetCamera() { return m_pCamera; }
 
 
 		std::vector<GameObject*> GetLights() { return m_Lights; }
 		GameObject* GetClosestLight(vec3 position);
 
-		void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
+		//void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
 
-		void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
+		//void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
 
 		void PopulateAllLightArrays();
 
@@ -58,18 +55,6 @@ namespace fw
 		fw::Camera* m_pCamera = nullptr;
 
 		std::vector<GameObject*> m_Lights;
-
-#pragma region Physics
-
-		//Box2D
-		b2World* m_pBox2DWorld = nullptr;
-		MyContactListener* m_pBox2DContactListener = nullptr;
-
-		//Jolt
-		JoltWorldBundle* m_pJoltWorld = nullptr;
-		JoltContactListener* m_pJoltContactListener = nullptr;
-
-#pragma endregion Physics
 
 		vec4 m_LightPos[10];
 		vec4 m_LightColor[10];
