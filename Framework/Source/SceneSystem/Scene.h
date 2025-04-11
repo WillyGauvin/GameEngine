@@ -29,7 +29,11 @@ namespace fw
 		GameCore* GetGameCore() { return m_pGameCore; }
 		ComponentManager* GetComponentManager() { return m_pComponentManager; }
 		fw::EventManager* GetEventManager() { return m_pEventManager; }
-		b2World* GetWorld() { return m_pWorld; }
+
+
+		b2World* GetBox2DWorld() { return m_pBox2DWorld; }
+		JoltWorldBundle* GetJoltWorld() { return m_pJoltWorld; }
+
 		virtual fw::Camera* GetCamera() { return m_pCamera; }
 
 
@@ -55,9 +59,17 @@ namespace fw
 
 		std::vector<GameObject*> m_Lights;
 
-		//B2Box
-		b2World* m_pWorld = nullptr;
-		MyContactListener* m_pContactListener = nullptr;
+#pragma region Physics
+
+		//Box2D
+		b2World* m_pBox2DWorld = nullptr;
+		MyContactListener* m_pBox2DContactListener = nullptr;
+
+		//Jolt
+		JoltWorldBundle* m_pJoltWorld = nullptr;
+		JoltContactListener* m_pJoltContactListener = nullptr;
+
+#pragma endregion Physics
 
 		vec4 m_LightPos[10];
 		vec4 m_LightColor[10];

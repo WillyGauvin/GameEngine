@@ -10,6 +10,12 @@
 
 namespace fw
 {
+	enum class PhysicsLibrary
+	{
+		Jolt,
+		Box2D,
+	};
+
 	class PhysicsComponent : public Component
 	{
 	public:
@@ -69,7 +75,7 @@ namespace fw
 			}
 		}
 
-	public:
+	private:
 		b2World* m_pWorld = nullptr;
 		b2Body* m_pBody = nullptr;
 		b2FixtureDef m_fixtureDef;
