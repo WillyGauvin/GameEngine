@@ -127,7 +127,7 @@ namespace fw {
     JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager, JPH::ContactListener* pListener)
     {
         // This code isn't setup to handle multiple Jolt worlds.
-        assert(JPH::Factory::sInstance == nullptr);
+        //assert(JPH::Factory::sInstance == nullptr);
 
         JPH::RegisterDefaultAllocator();
         JPH::Factory::sInstance = new JPH::Factory();
@@ -228,6 +228,10 @@ namespace fw {
         JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
         bodySettings.mEnhancedInternalEdgeRemoval = true;
         bodySettings.mRestitution = 0.5f;
+        bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::MassAndInertiaProvided;
+        JPH::MassProperties mass;
+        mass.mMass = density;
+        bodySettings.mMassPropertiesOverride = mass;
 
 
         // Create the rigid body.

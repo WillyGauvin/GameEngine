@@ -73,7 +73,7 @@ void OBJScene::StartFrame(float deltaTime)
 
 void OBJScene::Update(float deltaTime)
 {
-	m_pComponentManager->UpdateTransforms();
+	m_pComponentManager->Update(deltaTime);
 	m_pCamera->Update(deltaTime);
 
 }

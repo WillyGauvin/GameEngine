@@ -12,6 +12,8 @@
 #include "Framework.h"
 #include "DataTypes.h"
 
+#include "Physics/Jolt/JoltHelpers.h"
+
 class Player;
 
 class PhysicsScene;

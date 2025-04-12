@@ -29,7 +29,7 @@ void OrbitCameraScene::StartFrame(float deltaTime)
 
 void OrbitCameraScene::Update(float deltaTime)
 {
-	m_pComponentManager->UpdateTransforms();
+	m_pComponentManager->Update(deltaTime);
 	m_pCamera->Update(deltaTime);
 }
 

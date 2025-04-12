@@ -79,8 +79,6 @@ MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_pEventManager->RegisterListener(SwingClubEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(fw::CollisionEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(ResetGameEvent::GetStaticEventType(), this);
-
-
 }
 
 MiniPuttScene::~MiniPuttScene()
@@ -131,15 +129,6 @@ void MiniPuttScene::StartFrame(float deltaTime)
 void MiniPuttScene::Update(float deltaTime)
 {
 	Super::Update(deltaTime);
-
-	vec3 pos = vec3(m_pBallBody->GetPosition().GetX(), m_pBallBody->GetPosition().GetY(), m_pBallBody->GetPosition().GetZ());
-	m_pGolfBall->GetTransformComponent()->m_position = pos;
-
-	vec3 rotation = vec3(m_pBallBody->GetRotation().GetX(), m_pBallBody->GetRotation().GetY(), m_pBallBody->GetRotation().GetZ());
-
-	rotation *= 360;
-	
-	m_pGolfBall->GetTransformComponent()->m_rotation = rotation;
 
 	m_pGolfBall->Update(deltaTime);
 	m_pOrbitCamera->Update(deltaTime);

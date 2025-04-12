@@ -1,20 +1,18 @@
 #include "ComponentManager.h"
+
 #include "Component/TransformComponent.h"
 #include "Component/RenderComponent.h"
 #include "Component/PhysicsComponent.h"
-#include "Physics/Jolt/JoltHelpers.h"
+
 #include "Physics/Jolt/JoltContactListener.h"
 #include "Physics/Box2D/MyContactListener.h"	
-
-#define B2_USER_SETTINGS
-#include "../Libraries/box2d/include/box2d/box2d.h"
 
 namespace fw
 {
 
 	ComponentManager::ComponentManager(EventManager* pEventManager)
 	{
-		m_pBox2DWorld = new b2World(b2Vec2(0, -9.8));
+		m_pBox2DWorld = new b2World(b2Vec2(0.f, -9.8f));
 		m_pBox2DContactListener = new MyContactListener(pEventManager);
 		m_pBox2DWorld->SetContactListener(m_pBox2DContactListener);
 		m_pJoltContactListener = new JoltContactListener(pEventManager);

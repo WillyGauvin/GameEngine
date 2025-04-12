@@ -8,14 +8,21 @@
 #define B2_USER_SETTINGS
 #include "../Libraries/box2d/include/box2d/box2d.h"
 
+
+enum class PhysicsLibrary
+{
+	Box2D,
+	Jolt,
+};
+
+enum class ForceMode
+{
+	Force,
+	Impulse,
+};
+
 namespace fw
 {
-	enum class PhysicsLibrary
-	{
-		Box2D,
-		Jolt,
-	};
-
 	class PhysicsComponent : public Component
 	{
 	public:
@@ -27,19 +34,19 @@ namespace fw
 		
 		void Reset();
 
-		void AddLinearImpulse(vec2 impulse);
-		void AddAngularImpulse(float impulse);
-		void AddForce(vec2 force);
-		void AddForce(vec2 force, vec2 offset);
-		void AddUpForce(float force, vec2 offset);
-		void AddUpForce(float force);
+		void AddForce(vec2 force, ForceMode forceMode = ForceMode::Force);
+		void AddForce(vec3 force, ForceMode forceMode = ForceMode::Force);
+
+		void AddForceAtPosition(vec2 force, vec2 pos, ForceMode forceMode = ForceMode::Force);
+		void AddForceAtPosition(vec3 force, vec2 pos, ForceMode forceMode = ForceMode::Force);
+
+		void AddTorque(vec3 torque, ForceMode forceMode = ForceMode::Force);
 
 		void UpdateBody();
 
 		void SetCircle(bool isProjectile);
 		void SetBox();
 		void SetBox(vec2 scale);
-		void SetPoly(const b2Vec2* points, int32 count);
 		void SetTriangle();
 		void SetSensor();
 		void SetLineCensor();
@@ -47,8 +54,11 @@ namespace fw
 
 		void CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor);
 
+
+
 		static const char* GetStaticType() { return "PhysicsComponent"; }
 		virtual const char* GetType() override { return GetStaticType(); }
+		vec3 GetVelocity();
 
 
 	private:
@@ -58,7 +68,6 @@ namespace fw
 		JoltWorldBundle* m_pJoltWorld = nullptr;
 		JPH::Body* m_pJoltBody = nullptr;
 
-
-	private: 
+		PhysicsLibrary m_mode;
 	};
 }

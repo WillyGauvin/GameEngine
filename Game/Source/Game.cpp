@@ -16,8 +16,6 @@
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
 #include "Objects/VirtualController.h"
-#include "Scenes/JoltScene.h"
-#include "Scenes/MidtermScene.h"
 #include "Scenes/LandingScene.h"
 #include "Scenes/OBJScene.h"
 #include "Scenes/LightScene.h"
@@ -72,8 +70,6 @@ Game::Game(fw::FWCore& fwCore)
     LoadResources( m_pResources );
 
     //Create some Scenes
-    m_pJoltScene = new JoltScene(this);
-    m_pMidtermScene = new MidtermScene(this);
     m_pLandingScene = new LandingScene(this);
     m_pOBJScene = new OBJScene(this);
     m_pLightScene = new LightScene(this);
@@ -90,7 +86,6 @@ Game::~Game()
     delete m_pImGuiManager;
     delete m_pUniforms;
     delete m_pJoltScene;
-    delete m_pMidtermScene;
     delete m_pLandingScene;
     delete m_pOBJScene;
     delete m_pOrbitCameraScene;
@@ -188,14 +183,6 @@ void Game::Editor_SelectScene()
 {
     ImGui::Begin("SceneSelector");
 
-    if (ImGui::Button("Jolt"))
-    {
-        m_pCurrentScene = m_pJoltScene;
-    }
-    if (ImGui::Button("Midterm"))
-    {
-        m_pCurrentScene = m_pMidtermScene;
-    }
     if (ImGui::Button("Landing"))
     {
         m_pCurrentScene = m_pLandingScene;

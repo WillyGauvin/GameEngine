@@ -1,4 +1,5 @@
 #pragma once
+#include "CoreHeaders.h"
 #include "EventSystem/EventListener.h"
 #include "Math/Vector.h"
 
@@ -36,10 +37,6 @@ namespace fw
 
 		std::vector<GameObject*> GetLights() { return m_Lights; }
 		GameObject* GetClosestLight(vec3 position);
-
-		//void CreateRevoluteJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos);
-
-		//void CreatePrismaticJoint(b2Body* ObjA, b2Body* ObjB, vec2 pos, vec2 axis);
 
 		void PopulateAllLightArrays();
 

@@ -45,7 +45,7 @@ void LightScene::StartFrame(float deltaTime)
 
 void LightScene::Update(float deltaTime)
 {
-	m_pComponentManager->UpdateTransforms();
+	m_pComponentManager->Update(deltaTime);
 	m_pCamera->SetEye(m_cameraEye);
 	m_pCamera->SetAt(m_cameraAt);
 	m_pCamera->Update(deltaTime);

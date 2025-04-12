@@ -24,6 +24,7 @@ GolfBall::GolfBall(fw::Scene* pScene)
 
     AddComponent(new fw::TransformComponent(this, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
     AddComponent(new fw::RenderComponent(this, getMesh("GolfBall"), getMaterial("GolfBall")));
+    AddComponent(new fw::PhysicsComponent(PhysicsLibrary::Jolt, this));
 }
 
 GolfBall::~GolfBall()
@@ -64,8 +65,7 @@ void GolfBall::Update(float deltaTime)
             {   
                 isSwinging = false;
                 vec3 force = forwardDirection * (m_Power/10.0f);
-                SwingClubEvent* event = new SwingClubEvent(force);
-                GetScene()->GetEventManager()->AddEvent(event);
+                GetPhysicsComponent()->AddForce(force);
                 m_Power = 0.0f;
             }
             if (m_pController->isActionHeld(VirtualController::Reset))

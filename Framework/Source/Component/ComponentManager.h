@@ -3,10 +3,16 @@
 #include "CoreHeaders.h"
 #include "Component/Component.h"
 
+#include "Physics/Jolt/JoltHelpers.h"
+
+#define B2_USER_SETTINGS
+#include "../Libraries/box2d/include/box2d/box2d.h"
+
 namespace fw
 {
 	class MyContactListener;
 	class JoltContactListener;
+	class EventManager;
 
 	class ComponentManager
 	{
