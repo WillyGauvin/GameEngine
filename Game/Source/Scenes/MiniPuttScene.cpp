@@ -13,14 +13,11 @@
 #include "Jolt/Physics/Body/Body.h"
 #include "Jolt/Renderer/DebugRenderer.h"
 
-MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
+MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore, fw::PhysicsLibrary::Jolt)
 {
 	Game* game = static_cast<Game*>(m_pGameCore);
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
-
-	m_pJoltContactListener = new fw::JoltContactListener(m_pEventManager);
-	m_pWorldBundle = fw::CreateJoltWorld(m_pEventManager, m_pJoltContactListener);
 
 	m_pPlane = new fw::GameObject(this);
 	m_pPlane->AddComponent(new fw::RenderComponent(m_pPlane, getMesh("Plane"), getMaterial("Water")));
@@ -50,25 +47,24 @@ MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 	m_Lights.push_back(m_pBlueLight);
 
 
-
-
-
-
-
-
 	m_pCourse = new fw::GameObject(this);
 	m_pCourse->AddComponent(new fw::RenderComponent(m_pCourse, getMesh("MiniPuttCourse"), getMaterial("MiniPuttCourse")));
 	m_pCourse->AddComponent(new fw::TransformComponent(m_pCourse, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
+	m_pCourse->AddComponent(new fw::PhysicsComponent(fw::PhysicsLibrary::Jolt, m_pCourse, fw::ShapeType::Mesh, false));
 	m_Objects.push_back(m_pCourse);
+	m_pCourse->GetPhysicsComponent()->SetRestitution(0.3f);
+	m_pCourse->GetPhysicsComponent()->SetFriction(1.0f);
 	
 	m_pHole = new fw::GameObject(this);
 	m_pHole->AddComponent(new fw::RenderComponent(m_pHole, getMesh("Cube"), getMaterial("Blue")));
 	m_pHole->AddComponent(new fw::TransformComponent(m_pHole, vec3(4.5f, -0.2f, 4.9f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
+	m_pHole->AddComponent(new fw::PhysicsComponent(fw::PhysicsLibrary::Jolt, m_pHole, fw::ShapeType::Cube, false, true));
+
 	m_Objects.push_back(m_pHole);
 
 	m_pController = new VirtualController(m_pEventManager);
 
-	m_pGolfBall = new GolfBall(this);
+	m_pGolfBall = new GolfBall(this, m_golfballStartingPos, vec3(), vec3(0.1f,0.1f,0.1f));
 	m_pGolfBall->SetController(m_pController);
 	m_pGolfBall->GetTransformComponent()->m_position = m_golfballStartingPos;
 
@@ -76,35 +72,20 @@ MiniPuttScene::MiniPuttScene(fw::GameCore* pGameCore) : Scene(pGameCore)
 
 	m_pOrbitCamera->SetStartingDistance(1.0f);
 
-	m_pEventManager->RegisterListener(SwingClubEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(fw::CollisionEvent::GetStaticEventType(), this);
 	m_pEventManager->RegisterListener(ResetGameEvent::GetStaticEventType(), this);
 }
 
 MiniPuttScene::~MiniPuttScene()
 {
-	fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pCourseBody);
-	fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pBallBody);
-
-	fw::DestroyJoltWorld(m_pWorldBundle);
-	delete m_pWorldBundle;
 	delete m_pOrbitCamera;
 	delete m_pGolfBall;
-	delete m_pJoltContactListener;
 	delete m_pController;
 }
 
 void MiniPuttScene::ExecuteEvent(fw::Event* pEvent)
 {
-	if (pEvent->GetType() == SwingClubEvent::GetStaticEventType())
-	{
-		SwingClubEvent* event = static_cast<SwingClubEvent*>(pEvent);
-		vec3 force = event->GetForce();
-		JPH::Vec3Arg newForce = JPH::Vec3Arg(force.x, force.y, force.z);
- 		m_pBallBody->AddImpulse(newForce);
-		m_StrokeCount++;
-	}
-	else if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
+	if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
 	{
 		fw::CollisionEvent* CollisionEvent = static_cast<fw::CollisionEvent*>(pEvent);
 		uint32 profileA = CollisionEvent->GetProfileA();
@@ -178,11 +159,6 @@ void MiniPuttScene::ResetGame()
 	m_hasWon = false;
 	m_StrokeCount = 0;
 
-	m_pGolfBall->GetTransformComponent()->m_position = m_golfballStartingPos;
-	m_pGolfBall->GetTransformComponent()->m_rotation = vec3(0.0f, 0.0f, 0.0f);
-
-	fw::DestroyJoltBody(m_pWorldBundle->m_pWorld, m_pBallBody);
-	m_pBallBody = fw::CreateSphereJoltBody(m_pWorldBundle->m_pWorld, m_pGolfBall->GetTransformComponent()->m_position, 0.025f, true, 0.01f, m_pGolfBall);
-
+	m_pGolfBall->Reset();
 }
 

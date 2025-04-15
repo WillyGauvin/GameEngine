@@ -24,12 +24,6 @@ public:
 	void ResetGame();
 
 protected:
-	fw::JoltWorldBundle* m_pWorldBundle = nullptr;
-	fw::JoltContactListener* m_pJoltContactListener = nullptr;
-
-	JPH::Body* m_pCourseBody = nullptr;
-	JPH::Body* m_pHoleBody = nullptr;
-	JPH::Body* m_pBallBody = nullptr;
 
 	VirtualController* m_pController = nullptr;
 	GolfBall* m_pGolfBall = nullptr;

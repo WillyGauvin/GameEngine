@@ -2,7 +2,7 @@
 #include "CoreHeaders.h"
 #include "EventSystem/EventListener.h"
 #include "Math/Vector.h"
-
+#include "Component/PhysicsComponent.h"
 #define B2_USER_SETTINGS
 #include "../Libraries/box2d/include/box2d/box2d.h"
 
@@ -20,7 +20,7 @@ namespace fw
 	class Scene : public EventListener
 	{
 	public:
-		Scene(GameCore* pGameCore);
+		Scene(GameCore* pGameCore, PhysicsLibrary usingPhysicsEngine = PhysicsLibrary::None);
 		virtual ~Scene();
 
 		virtual void ExecuteEvent(fw::Event* pEvent) override;

@@ -127,7 +127,7 @@ namespace fw {
     JoltWorldBundle* CreateJoltWorld(EventManager* pEventManager, JPH::ContactListener* pListener)
     {
         // This code isn't setup to handle multiple Jolt worlds.
-        //assert(JPH::Factory::sInstance == nullptr);
+        assert(JPH::Factory::sInstance == nullptr);
 
         JPH::RegisterDefaultAllocator();
         JPH::Factory::sInstance = new JPH::Factory();
@@ -173,19 +173,68 @@ namespace fw {
         JPH::Factory::sInstance = nullptr;
     }
 
-    JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject)
+    JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density)
     {
         // Create the shape.
-        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2.0f, scale.y / 2.0f, scale.x / 2.0f));
+        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2, scale.y / 2, scale.x / 2));
         JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
         JPH::ShapeRefC shape = shapeResult.Get();
 
         // Setup the body.
         JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
         JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
-        int objectLayer = Layers::SENSOR;
+        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+        JPH::Mat44 rotMat = JPH::Mat44::sRotationY(-rot.y / 180 * PI) * JPH::Mat44::sRotationX(-rot.x / 180 * PI) * JPH::Mat44::sRotationZ(-rot.z / 180 * PI);
+        JPH::Quat quat = rotMat.GetQuaternion();
+        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), quat, motionType, objectLayer);
+
+        // Create the rigid body.
+        JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
+        bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
+
+        return pRigidBody;
+    }
+
+    JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density)
+    {
+        // Create the shape.
+        JPH::SphereShapeSettings shapeSettings(radius/4.0f);
+        JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
+        JPH::ShapeRefC shape = shapeResult.Get();
+
+        // Setup the body.
+        JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
+        JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
+        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+
         JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
-        bodySettings.mIsSensor = true;
+        bodySettings.mEnhancedInternalEdgeRemoval = true;
+        bodySettings.mAllowSleeping = false;
+
+        // Create the rigid body.
+        JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
+        bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
+
+        return pRigidBody;
+    }
+
+    JPH::Body* CreateCubeJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density)
+    {
+        // Create the shape.
+        JPH::BoxShapeSettings shapeSettings(JPH::Vec3(scale.x / 2.0f, scale.y / 2.0f, scale.z / 2.0f));
+        JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
+        JPH::ShapeRefC shape = shapeResult.Get();
+
+        // Setup the body.
+        JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
+        JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
+        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
+
+        JPH::Mat44 rotMat = JPH::Mat44::sRotationY(-rot.y / 180 * PI) * JPH::Mat44::sRotationX(-rot.x / 180 * PI) * JPH::Mat44::sRotationZ(-rot.z / 180 * PI);
+        JPH::Quat quat = rotMat.GetQuaternion();
+
+        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), quat, motionType, objectLayer);
+
         // Create the rigid body.
         JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
         bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
@@ -225,9 +274,12 @@ namespace fw {
         JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
         JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
         int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
-        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
+
+        JPH::Mat44 rotMat = JPH::Mat44::sRotationY(-rot.y / 180 * PI) * JPH::Mat44::sRotationX(-rot.x / 180 * PI) * JPH::Mat44::sRotationZ(-rot.z / 180 * PI);
+        JPH::Quat quat = rotMat.GetQuaternion();
+
+        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), quat, motionType, objectLayer);
         bodySettings.mEnhancedInternalEdgeRemoval = true;
-        bodySettings.mRestitution = 0.5f;
         bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::MassAndInertiaProvided;
         JPH::MassProperties mass;
         mass.mMass = density;
@@ -238,29 +290,6 @@ namespace fw {
         JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
         bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
 
-        return pRigidBody;
-    }
-
-    JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density, GameObject* pGameObject)
-    {
-        // Create the shape.
-        JPH::SphereShapeSettings shapeSettings(radius);
-        JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
-        JPH::ShapeRefC shape = shapeResult.Get();
-
-        // Setup the body.
-        JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
-        JPH::EMotionType motionType = isDynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static;
-        int objectLayer = isDynamic ? Layers::MOVING : Layers::NON_MOVING;
-        JPH::BodyCreationSettings bodySettings(shape, JPH::RVec3(pos.x, pos.y, pos.z), JPH::Quat::sIdentity(), motionType, objectLayer);
-        bodySettings.mEnhancedInternalEdgeRemoval = true;
-        bodySettings.mRestitution = 0.4f;
-        bodySettings.mFriction = 0.9f;
-        bodySettings.mAllowSleeping = false;
-
-        // Create the rigid body.
-        JPH::Body* pRigidBody = bodyInterface.CreateBody(bodySettings);
-        bodyInterface.AddBody(pRigidBody->GetID(), JPH::EActivation::Activate);
         return pRigidBody;
     }
 

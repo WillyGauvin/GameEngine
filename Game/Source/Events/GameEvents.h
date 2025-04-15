@@ -42,24 +42,6 @@ public:
 protected:
 };
 
-class SwingClubEvent : public fw::Event
-{
-public:
-    SwingClubEvent(vec3 Force)
-    {
-        m_Force = Force;
-    }
-    virtual ~SwingClubEvent() {}
-
-    static const char* GetStaticEventType() { return "SwingClubEvent"; }
-    virtual const char* GetType() override { return GetStaticEventType(); }
-
-    vec3 GetForce() { return m_Force; }
-
-protected:
-    vec3 m_Force;
-};
-
 class ResetGameEvent : public fw::Event
 {
 public:

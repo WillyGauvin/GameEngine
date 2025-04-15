@@ -9,14 +9,19 @@
 
 namespace fw
 {
-
-	ComponentManager::ComponentManager(EventManager* pEventManager)
+	ComponentManager::ComponentManager(EventManager* pEventManager, PhysicsLibrary physicsType)
 	{
-		m_pBox2DWorld = new b2World(b2Vec2(0.f, -9.8f));
-		m_pBox2DContactListener = new MyContactListener(pEventManager);
-		m_pBox2DWorld->SetContactListener(m_pBox2DContactListener);
-		m_pJoltContactListener = new JoltContactListener(pEventManager);
-		m_pJoltWorld = fw::CreateJoltWorld(pEventManager, m_pJoltContactListener);
+		if (physicsType == PhysicsLibrary::Box2D)
+		{
+			m_pBox2DWorld = new b2World(b2Vec2(0.f, -9.8f));
+			m_pBox2DContactListener = new MyContactListener(pEventManager);
+			m_pBox2DWorld->SetContactListener(m_pBox2DContactListener);
+		}
+		else if (physicsType == PhysicsLibrary::Jolt)
+		{
+			m_pJoltContactListener = new JoltContactListener(pEventManager);
+			m_pJoltWorld = fw::CreateJoltWorld(pEventManager, m_pJoltContactListener);
+		}
 	}
 
 	ComponentManager::~ComponentManager()
@@ -72,8 +77,14 @@ namespace fw
 
 	void ComponentManager::UpdatePhysics(float deltaTime)
 	{
-		m_pBox2DWorld->Step(deltaTime, 8, 3);
-		UpdateJoltWorld(m_pJoltWorld, deltaTime);
+		if (m_pBox2DWorld)
+		{
+			m_pBox2DWorld->Step(deltaTime, 8, 3);
+		}
+		if (m_pJoltWorld)
+		{
+			UpdateJoltWorld(m_pJoltWorld, deltaTime);
+		}
 
 		std::vector<Component*>& ComponentList = m_Components["PhysicsComponent"];
 		for (int i = 0; i < ComponentList.size(); i++)

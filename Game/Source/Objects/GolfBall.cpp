@@ -15,16 +15,19 @@
 #include "Objects/VirtualController.h"
 #include "Events/GameEvents.h"
 
-GolfBall::GolfBall(fw::Scene* pScene)
+GolfBall::GolfBall(fw::Scene* pScene, vec3 position, vec3 rotation, vec3 scale)
     : fw::GameObject(pScene)
 {
     Game* game = static_cast<Game*>(m_pScene->GetGameCore());
 #define getMesh game->GetResourceManager()->Get<fw::Mesh>
 #define getMaterial game->GetResourceManager()->Get<fw::Material>
 
-    AddComponent(new fw::TransformComponent(this, vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f), vec3(1.0f, 1.0f, 1.0f)));
+    m_startingPosition = position;
+
+    AddComponent(new fw::TransformComponent(this, position, rotation, scale));
     AddComponent(new fw::RenderComponent(this, getMesh("GolfBall"), getMaterial("GolfBall")));
-    AddComponent(new fw::PhysicsComponent(PhysicsLibrary::Jolt, this));
+    AddComponent(new fw::PhysicsComponent(fw::PhysicsLibrary::Jolt, this, fw::ShapeType::Sphere));
+    GetPhysicsComponent()->SetFriction(0.5f);
 }
 
 GolfBall::~GolfBall()
@@ -46,7 +49,6 @@ void GolfBall::Update(float deltaTime)
 
     vec3 dir;
 
-
     if (m_pFollowCamera)
     {
         vec3 forwardDirection = (GetTransformComponent()->m_position - m_pFollowCamera->GetEye()).Normalize();
@@ -64,8 +66,8 @@ void GolfBall::Update(float deltaTime)
             else if (m_pController->WasActionReleased(VirtualController::Swing))
             {   
                 isSwinging = false;
-                vec3 force = forwardDirection * (m_Power/10.0f);
-                GetPhysicsComponent()->AddForce(force);
+                vec3 force = forwardDirection * (m_Power);
+                GetPhysicsComponent()->AddForce(force, fw::ForceMode::Impulse);
                 m_Power = 0.0f;
             }
             if (m_pController->isActionHeld(VirtualController::Reset))
@@ -97,7 +99,7 @@ void GolfBall::ChargeSwing(float deltaTime)
 {
     if (isIncreasing)
     {
-        m_Power += deltaTime * 5.0f;
+        m_Power += deltaTime * 1;
 
         if (m_Power >= m_MaxPower)
         {
@@ -107,7 +109,7 @@ void GolfBall::ChargeSwing(float deltaTime)
     }
     else if (!isIncreasing)
     {
-        m_Power -= deltaTime * 5.0f;
+        m_Power -= deltaTime * 1;
         
         if (m_Power <= m_MinPower)
         {
@@ -116,4 +118,11 @@ void GolfBall::ChargeSwing(float deltaTime)
         }
     }
 
+}
+
+void GolfBall::Reset()
+{
+    GetTransformComponent()->m_position = m_startingPosition;
+    GetTransformComponent()->m_rotation = vec3(0.0f, 0.0f, 0.0f);
+    GetPhysicsComponent()->Reset();
 }

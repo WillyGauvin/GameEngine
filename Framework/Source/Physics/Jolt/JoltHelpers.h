@@ -33,8 +33,11 @@ namespace fw {
     void UpdateJoltWorld(JoltWorldBundle* pBundle, float deltaTime);
     void DestroyJoltWorld(JoltWorldBundle* pBundle);
     
-    JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject);
+    JPH::Body* CreateJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density);
+
+    JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density);
+    JPH::Body* CreateCubeJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density);
+
     JPH::Body* CreateMeshJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject);
-    JPH::Body* CreateSphereJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, float radius, bool isDynamic, float density, GameObject* pGameObject);
     void DestroyJoltBody(JPH::PhysicsSystem* pWorld, JPH::Body* pBody);
 } // namespace fw

@@ -38,7 +38,7 @@ void LoadResources(fw::ResourceManager* pResources)
     pResources->Add<fw::Mesh>("Tree", LoadObj("Data/Textures/Tree.obj"));
     pResources->Add<fw::Mesh>("Player", LoadObj("Data/Textures/Player.obj"));
     pResources->Add<fw::Mesh>("MiniPuttCourse", LoadObj("Data/Textures/GolfCourse.obj"));
-    pResources->Add<fw::Mesh>("GolfBall", LoadObj("Data/Textures/Titleist.obj"));
+    pResources->Add<fw::Mesh>("GolfBall", LoadObj("Data/Textures/GolfBall.obj"));
 
 
     // Load some shaders.

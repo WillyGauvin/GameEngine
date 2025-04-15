@@ -173,8 +173,26 @@ fw::Mesh* CreateCubeMesh(vec3 Objscale)
         21,23,20,
         21,22,23
     };
+    std::vector <std::vector<int>> triangles;
+
+    for (int i = 0; i < 36; i += 3)
+    {
+        std::vector<int> triangle;
+        triangle.push_back((int)g_CubeIndices[i]);
+        triangle.push_back((int)g_CubeIndices[i+1]);
+        triangle.push_back((int)g_CubeIndices[i+2]);
+        triangles.push_back(triangle);
+    }
+
+    std::vector<vec3> vertexes;
+
+    for (VertexFormat_Pos3NormalUV vertex : g_CubeVerts)
+    {
+        vertexes.push_back(vertex.pos);
+    }
    
-    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, g_CubeVerts, sizeof(g_CubeVerts), g_CubeIndices, sizeof(g_CubeIndices));
+    return new fw::Mesh(VertexFormat_Pos3NormalUV::format, g_CubeVerts, sizeof(g_CubeVerts), g_CubeIndices, sizeof(g_CubeIndices), vertexes, triangles);
+
 }
 
 fw::Mesh* CreatePlaneMesh(ivec2 size, vec2 scale)

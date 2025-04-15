@@ -2,6 +2,7 @@
 
 #include "CoreHeaders.h"
 #include "Component/Component.h"
+#include "Component/PhysicsComponent.h"
 
 #include "Physics/Jolt/JoltHelpers.h"
 
@@ -17,7 +18,7 @@ namespace fw
 	class ComponentManager
 	{
 	public:
-		ComponentManager(EventManager* pEventManager);
+		ComponentManager(EventManager* pEventManager, PhysicsLibrary physicsType = PhysicsLibrary::None);
 		virtual ~ComponentManager();
 
 		void AddComponent(Component* pComponent);

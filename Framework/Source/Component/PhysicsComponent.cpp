@@ -8,7 +8,7 @@
 
 namespace fw
 {
-    PhysicsComponent::PhysicsComponent(PhysicsLibrary libType, GameObject* pGameObject, bool isDynamic) : Component(pGameObject),
+    PhysicsComponent::PhysicsComponent(PhysicsLibrary libType, GameObject* pGameObject, ShapeType type, bool isDynamic, bool isTrigger) : Component(pGameObject),
         m_mode(libType)
     {
         m_pBox2DWorld = pGameObject->GetScene()->GetComponentManager()->GetBox2DWorld();
@@ -30,7 +30,18 @@ namespace fw
         }
         else if (m_mode == PhysicsLibrary::Jolt)
         {
-            m_pJoltBody = fw::CreateMeshJoltBody(m_pJoltWorld->m_pWorld, transform->m_position, transform->m_rotation, transform->m_scale, isDynamic, 1.0f, pGameObject);
+            switch (type)
+            {
+            case ShapeType::Cube:
+                m_pJoltBody = fw::CreateCubeJoltBody(m_pJoltWorld->m_pWorld, transform->m_position, transform->m_rotation, transform->m_scale, isDynamic, 1.0f);
+                break;
+            case ShapeType::Sphere:
+                m_pJoltBody = fw::CreateSphereJoltBody(m_pJoltWorld->m_pWorld, transform->m_position, transform->m_scale.x, isDynamic, 1.0f);
+                break;
+            case ShapeType::Mesh:
+                m_pJoltBody = fw::CreateMeshJoltBody(m_pJoltWorld->m_pWorld, transform->m_position, transform->m_rotation, transform->m_scale, isDynamic, 1.0f, pGameObject);
+                break;
+            }
         }
     }
 
@@ -48,19 +59,32 @@ namespace fw
 
 	PhysicsComponent::~PhysicsComponent()
 	{
-        m_pBox2DWorld->DestroyBody(m_pBox2DBody);
-        DestroyJoltBody(m_pJoltWorld->m_pWorld, m_pJoltBody);
+        if (m_pBox2DBody)
+        {
+            m_pBox2DWorld->DestroyBody(m_pBox2DBody);
+        }
+        if (m_pJoltBody)
+        {
+            DestroyJoltBody(m_pJoltWorld->m_pWorld, m_pJoltBody);
+        }
 	}
 
     void PhysicsComponent::Reset()
     {
-        m_pBox2DBody->SetAngularVelocity(0.0f);
-        m_pBox2DBody->SetLinearVelocity(b2Vec2(0,0));
+        if (m_pBox2DBody)
+        {
+            m_pBox2DBody->SetAngularVelocity(0.0f);
+            m_pBox2DBody->SetLinearVelocity(b2Vec2(0, 0));
 
-        b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
-        float rotation = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+            b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
+            float rotation = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
 
-        m_pBox2DBody->SetTransform(position, rotation);
+            m_pBox2DBody->SetTransform(position, rotation);
+        }
+        if (m_pJoltBody)
+        {
+            m_pJoltBody->ResetMotion();
+        }
     }
 
     void PhysicsComponent::AddForce(vec2 force, ForceMode forceMode)
@@ -299,6 +323,22 @@ namespace fw
         fixtureDef.density = 1.0f;
         fixtureDef.isSensor = true;
         m_pBox2DBody->CreateFixture(&fixtureDef);
+    }
+
+    void PhysicsComponent::SetRestitution(float restitution)
+    {
+        if (m_pJoltBody)
+        {
+            m_pJoltBody->SetRestitution(restitution);
+        }
+    }
+
+    void PhysicsComponent::SetFriction(float friction)
+    {
+        if (m_pJoltBody)
+        {
+            m_pJoltBody->SetFriction(friction);
+        }
     }
 
     void PhysicsComponent::CreateWeldJoint(GameObject* otherObject, vec2 thisObjectAnchor, vec2 otherObjectAnchor)

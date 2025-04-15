@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.10 )
+cmake_minimum_required( VERSION 3.20 )
 
 # Global Settings
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
@@ -26,6 +26,8 @@ add_subdirectory( Libraries/JoltPhysics/Build Jolt )
 
 include ( GNUInstallDirs )
 add_subdirectory( Libraries/box2d/src )
+
+set_property( TARGET Jolt PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" )
 
 ###################
 # Game Project

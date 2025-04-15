@@ -12,11 +12,11 @@
 
 namespace fw
 {
-	Scene::Scene(GameCore* pGameCore) :
+	Scene::Scene(GameCore* pGameCore, PhysicsLibrary usingPhysicsEngine) :
 		m_pGameCore(pGameCore)
 	{
 		m_pEventManager = new EventManager(m_pGameCore);
-		m_pComponentManager = new ComponentManager(m_pEventManager);
+		m_pComponentManager = new ComponentManager(m_pEventManager, usingPhysicsEngine);
 
 		m_pCamera = new Camera(this, vec3(0, 0, 0), vec3(0, 1, 0), vec3(0, 0, 3));
 	}

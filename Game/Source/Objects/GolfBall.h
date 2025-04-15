@@ -17,7 +17,7 @@ class VirtualController;
 class GolfBall : public fw::GameObject
 {
 public:
-    GolfBall(fw::Scene* pScene);
+    GolfBall(fw::Scene* pScene, vec3 position, vec3 rotation, vec3 scale);
 
     virtual ~GolfBall();
 
@@ -31,6 +31,8 @@ public:
     float GetPower() { return m_Power; }
     float GetMaxPower() { return m_MaxPower; }
 
+    void Reset();
+
 protected:
     VirtualController* m_pController = nullptr;
 
@@ -39,6 +41,8 @@ protected:
     float m_Power = 0.0f;
     bool isIncreasing = true;
 
-    float m_MaxPower = 10.0f;
+    float m_MaxPower = 1.0f;
     float m_MinPower = 0.0f;
+
+    vec3 m_startingPosition;
 };
