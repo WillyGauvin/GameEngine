@@ -40,4 +40,6 @@ namespace fw {
 
     JPH::Body* CreateMeshJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject);
     void DestroyJoltBody(JPH::PhysicsSystem* pWorld, JPH::Body* pBody);
+
+    void SetJoltBodyPositionRotation(JoltWorldBundle* bundle, JPH::Body* body, vec3 position, vec3 rotation);
 } // namespace fw

@@ -92,7 +92,6 @@ void LandingScene::ExecuteEvent(fw::Event* pEvent)
 		int height = GetGameCore()->GetFramework()->GetWindowClientHeight();
 
 		m_pCamera->SetAspectRatio((float)width / height);
-
 	}
 
 	if (pEvent->GetType() == fw::CollisionEvent::GetStaticEventType())
@@ -150,21 +149,21 @@ void LandingScene::Update(float deltaTime)
 		if (m_pController->isActionHeld(VirtualController::Left) && m_pController->isActionHeld(VirtualController::Right))
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pBoth);
-			m_pPlayer->GetPhysicsComponent()->AddForce(vec2(0.0f, 500.0f));
+			m_pPlayer->GetPhysicsComponent()->AddForce(vec2(0.0f, 1000.0f));
 			m_hasTouchedDown = false;
 
 		}
 		else if (m_pController->isActionHeld(VirtualController::Right))
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pRight);
-			m_pRightEngine->GetPhysicsComponent()->AddForce(vec2(0.0f, 250.0f));
+			m_pRightEngine->GetPhysicsComponent()->AddForce(vec2(0.0f, 500.0f));
 
 			m_hasTouchedDown = false;
 		}
 		else if (m_pController->isActionHeld(VirtualController::Left))
 		{
 			m_pPlayer->GetRenderComponent()->SetMaterial(m_pLeft);
-			m_pLeftEngine->GetPhysicsComponent()->AddForce(vec2(0.0f, 250.0f));
+			m_pLeftEngine->GetPhysicsComponent()->AddForce(vec2(0.0f, 500.0f));
 
 			m_hasTouchedDown = false;
 		}

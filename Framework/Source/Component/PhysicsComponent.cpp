@@ -71,19 +71,23 @@ namespace fw
 
     void PhysicsComponent::Reset()
     {
+        vec3 position = m_pGameObject->GetTransformComponent()->m_position;
+        vec3 rotation = m_pGameObject->GetTransformComponent()->m_rotation;
+
         if (m_pBox2DBody)
         {
             m_pBox2DBody->SetAngularVelocity(0.0f);
             m_pBox2DBody->SetLinearVelocity(b2Vec2(0, 0));
 
-            b2Vec2 position = b2Vec2(m_pGameObject->GetTransformComponent()->m_position.x, m_pGameObject->GetTransformComponent()->m_position.y);
-            float rotation = -1.0f * degreesToRads(m_pGameObject->GetTransformComponent()->m_rotation.z);
+            b2Vec2 b2position = b2Vec2(position.x, position.y);
+            float b2rotation = -1.0f * degreesToRads(rotation.z);
 
-            m_pBox2DBody->SetTransform(position, rotation);
+            m_pBox2DBody->SetTransform(b2position, b2rotation);
         }
         if (m_pJoltBody)
         {
             m_pJoltBody->ResetMotion();
+            fw::SetJoltBodyPositionRotation(m_pJoltWorld, m_pJoltBody, position, rotation);
         }
     }
 

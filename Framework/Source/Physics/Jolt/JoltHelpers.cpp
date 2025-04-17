@@ -244,7 +244,6 @@ namespace fw {
 
     JPH::Body* CreateMeshJoltBody(JPH::PhysicsSystem* pWorld, vec3 pos, vec3 rot, vec3 scale, bool isDynamic, float density, GameObject* pGameObject)
     {
-
         std::vector<vec3> vertexesVec3 = pGameObject->GetRenderComponent()->m_pMesh->GetVerts();
         JPH::VertexList vertexs;
         
@@ -298,6 +297,14 @@ namespace fw {
         JPH::BodyInterface& bodyInterface = pWorld->GetBodyInterface();
         bodyInterface.RemoveBody(pBody->GetID());
         bodyInterface.DestroyBody(pBody->GetID());
+    }
+
+    void SetJoltBodyPositionRotation(JoltWorldBundle* bundle, JPH::Body* body, vec3 position, vec3 rotation)
+    {
+        JPH::BodyInterface& bi = bundle->m_pWorld->GetBodyInterface();
+        rotation = rotation.Normalize();
+        float length = rotation.Length();
+        bi.SetPositionAndRotation(body->GetID(), JPH::RVec3Arg(position.x, position.y, position.z), JPH::QuatArg(rotation.x, rotation.y, rotation.z, 1.0f), JPH::EActivation::Activate);
     }
 
 } // namespace fw
