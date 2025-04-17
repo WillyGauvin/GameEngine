@@ -49,6 +49,10 @@ namespace fw
 		void AddForce(vec2 force, ForceMode forceMode = ForceMode::Force);
 		void AddForce(vec3 force, ForceMode forceMode = ForceMode::Force);
 
+		void AddUpForce(float force);
+		void AddUpForce(float force, vec2 offset);
+
+
 		void AddForceAtPosition(vec2 force, vec2 pos, ForceMode forceMode = ForceMode::Force);
 		void AddForceAtPosition(vec3 force, vec2 pos, ForceMode forceMode = ForceMode::Force);
 

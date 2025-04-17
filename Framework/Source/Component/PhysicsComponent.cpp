@@ -117,6 +117,25 @@ namespace fw
         }
     }
 
+    void PhysicsComponent::AddUpForce(float force, vec2 offset)
+    {
+        if (m_pBox2DBody)
+        {
+            vec2 UpVector = vec2(cos(m_pBox2DBody->GetAngle() + PI / 2), sin(m_pBox2DBody->GetAngle() + PI / 2)).Normalize();
+            m_pBox2DBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBox2DBody->GetWorldCenter() + b2Vec2(offset.x, offset.y), true);
+        }
+    }
+
+    void PhysicsComponent::AddUpForce(float force)
+    {
+        if (m_pBox2DBody)
+        {
+            vec2 UpVector = vec2(cos(m_pBox2DBody->GetAngle() + PI / 2), sin(m_pBox2DBody->GetAngle() + PI / 2)).Normalize();
+            m_pBox2DBody->ApplyForce(b2Vec2(UpVector.x * force, UpVector.y * force), m_pBox2DBody->GetWorldCenter(), true);
+        }
+    }
+
+
     void PhysicsComponent::AddForce(vec3 force, ForceMode forceMode)
     {
         if (m_mode == PhysicsLibrary::Box2D)
