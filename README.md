@@ -2,7 +2,7 @@ Game Engine built in C++
 
 This engine was a school project that lasted a single semester. In that time I was able to implement features such as a component system, lighting system, player controllers, scene management, and integration of Box2D and Jolt physics library.
 
-# __Clone the project recursively!__
+# __Clone the repo recursively!__
 # Running the project
 Have cmake installed. [Here's a link if you don't have it installed](https://cmake.org/download/)
 
